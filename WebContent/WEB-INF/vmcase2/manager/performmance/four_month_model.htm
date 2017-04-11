@@ -1,0 +1,582 @@
+#parse ("common/iframe_page_header.htm")
+ <link rel="stylesheet" type="text/css" href="${uicasePath}/css/specialtab.css" />
+ 
+<body class="whitebg">
+	<div class="content_main">
+		<div class="contentinner">
+			<div class="place">
+				<div class="title">"诚易贷"授信政策操作指引-审贷会</div>
+			</div>
+		 <div class="search">
+          <form id="submitForm" >
+	         <div class="forms" id="formsId" style="height: 120px;">
+	          <table class="rule">
+	            <colgroup>
+	              <col width="5%" />
+	              <col width="10%" />
+	              <col width="5%" />
+	              <col width="10%" />
+	              <col width="5%" />
+	              <col width="10%" />
+	              <col width="5%" />
+	              <col width="10%" />
+	            </colgroup>
+	            <tr>
+	              <td>户籍:</td>
+	              <td><select id="a1" name="a1" >
+						<option value="外地人">外地人</option>
+						<option value="本省外地人">本省外地人</option>
+						<option value="济南本地人">济南本地人</option>
+					  </select></td>
+	              <td>年龄:</td>
+	              <td><select id="a2" name="a2" >
+						<option value="25岁以下">25岁以下</option>
+						<option value="25-30">25-30</option>
+						<option value="30-35">30-35</option>
+						<option value="35-50">35-50</option>
+						<option value="50以上">50以上</option>
+					  </select></td>
+	              <td>学历:</td>
+	              <td><select id="a3" name="a3" >
+						<option value="专科以下">专科以下</option>
+						<option value="专科">专科</option>
+						<option value="本科">本科</option>
+						<option value="研究生及以上">研究生及以上</option>
+					  </select></td>
+	              <td>婚姻状况:</td>
+	              <td><select id="a4" name="a4" >
+						<option value="离异">离异</option>
+						<option value="未婚">未婚</option>
+						<option value="已婚">已婚</option>
+					  </select></td>
+	            </tr>
+	            <tr>
+	              <td>子女情况:</td>
+	              <td><select id="a5" name="a5" >
+						<option value="无子女">无子女</option>
+						<option value="有未成年子女">有未成年子女</option>
+						<option value="有成年子女">有成年子女</option>
+					  </select></td>
+	              <td>单位性质:</td>
+	              <td><select id="a6" name="a6" >
+						<option value="公务员及事业编">公务员及事业编</option>
+						<option value="央企、国企">央企、国企</option>
+						<option value="上市公司">上市公司</option>
+						<option value="世界五百强企业">世界五百强企业</option>				
+						<option value="公立学院、公立医院员工">公立学院、公立医院员工</option>
+						<option value="银行员工">银行员工</option>
+						<option value="证券、保险非销售岗">证券、保险非销售岗</option>
+						<option value="其他">其他</option>
+					  </select></td>
+	              <td>房 产:</td>
+	              <td><select id="a7" name="a7" >
+						<option value="无房">无房</option>
+						<option value="三等奖">有1套房</option>
+						<option value="2套及以上">2套及以上</option>
+					  </select></td>
+	              <td>车产情况:</td>
+	              <td><select id="a8" name="a8" >
+						<option value="无车">无车</option>
+						<option value="有车（私家车）">有车（私家车）</option>
+					  </select></td>
+	            </tr>
+	            <tr>
+	              <td>借款人24个月信用情况:</td>
+	              <td><select id="a9" name="a9" >
+						<option value="无逾期">无逾期</option>
+						<option value="有逾期（次数）">有逾期（次数）</option>
+					   </select></td>
+	              <td>与我行业务往来:</td>
+	              <td><select id="a10" name="a10" >
+						<option value="无">无</option>
+						<option value="有">有</option>
+					  </select></td>
+	              <td>经营年限:</td>
+	              <td><select id="a11" name="a11" >
+						<option value="1年-3年">1年-3年</option>
+						<option value="3年-5年">3年-5年</option>
+						<option value="5年以上">5年以上</option>
+					  </select></td>
+	              <td>资产负债率:</td>
+	              <td><select id="a12" name="a12" >
+						<option value="50%-70%">50%-70%</option>
+						<option value="3">50%（含）以下</option>
+					  </select></td>
+	            </tr>
+	            <tr>
+	              <td>家庭年收入:</td>
+	              <td><select id="a13" name="a13" >
+						<option value="10万以下">10万以下</option>
+						<option value="10-20万">10-20万</option>
+						<option value="20-30万">20-30万</option>
+						<option value="30-50万">30-50万</option>
+						<option value="50万以上">50万以上</option>
+					  </select></td>
+	              
+	            </tr>
+	          </table>
+	        </div>
+	        <div class="search_button" >
+     				<input id="id_browse_button" type="button" value="#i18n('button.browse')" class="search_button_inquiry"
+                  title="#i18n('button.browse.hint')" style="height: 26px; line-height: 24px;" />
+      		</div>
+          </form>
+        </div>
+        
+        <div id="topDiv" style="width: 99.96%;overflow:auto">
+			<table cellpadding="0" cellspacing="0" class="table-bd" border="1" bordercolor="#cccccc" style="width: 2000px;">
+             <colgroup>
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              <col width="2%" />
+              
+              <col width="5%" />
+            </colgroup>
+            <tr>
+              <th class="titlefc4" colspan="3">户籍</th>
+              <th class="titlefc4" colspan="5">年龄</th>
+              <th class="titlefc4" colspan="4">学历</th>
+              <th class="titlefc4" colspan="3">婚姻状况</th>
+              <th class="titlefc4" colspan="3">子女情况</th>
+              <th class="titlefc4" colspan="8">单位性质</th>
+              <th class="titlefc4" colspan="3">房 产</th>
+              <th class="titlefc4" colspan="2">车产情况</th>
+              <th class="titlefc4" colspan="2">借款人24个月信用情况</th>
+              <th class="titlefc4" colspan="2">与我行业务往来</th> 
+              <th class="titlefc4" colspan="3">经营年限</th>
+              <th class="titlefc4" colspan="2">资产负债率</th>
+              <th class="titlefc4" colspan="5">家庭年收入</th>
+              
+              <th class="titlefc4" rowspan="2">授信额上限（万）</th>
+            </tr>
+			<tr>
+				<th class="titlefc4">外地人</th>
+				<th class="titlefc4">本省外地人</th>
+				<th class="titlefc4">济南本地人</th>
+				
+				<th class="titlefc4">25岁以下</th>
+				<th class="titlefc4">25-30</th>
+				<th class="titlefc4">30-35</th>
+				<th class="titlefc4">35-50</th>
+				<th class="titlefc4">50以上</th>
+				
+				<th class="titlefc4">专科以下</th>
+				<th class="titlefc4">专科</th>
+				<th class="titlefc4">本科</th>
+				<th class="titlefc4">研究生及以上</th>
+				
+				<th class="titlefc4">离异</th>
+				<th class="titlefc4">未婚</th>
+				<th class="titlefc4">已婚</th>
+				
+				<th class="titlefc4">无子女</th>
+				<th class="titlefc4">有未成年子女</th>
+				<th class="titlefc4">有成年子女</th>
+				
+				<th class="titlefc4">公务员及事业编</th>
+				<th class="titlefc4">央企、国企</th>
+				<th class="titlefc4">上市公司</th>
+				<th class="titlefc4">世界五百强企业</th>
+				<th class="titlefc4">公立学院、公立医院员工</th>
+				<th class="titlefc4">银行员工</th>
+				<th class="titlefc4">证券、保险非销售岗</th>
+				<th class="titlefc4">其他</th>
+				
+				<th class="titlefc4">无房</th>
+				<th class="titlefc4">有1套房</th>
+				<th class="titlefc4">2套及以上</th>
+				
+				<th class="titlefc4">无车</th>
+				<th class="titlefc4">有车（私家车）</th>
+				
+				<th class="titlefc4">无逾期</th>
+				<th class="titlefc4">有逾期（次数）</th>
+				
+				<th class="titlefc4">无</th>
+				<th class="titlefc4">有</th>
+				
+				<th class="titlefc4">1年-3年</th>
+				<th class="titlefc4">3年-5年</th>
+				<th class="titlefc4">5年以上</th>
+				
+				<th class="titlefc4">50%-70%</th>
+				<th class="titlefc4">50%（含）以下</th>
+				
+				<th class="titlefc4">10万以下</th>
+				<th class="titlefc4">10-20万</th>
+				<th class="titlefc4">20-30万</th>
+				<th class="titlefc4">30-50万</th>
+				<th class="titlefc4">50万以上</th>
+			</tr>
+            #foreach ($intoPieces in $result.items)
+            <tr>
+              #if($intoPieces.a1 == "外地人")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a1 == "本省外地人")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a1 == "济南本地人")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a2 == "25岁以下")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a2 == "25-30")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a2 == "30-35")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+               #if($intoPieces.a2 == "35-50")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a2 == "50以上")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a3 == "专科以下")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a3 == "专科")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a3 == "本科")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a3 == "研究生及以上")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a4 == "离异")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a4 == "未婚")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a4 == "已婚")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a5 == "无子女")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a5 == "有未成年子女")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a5 == "有成年子女")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+               #if($intoPieces.a6 == "公务员及事业编")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+               #if($intoPieces.a6 == "央企、国企")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+               #if($intoPieces.a6 == "上市公司")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+               #if($intoPieces.a6 == "世界五百强企业")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+               #if($intoPieces.a6 == "公立学院、公立医院员工")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a6 == "银行员工")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a6 == "证券、保险非销售岗")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a6 == "其他")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a7 == "无房")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a7 == "有1套房")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a7 == "2套及以上")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a8 == "无车")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a8 == "有车（私家车）")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a9 == "无逾期")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a9 == "有逾期（次数）")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a10 == "无")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a10 == "有")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a11 == "1年-3年")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a11 == "3年-5年")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a11 == "5年以上")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a12 == "50%-70%")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a12 == "50%（含）以下")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a13 == "10万以下")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a13 == "10-20万")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a13 == "20-30万")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a13 == "30-50万")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+              #if($intoPieces.a13 == "50万以上")
+                <td align="center" class="titlefc4">√</td>
+              #else
+                <td align="center" class="titlefc4">x</td>
+              #end
+              
+               <td align="center" class="titlefc4">80</td>
+            </tr>
+            #end
+          </table>
+          </div>
+          
+		  <div class="pagebar">
+	        <div class="controlbtn">
+	        <!-- <input id="id_go_button" type="button" value="四维授信生成数据" class="search_button_inquiry"
+                  title="四维授信生成数据" style="height: 26px; line-height: 24px;" /> -->
+	        </div>
+	        #parse ("common/pagination.htm")
+	        <div class="clear"></div>
+	      </div>
+	      
+	</div>
+</body>
+<script language="javascript" type="text/javascript">
+	var layout = new TableLayout(2);
+	window.top.currentWindow.setLayout(layout);
+	url = "${modulePath}/scoreBrowse.page";
+	
+	
+	$(document).ready(function() {
+		var opsObj = new Object();
+		opsObj.formObj = $("#submitForm");
+		opsObj.browseUrl = "${modulePath}/scoreBrowse.page";
+		Dialog.load();
+		prepareOperations(opsObj);
+		Dialog.closeLoad();
+	});
+	
+	
+	//四维授信生成数据
+	$("#id_go_button").click(function() {
+		Dialog.load();
+		$.ajax({
+			type:'GET',
+			url:"${modulePath}/doGet.json",
+			data:"",
+			success:function(data){
+				Dialog.closeLoad();
+				if(data.success == true){
+					window.location.href="${modulePath}/jnJxbrowse.page";
+				}else{
+					Dialog.message(data.errors.errors[0].message);
+				}
+				
+			}
+		});
+    });
+	
+</script>
+
+#parse ("common/iframe_page_footer.htm")

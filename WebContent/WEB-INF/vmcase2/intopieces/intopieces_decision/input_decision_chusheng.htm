@@ -1,0 +1,374 @@
+#parse ("common/iframe_page_header.htm")
+#parse ("common/macro.htm")
+  <link rel="stylesheet" type="text/css" href="${uicasePath}/css/specialtab.css" />
+<body class="whitebg">
+  <div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">填写初审结论>初审结论</div>
+      </div>
+       
+      <form id="id_module_form" action="${contextPath}/intopieces/intopiecesdecision/updateAll.json"/>
+      <input type="hidden" id="customerId" name="customerId" value="$!customerApplicationInfo.customerId"/>
+      <input type="hidden" name="id" value="$!customerApplicationInfo.id"/>
+      <input type="hidden" name="serialNumber" value="$!customerApplicationInfo.serialNumber">
+      <input type="hidden" id ="prodCreditRange" name="prodCreditRange" value="$!producAttribute.prodCreditRange"/>
+      <input type="hidden" id ="productId" name="productId" value="$!producAttribute.id"/>
+      <input type="hidden" name="auditType" id="auditType" value="1" />
+      <input type="hidden" name="custManagerId" id="custManagerId" value="$!custManagerId" />
+      <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;"></div> 	 
+       	 <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">
+          <table cellpadding="0" cellspacing="0" class="table-bd" border="1" bordercolor="#cccccc" style="width: 100%;">
+            <colgroup>
+              <col width="10%" />
+              <col width="30%" />
+              <col width="10%" />
+              <col width="30%" />
+            </colgroup>
+              <tr>
+              	<td class="titlec" colspan="4" style="text-align: center;">客户申请信息</td>
+              </tr>
+              <tr>
+                <td class="titlefc3"><label for="applyQuota">客户名称:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.name" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="applyQuota">申请额度(元):</label></td>
+	          <td><input  type="text" class="rinpsty" name="applyQuota" id="applyQuota" 
+	              value="$!customerApplicationInfo.applyQuota" disabled="disabled"/></td>
+              </tr>
+                    <tr>
+                <td class="titlefc3"><label for="applyQuota">申请期限:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.sqqx" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="applyQuota">贷款用途:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.dkyt" disabled="disabled"/></td>
+              </tr>
+               <tr>
+              	<td class="titlec" colspan="4" style="text-align: center;">申请产品信息</td>
+              </tr>
+              <tr>
+              <td class="titlefc3"><span style="color:red">*</span><label for="prodName" style="color:red">产品名称:</label></td>
+	          <td><input  type="text" class="rinpsty" name="prodName" id="prodName" 
+	              value="$!producAttribute.productName" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="prodCreditRange">产品授信区间:</label></td>
+	          <td><input  type="text" class="rinpsty" name="prodCreditRange" id="prodCreditRange" 
+	              value="$!producAttribute.prodCreditRange" disabled="disabled"/></td>
+            </tr>
+              <tr>
+              <td class="titlefc3"><span style="color:red">*</span><label for="prodName" style="color:red">产品基准利率:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!producAttribute.rateRange" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="prodCreditRange">产品用途:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!producAttribute.purposeLoan" disabled="disabled"/></td>
+            </tr>
+            
+            
+            
+            
+              <tr>
+              	<td class="titlec" colspan="4" style="text-align: center;">客户经理意见信息</td>
+              </tr>
+              <tr>
+              <td class="titlefc3"><label for="prodName" >建议金额:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.jyje" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="prodCreditRange">建议期限:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.jyqx" disabled="disabled"/></td>
+            </tr>
+              <tr>
+              <td class="titlefc3"><label for="prodName" >建议产品:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.jycp" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="prodCreditRange">建议利率:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.jylv" disabled="disabled"/></td>
+            </tr>
+             <tr>
+              <td class="titlefc3"><label for="prodName" >建议担保人:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.jydbr" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="prodCreditRange">客户与担保人关系:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.gx" disabled="disabled"/></td>
+            </tr>
+                     <tr>
+              <td class="titlefc3"><label for="prodName" >建议抵押物:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.jydyw" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="prodCreditRange">抵押物物权人:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.wqr" disabled="disabled"/></td>
+            </tr>
+          </table>
+         </div>
+         
+         <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">
+          <table cellpadding="0" cellspacing="0" class="table-bd" border="1" bordercolor="#cccccc" style="width: 100%;height: 250px">
+            <colgroup>
+              <col width="10%" />
+              <col width="30%" />
+              <col width="10%" />
+              <col width="30%" />
+            </colgroup>
+              <tr><td class="titlec" colspan="4" style="text-align: center;">初审结论</td></tr>
+            <tr>
+              <td  class="titlefc3"><label for="status">初审结论:</label></td>
+              <td><select id="status" name="status" style="width: 150px;" onChange="changeDecisionRefusereason();">
+                  	#dict("intopieces_decision_chusheng",$!customerApplicationInfo.status)
+                  </select></td>
+            </tr>
+            <tr>
+			  <td class="titlefc3"><label for="decisionAmount">初审额度(元):</label></td>
+              <td><input  type="text" class="rinpsty" name="decisionAmount" id="decisionAmount" style="width: 150px;"/></td>
+              <td class="titlefc3"><label for="decisionRate">利率(%):</label></td>
+              <td><input type="text" class="rinpsty" name="decisionRate" style="width: 150px;" id="decisionRate"  /></td>
+            </tr>
+            <tr>
+              <td class="titlefc3"><label for="qx">期限:</label></td>
+              <td>
+					<select id="qx" name="qx" style="width: 150px;">
+								#dict("decision_term","")
+                	</select>
+			</td>
+			 <td class="titlefc3"><label for="qx">担保方式:</label></td>
+              <td>
+					<select id="dbfs" name="dbfs" style="width: 150px;">
+								#dict("dbfs_term","")
+                	</select>
+			</td>
+			 </tr>
+             <tr>
+              <td class="titlefc3"><label for="cyUser1">参与审批客户经理:</label></td>
+              <td><select  name="cyUser1" id="cyUser1" style="width: 150px;">
+                 #foreach ($list1 in $list)
+                 <option value="$!list1.userId">$!list1.id$!list1.displayName</option>
+                 #end
+                  </select>
+              </td>
+              <td class="titlefc3"><label for="cyUser2">参与审批客户经理:</label></td>
+              <td><select  name="cyUser2" id="cyUser2" style="width: 150px;">
+                   #foreach ($list1 in $list)
+                 <option value="$!list1.userId">$!list1.id$!list1.displayName</option>
+                 #end
+                  </select>
+              </td>
+            </tr>
+            <tr>
+              <td class="titlefc3"><label for="fdUser">辅调客户经理:</label></td>
+              <td><select  name="fdUser" id="fdUser" style="width: 150px;" >
+                  #foreach ($list1 in $list)
+                 <option value="$!list1.userId">$!list1.id$!list1.displayName</option>
+                 #end
+                  </select>
+              </td>
+            </tr>
+            <tr style="display :none">
+              <td  class="titlefc3"><label id ="reason" for=reason>原因:</label></td>
+              <td><textarea name="decisionRefusereason" id="decisionRefusereason">$!customerApplicationInfo.decisionRefusereason</textarea></td>
+            </tr>
+                <tr><td class="titlec" colspan="4" style="text-align: center;">选择审贷委</td></tr>
+             <tr>
+              <td class="titlefc3"><label for="userId1">主审委:</label></td>
+              <td><select  name="user_Id1" id="user_Id1" style="width: 150px;">
+                      #foreach ($list1 in $list)
+                 <option value="$!list1.userId">$!list1.id$!list1.displayName</option>
+                 #end
+                  </select>
+              </td>
+              <td class="titlefc3"><label for="userId2">副审委一:</label></td>
+              <td><select  name="user_Id2" id="user_Id2" style="width: 150px;">
+                      #foreach ($list1 in $list)
+                 <option value="$!list1.userId">$!list1.id$!list1.displayName</option>
+                 #end
+                  </select>
+              </td>
+            </tr>
+            <tr>
+              <td class="titlefc3"><label for="userId3">副审委二:</label></td>
+              <td><select  name="user_Id3" id="user_Id3" style="width: 150px;" >
+                      #foreach ($list1 in $list)
+                 <option value="$!list1.userId">$!list1.id$!list1.displayName</option>
+                 #end
+                  </select>
+              </td>
+            
+            </tr>
+          </table>
+        </div>
+      </form>
+      <div class="submit">
+      #if($!customerApplicationInfo.status=='audit')
+        <input id="id_save_button" type="button" value="#i18n('button.save')" class="current" />
+      #end
+        <input type="button" onclick="javascript:history.go(-1);" value="返回" />
+      </div>
+    </div>
+  </div>
+ <script src='${contextPath}/js/maintenanceAccountManager/maintenanceAccountManager.js'></script> 
+  <script type="text/javascript">
+  	#set ($formName = "'#id_module_form'")
+	/* #parse ("intopieces/intopieces_decision/input_decision_validation.js") */
+	var layout = new FormsLayout("formsId");
+	window.top.currentWindow.setLayout(layout);
+	
+	
+	$(document).ready(function() {		
+		var info = "$!customerApplicationInfo.status";
+		//已提交的显示只读
+		
+		
+		if(info!='audit'){
+			$("input[type='text']").attr("disabled",true);
+			$("input[type='radio']").attr("disabled",true);
+			$("input[type='checkbox']").attr("disabled",true);
+			$("select").attr("disabled",true);
+			$("textarea").attr("disabled",true);
+		}
+		
+		$("#id_save_button").click(function() {
+			$(".myerror").remove();
+			var status = $("select[name=status]").val();
+			
+			if( status == "APPROVE"){
+				if($("#decisionAmount").val() == ""){
+					 $("#decisionAmount").after("<label class='error myerror' generated='true' >金额不能为空</label>");  
+					 return;
+				}
+				if($("#decisionRate").val() == ""){
+					 $("#decisionRate").after("<label class='error myerror'generated='true' >利率不能为空</label>");  
+					 return;
+				} 
+				//判断金额必须在产品的授信区间内
+				var decisionAmout = $("#decisionAmount").val();
+				var str = $("#prodCreditRange").val();
+				var strArray = str.split("-");
+				if(parseFloat(decisionAmout) < parseFloat(strArray[0]) 
+				 ||parseFloat(decisionAmout) > parseFloat(strArray[1])){
+					topWin.Dialog.message("金额必须在产品授信区间内"+str);
+					return;
+				}
+				var leng = 0;
+		    	leng = $(".myerror").length;
+		    	if(leng > 0){
+		    		return;
+		    	}else{
+			    	var customerId=$("#customerId").val();
+			    	var productId=$("#productId").val();
+			    	var decisionRate=$("#decisionRate").val();
+			    	var decisionAmount=$("#decisionAmount").val();
+			    	var qx=$("#qx").val();
+			    	var user_Id1=$("#user_Id1").val();
+			    	var user_Id2=$("#user_Id2").val();
+			    	var user_Id3=$("#user_Id3").val();
+			    	var cyUser1=$("#cyUser1").val();
+			    	var cyUser2=$("#cyUser2").val();
+			    	var fdUser=$("#fdUser").val(); 
+			    	var dbfs=$("#dbfs").val(); 
+			    	
+			      $.ajax({
+							url : "${contextPath}/jnpad/CustormerSdwUserPc/insertCSPC.json?customerId="+customerId+"&&productId="+productId
+							+"&&decisionRate="+decisionRate+"&&decisionAmount="+decisionAmount+"&&qx="+qx+"&&user_Id1="+user_Id1
+							+"&&user_Id2="+user_Id2+"&&user_Id3="+user_Id3+"&&cyUser1="+cyUser1+"&&cyUser2="+cyUser2+"&&fdUser="+fdUser+"&&dbfs="+dbfs,
+							
+							dataType : 'json',
+							type : "get",
+							success : function(data) {
+							if (data.success) {
+								topWin.Dialog.message("保存成功!");
+			 	            	window.location.href="${contextPath}/intopieces/intopiecesdecision/csBrowse.page";
+							 }else{
+									window.top.Dialog.message("系统出现异常,请联系管理员"); 
+						    	}
+							}
+				    }); 
+		    	}
+			}else{
+			
+				if( status == "REJECTAPPROVE"){
+					if($("#decisionRefusereason").val() == ""){
+						 $("#decisionRefusereason").after("<label class='error myerror' generated='true' >拒绝原因不能为空</label>");   
+						 return;
+					}
+				}
+				
+				if( status == "RETURNAPPROVE"){
+					if($("#decisionRefusereason").val() == ""){
+						 $("#decisionRefusereason").after("<label class='error myerror' generated='true' >退回原因不能为空</label>");   
+						 return;
+					}
+				}
+				
+				var leng = 0;
+		    	leng = $(".myerror").length;
+		    	if(leng > 0){
+		    		return;
+		    	}else{
+		    		if ($($formName).valid()) {
+						var formjson = $($formName).serialize();
+			 	          $.get($($formName).attr("action"), formjson, function(data, textStatus, jqXhr) {
+			 	            if (data.success) {
+			 	            	topWin.Dialog.message("保存成功!");
+			 	            	window.location.href="${contextPath}/intopieces/intopiecesdecision/csBrowse.page";
+			 	            }
+			 	          });
+					}
+		    	}
+				}
+		});
+		
+		$("#status").change(function (){
+			$(".myerror").remove();
+			
+			var status = $("select[name=status]").val();
+			if( status == "APPROVE"){
+				$("tr:eq(19)").show();
+				$("tr:eq(20)").show();
+				$("tr:eq(14)").show();
+				$("tr:eq(13)").show();
+				$("tr:eq(18)").show();
+				$("tr:eq(17)").hide();
+				if($("input[name=decision_amount]").val() == ""){
+					 $("input[name='decision_amount']").after("<label class='error myerror' generated='true' >金额不能为空</label>");   
+				}
+				if($("input[name=decision_rate]").val() == ""){
+					 $("input[name='decision_rate']").after("<label class='error myerror'generated='true' >利率不能为空</label>");   
+				}
+			}
+			
+			if( status == "REJECTAPPROVE"){
+				$("tr:eq(19)").hide();
+				$("tr:eq(20)").hide();
+				$("tr:eq(14)").hide();
+				$("tr:eq(13)").hide();
+				$("tr:eq(18)").hide();
+				$("tr:eq(17)").show();
+				if($("textarea[name=decision_refusereason]").val() == ""){
+					 $("textarea[name='decision_refusereason']").after("<label class='error myerror' generated='true' >拒绝原因不能为空</label>");   
+				}
+			}
+			
+			if( status == "RETURNAPPROVE"){
+				$("tr:eq(19)").hide();
+				$("tr:eq(20)").hide();
+				$("tr:eq(14)").hide();
+				$("tr:eq(13)").hide();
+				$("tr:eq(18)").hide();
+				$("tr:eq(17)").show();
+			}
+			
+			if(status =='RETURNAPPROVE'){
+ 			  $("#reason").text("退回原因");	
+ 			}else{
+ 		      $("#reason").text("拒绝原因");	
+ 			} 
+		});
+	});
+	
+	
+  </script>
+  
+</body>
+#parse ("common/iframe_page_footer.htm")

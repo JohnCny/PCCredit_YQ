@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.intopieces.dao.CustomerSqInfoDao" >
+<resultMap type="com.cardpay.pccredit.intopieces.model.CustomerSqInfo" id="CustomerSqInfo">
+<result property="id" column="id" />
+<result property="pid" column="pid" />
+<result property="cid" column="cid" />
+<result property="name" column="name" />
+<result property="cardId" column="cardId" />
+<result property="sqje" column="sqje" />
+<result property="dkyt" column="dkyt" />
+<result property="sqqx" column="sqqx" />
+<result property="jyje" column="jyje" />
+<result property="jyqx" column="jyqx" />
+<result property="jycp" column="jycp" />
+<result property="jylv" column="jylv" />
+<result property="jydbr" column="jydbr" />
+<result property="gx" column="gx" />
+<result property="jydyw" column="jydyw" />
+<result property="wqr" column="wqr" />
+<result property="time" column="time" />
+<result property="icount" column="icount" />
+</resultMap>
+    
+    
+<insert id="addSqInfo"  parameterType="java.lang.Integer" >
+			insert into CUSTOMER_SQINFO (id,pid,cid,name,cardId,sqje,dkyt,sqqx,jyje,jyqx,jycp,jylv,jydbr,gx,jydyw,wqr,time,icount) 
+			values (#{id},#{pid},#{cid},#{name},#{cardId},#{sqje},#{dkyt},#{sqqx},#{jyje},#{jyqx},#{jycp},#{jylv},#{jydbr},#{gx},#{jydyw},#{wqr},#{time},#{icount})
+</insert>
+
+<select id="selectMaxIcount" resultType="int" >
+			select nvl( max(icount),0) from CUSTOMER_SQINFO where cid=#{cid} and pid=#{pid}
+</select>
+
+<select id="selectSqInfoBycpId"  resultMap="CustomerSqInfo">
+			select * from CUSTOMER_SQINFO
+			where cid=#{cid} and pid=#{pid} and icount= (select max(icount) from CUSTOMER_SQINFO where cid=#{cid} and pid=#{pid})
+</select>
+
+</mapper> 

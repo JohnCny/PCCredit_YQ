@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.report.dao.BadLoansDao">
+	 <resultMap id="ResultMap" type="com.cardpay.pccredit.report.model.BadLoansInfo">
+		<result property="chinesename" column="CHINESE_NAME" />
+		<result property="cardid" column="CARD_ID" />
+		<result property="managername" column="display_name" />
+		<result property="recorddate" column="RECORDDATE" />
+		<result property="customerId" column="CUSTID" />
+		<result property="subject" column="SUBJECT" />
+		<result property="baddescription" column="BADDESCRIPTION" />
+		<result property="opertor" column="OPERATOR" />
+		<result property="instcityCode" column="id" />
+		<result property="operDateTime" column="OPERDATETIME" />
+		<result property="Referaomunt" column="REFERAOMUNT" />
+
+	</resultMap>
+	<select id="findBadloansByfilter" resultMap="ResultMap" parameterType="com.cardpay.pccredit.report.filter.BadLoansFilter" >
+		SELECT * FROM
+		(SELECT ROW_.*,ROWNUM ROWNUM_
+		FROM (SELECT
+		c.CHINESE_NAME,c.CARD_ID,t.CUSTID,t.REFERAOMUNT,t.SUBJECT,t.BADDESCRIPTION,t.RECORDDATE,u.display_name,t.OPERDATETIME,t.OPERATOR
+		FROM T_CIPERSONBADRECORD t INNER JOIN BASIC_CUSTOMER_INFORMATION c ON
+		c.TY_CUSTOMER_ID = t.CUSTID INNER JOIN SYS_USER u ON c.USER_ID= u.ID
+		<if test="managerName != null and managerName != '' ">
+			AND u.ID = #{managerName}
+		</if>
+		<if test="cardId != null and cardId != '' ">
+			AND c.CARD_ID = #{cardId}
+		</if>
+		<if test="startDate != null and startDate != '' and endDate != null and endDate != '' ">
+			AND t.RECORDDATE between  #{startDate} and #{endDate}
+		</if>
+		order by t.RECORDDATE desc 
+		
+		<![CDATA[) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+	</select>
+	<select id="findBadloansDataByfilter" resultMap="ResultMap" parameterType="com.cardpay.pccredit.report.filter.BadLoansFilter" >
+		SELECT
+		c.CHINESE_NAME,c.CARD_ID,t.CUSTID,t.REFERAOMUNT,t.SUBJECT,t.BADDESCRIPTION,t.RECORDDATE,u.display_name,t.OPERDATETIME,t.OPERATOR
+		FROM T_CIPERSONBADRECORD t INNER JOIN BASIC_CUSTOMER_INFORMATION c ON
+		c.TY_CUSTOMER_ID = t.CUSTID INNER JOIN SYS_USER u ON c.USER_ID= u.ID
+		<if test="managerName != null and managerName != '' ">
+			AND u.ID = #{managerName}
+		</if>
+		<if test="cardId != null and cardId != '' ">
+			AND c.CARD_ID = #{cardId}
+		</if>
+		<if test="startDate != null and startDate != '' and endDate != null and endDate != '' ">
+			AND t.RECORDDATE between  #{startDate} and #{endDate}
+		</if>
+		order by t.RECORDDATE desc 
+	</select>
+	<select id="findBadloansSizeByfilter" resultType="int" parameterType="com.cardpay.pccredit.report.filter.BadLoansFilter">
+		SELECT
+		count(*)
+		FROM T_CIPERSONBADRECORD t INNER JOIN BASIC_CUSTOMER_INFORMATION c ON
+		c.TY_CUSTOMER_ID = t.CUSTID INNER JOIN SYS_USER u ON c.USER_ID= u.ID
+		<if test="managerName != null and managerName != '' ">
+			AND u.ID = #{managerName}
+		</if>
+		<if test="cardId != null and cardId != '' ">
+			AND c.CARD_ID = #{cardId}
+		</if>
+		<if test="startDate != null and startDate != '' and endDate != null and endDate != '' ">
+			AND t.RECORDDATE between  #{startDate} and #{endDate}
+		</if>
+	</select>
+</mapper>

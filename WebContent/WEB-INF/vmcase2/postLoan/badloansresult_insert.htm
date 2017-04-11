@@ -1,0 +1,61 @@
+#parse ("common/iframe_page_header.htm")
+<body>
+	<div class="content_main">
+		<div class="contentinner">
+			<div class="place">
+				<div class="title">不良资产处理结果登记</div>
+			</div>
+			
+             <input type="hidden" id="custid" value="$!customerId" />
+				<div class="forms" id="formsId">
+				
+					<table class="rule" border="1" bordercolor="#CCCCCC">
+					<caption>处理结果</caption>
+			          <!-- <caption>展业计划安排</caption> -->
+			            <colgroup>
+			              <col width="10%" />
+			              <col width="40%" />
+			              <col width="10%" />
+			              <col width="40%" />
+			            </colgroup>
+						<tr>
+						<td><textarea textarea rows="5" style="height:200px;width:980px" id="dealResult"></textarea></td>
+					</table>
+				</div>
+
+			<div class="submit">
+				<input id="id_save_button" type="button" value="保存" class="current" />
+				<input type="button" onclick="javascript:history.go(-1);" value="取消" />
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	var layout=new FormsLayout("formsId");	
+	window.top.currentWindow.setLayout(layout);
+	$(document).ready(function() {		
+		$("#id_save_button").click(function() {
+			if(submitFlag == 1){
+				alert("请勿重复提交!")
+				return;
+			}
+			submitFlag = 1;
+	   	        var url = "${modulePath}/update.json?customerId="+$("#custid").val()+"&dealResult="+$("#dealResult").val();
+				$.ajax({
+					url : url,
+					type : "get",
+					success : function(data) {
+						if (data.success) {
+							topWin.Dialog.message("保存成功！");
+							window.location.href= contextPath+"/postLoan/post/blzcBrowse.page" ;
+						}
+						else{
+							topWin.Dialog.message(data.message);
+					    }
+						submitFlag = 0;
+					}
+				});
+	    });
+	});
+	</script>
+</body>
+#parse ("common/iframe_page_footer.htm")
