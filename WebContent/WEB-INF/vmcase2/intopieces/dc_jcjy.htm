@@ -1,0 +1,242 @@
+#parse ("common/iframe_page_header.htm")
+<link rel="stylesheet" type="text/css"
+	href="${contextPath}/css/style.css" />
+<link rel="stylesheet" type="text/css" href="${uicasePath}/css/tab.css" />
+<style>
+.form-l .form-r{height:32px;}
+</style>
+<body class="whitebg" style="">
+	<div class="content_main">
+		<div class="contentinner">
+			<div class="place">
+        		<div class="title">杩涗欢鏂板>浜ゅ弶妫�獙</div>
+      		</div>
+	      <div class="tabplace">
+           <ul class="com-tab" >
+            <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/changewh.page?customerId=$!customerId&productId=$!productId">寤鸿</a></li>
+            <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/findJbzk.page?customerId=$!customerId&productId=$!productId">鍩烘湰鐘跺喌</a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/findJyzt.page?customerId=$!customerId&productId=$!productId">缁忚惀鐘舵�</a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/findSczt.page?customerId=$!customerId&productId=$!productId">鐢熷瓨鐘舵�</a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/findDdpz.page?customerId=$!customerId&productId=$!productId">閬撳痉鍝佽川</a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_zcfz.page?customerId=$!customerId&productId=$!productId">璧勪骇璐熷�</a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_lrjb.page?customerId=$!customerId&productId=$!productId">鍒╂鼎绠�〃</a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_bzlr.page?customerId=$!customerId&productId=$!productId">鏍囧噯鍒╂鼎琛�/a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_xjl.page?customerId=$!customerId&productId=$!productId">鐜伴噾娴侀噺</a></li>
+			<li class="tab activeTab"><a href="${contextPath}/intopieces/addIntopieces/create_jcjy.page?customerId=$!customerId&productId=$!productId">浜ゅ弶妫�獙</a></li>
+			<li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_dhd.page?customerId=$!customerId&productId=$!productId">鐐硅揣鍗�/a></li>
+			<li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_gdzc.page?customerId=$!customerId&productId=$!productId">鍥哄畾璧勪骇娓呭崟</a></li>
+			<li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_yfys.page?customerId=$!customerId&productId=$!productId">搴斾粯棰勬敹</a></li>
+			<li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_ysyf.page?customerId=$!customerId&productId=$!productId">搴旀敹棰勪粯</a></li>
+			<li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_lsfx.page?customerId=$!customerId&productId=$!productId">娴佹按鍒嗘瀽</a></li>
+         </ul>
+         </div>
+			
+			<div class="tabplace"></div>
+			<form id="id_module_form" action="${modulePath}/update.json">
+				 <input type="hidden" id="customerId" name="customerId" value="$!customerId">
+    			 <input type="hidden" id="productId" name="productId" value="$!productId">
+				<div  id="formsId">
+				 <div class="form-bd" style="min-width:1000px;">
+				 <!-- 浜ゅ弶妫�獙  -->
+				 
+					<div class="form-block clearfix" loan_type="1">
+					<span></span><h2>浜ゅ弶妫�獙</h2>
+						<div>
+							<div class="form-l"><span name="NAMES">閿�敭棰濅氦鍙夋楠�/span>锛�/div>
+							<div class="form-r">
+								<textarea class="w700" name="CONTENTS_TEXT_NUMBERS" maxlength="120"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="form-block clearfix" loan_type="2">
+						<div>
+							<div class="form-l"><span name="NAMES">姣涘埄娑�鎴愭湰浜ゅ弶妫�獙</span>锛�/div>
+							<div class="form-r">
+								<textarea class="w700" name="CONTENTS_TEXT_NUMBERS" maxlength="120"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="form-block clearfix" loan_type="3">
+						<div>
+							<div class="form-l"><span name="NAMES">姣涘埄娑�鎴愭湰浜ゅ弶妫�獙</span>锛�/div>
+							<div class="form-r">
+								<textarea class="w700" name="CONTENTS_TEXT_NUMBERS" maxlength="120"></textarea>
+							</div>
+						</div>
+					</div>
+					<!-- 浜ゅ弶妫�獙 End -->
+					
+					<!-- 鏉冪泭浜ゅ弶妫�獙 Start -->
+					<span></span><h2>鏉冪泭浜ゅ弶妫�獙</h2>
+					<div class="form-block clearfix">
+						<div class="form-bd-l" loan_type="4">
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">鍒濇湡鏉冪泭鍚堣</span>锛�/div>
+								<div class="form-r">
+									<a href="#" class="btn" onclick="deleteRowItem($(this).parent().parent().parent())"><img src="${contextPath}/images/del.png" /></a> 
+									<a href="#" class="btn" onclick="addRowItem($(this).parent().parent().parent())"><img src="${contextPath}/images/add.png" /></a> 
+									<input  class="rinpstybc w100" name="CONTENTS_TEXT_NUMBERS" type="text" class="w100" readonly="readonly"/> 鍏�
+								</div>
+							</div>
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">寮�簵鏃剁殑娴佸姩璧勯噾</span>锛�/div>
+								<div class="form-r">
+									<input class="w100" name="CONTENTS_TEXT_NUMBERS" type="text" onblur="collectItem($(this).parent().parent().parent())"/> 鍏�
+								</div>
+							</div>
+						</div>
+						<div class="form-bd-r" loan_type="5">
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">鍒嗘瀽鏈熼棿鏀跺叆鍚堣</span>锛�/div>
+								<div class="form-r">
+									<a href="#" class="btn" onclick="deleteRowItem($(this).parent().parent().parent())"><img src="${contextPath}/images/del.png" /></a> 
+									<a href="#" class="btn" onclick="addRowItem($(this).parent().parent().parent())"><img src="${contextPath}/images/add.png" /></a> 
+									<input class="w100" name="CONTENTS_TEXT_NUMBERS" type="text" readonly="readonly"/> 鍏�
+								</div>
+							</div>
+
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">2012骞�0-12鏈堢殑鏀跺叆</span>锛�/div>
+								<div class="form-r">
+									<input class="w100" name="CONTENTS_TEXT_NUMBERS" type="text" onblur="collectItem($(this).parent().parent().parent())"/> 鍏�
+								</div>
+							</div>
+
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">2013骞寸殑缁忚惀鏀跺叆</span>锛�/div>
+								<div class="form-r">
+									<input class="w100" name="CONTENTS_TEXT_NUMBERS" type="text" onblur="collectItem($(this).parent().parent().parent())"/> 鍏�
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-block clearfix">
+						<div class="form-bd-l" loan_type="6">
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">澶ч」鏀嚭鍚堣</span>锛�/div>
+								<div class="form-r">
+									<a href="#" class="btn" onclick="deleteRowItem($(this).parent().parent().parent())"><img src="${contextPath}/images/del.png" /></a> 
+									<a href="#" class="btn" onclick="addRowItem($(this).parent().parent().parent())"><img src="${contextPath}/images/add.png" /></a> 
+									<input name="CONTENTS_TEXT_NUMBERS" type="text" class="w100" readonly="readonly"/> 鍏�
+								</div>
+							</div>
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">涔颁簡涓�彴TCL鐢佃</span>锛�/div>
+								<div class="form-r">
+									<input name="CONTENTS_TEXT_NUMBERS" type="text" class="w100" onblur="collectItem($(this).parent().parent().parent())"/> 鍏�
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-block clearfix">
+						<div class="form-bd-l" loan_type="7">
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">鍏朵粬鏀跺叆</span>锛�/div>
+								<div class="form-r">
+									<input name="CONTENTS_TEXT_NUMBERS" type="text" class="w100" onblur="calculate()"/> 鍏�
+								</div>
+							</div>
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">鎶樻棫(璧勪骇璐熷�琛ㄥ唴鎶樻棫)</span>锛�/div>
+								<div class="form-r">
+									<input name="CONTENTS_TEXT_NUMBERS" type="text" class="w100" onblur="calculate()"/> 鍏�
+								</div>
+							</div>
+						</div>
+						<div class="form-bd-r" loan_type="8">
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">鍗囧�</span>锛�/div>
+								<div class="form-r">
+									<input name="CONTENTS_TEXT_NUMBERS" type="text" class="w100" onblur="calculate()"/> 鍏�
+								</div>
+							</div>
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">琛ㄥ璧勪骇</span>锛�/div>
+								<div class="form-r">
+									<input name="CONTENTS_TEXT_NUMBERS" type="text" class="w100" onblur="calculate()"/> 鍏�
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="form-block clearfix">
+						<div class="form-bd-l" loan_type="9">
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">搴旀湁鏉冪泭</span>锛�/div>
+								<div class="form-r">
+									<input name="CONTENTS_TEXT_NUMBERS" type="text" class="w100" /> 鍏�
+								</div>
+							</div>
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">鏉冪泭宸(搴旀湁鏉冪泭-瀹為檯鏉冪泭)</span>锛�/div>
+								<div class="form-r">
+									<input name="CONTENTS_TEXT_NUMBERS" type="text" class="w100" /> 鍏�
+								</div>
+							</div>
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">鏉冪泭浜ゅ弶妫�獙姣旂巼</span>锛�/div>
+								<div class="form-r">
+									<input name="CONTENTS_TEXT_NUMBERS" type="text" class="w100" /> %
+								</div>
+							</div>
+						</div>
+						<div class="form-bd-r" loan_type="10">
+
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">瀹為檯鏉冪泭</span>锛�/div>
+								<div class="form-r">
+									<input class="rinpstybc w100" type="text" class="w100" name="CONTENTS_TEXT_NUMBERS" value="$!sjsy" readonly="readonly"/> 鍏�
+								</div>
+							</div>
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">鍒嗘瀽鏈熼棿绱鏀跺叆</span>锛�/div>
+								<div class="form-r">
+									<input name="CONTENTS_TEXT_NUMBERS" type="text" class="w100" readonly="readonly"/> 鍏�
+								</div>
+							</div>
+						</div>
+
+					</div>
+                 </div>
+				</div>
+			</form>
+
+			<div class="submit">
+				<input id="id_save_button" type="button" value='#i18n("button.save")' class="current" /> 
+				<input type="button" onclick="returnClick();" value='#i18n("button.cancel")' />
+			</div>
+		</div>
+	</div>
+
+	<script src='${contextPath}/js/customerInforUpdate/customerinfoupdate_jcjy.js'></script>
+	<script type="text/javascript">
+		var layout = new FormsLayout("formsId");
+		window.top.currentWindow.setLayout(layout);
+
+		var msg = '#i18n("validator.required")';
+		$(document).ready(function() {
+			
+			$("input:enabled[name]").each(function (index, domEle) { 
+				  // domEle == this 
+				  $(domEle).moneyFormat();
+			});
+			
+			$("#id_save_button").click(function() {
+				if(!validate())return;
+				// 鑾峰彇椤甸潰鏁版嵁
+				var jsonArrObj = getData();
+				var customerId = $("#customerId").val();
+				var productId =  $("#productId").val();
+				window.location.href = "${contextPath}/intopieces/addIntopieces//saveCrossExamination.page?crossExaminationInfo=" + JSONstringify1(jsonArrObj) + "&customerId="+customerId+"&productId="+productId;
+			});
+		});
+		function returnClick(){
+			
+			 window.location.href= contextPath + "/customer/basiccustomerinforUpdate/browse.page" ;
+		}
+	</script>
+</body>
+#parse ("common/iframe_page_footer.htm")

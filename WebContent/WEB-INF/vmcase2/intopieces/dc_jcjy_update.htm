@@ -1,0 +1,238 @@
+#parse ("common/iframe_page_header.htm")
+<link rel="stylesheet" type="text/css"
+	href="${contextPath}/css/style.css" />
+<link rel="stylesheet" type="text/css" href="${uicasePath}/css/tab.css" />
+<style>
+.form-l .form-r{height:32px;}
+</style>
+<body class="whitebg">
+	<div class="content_main">
+		<div class="contentinner">
+			<div class="place">
+			   <div class="title">杩涗欢鏂板>浜ゅ弶妫�獙</div>
+			</div>
+		   <div class="tabplace">
+           <ul class="com-tab" >
+            <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/changewh.page?customerId=$!customerId&productId=$!productId">寤鸿</a></li>
+            <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/findJbzk.page?customerId=$!customerId&productId=$!productId">鍩烘湰鐘跺喌</a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/findJyzt.page?customerId=$!customerId&productId=$!productId">缁忚惀鐘舵�</a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/findSczt.page?customerId=$!customerId&productId=$!productId">鐢熷瓨鐘舵�</a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/findDdpz.page?customerId=$!customerId&productId=$!productId">閬撳痉鍝佽川</a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_zcfz.page?customerId=$!customerId&productId=$!productId">璧勪骇璐熷�</a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_lrjb.page?customerId=$!customerId&productId=$!productId">鍒╂鼎绠�〃</a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_bzlr.page?customerId=$!customerId&productId=$!productId">鏍囧噯鍒╂鼎琛�/a></li>
+	        <li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_xjl.page?customerId=$!customerId&productId=$!productId">鐜伴噾娴侀噺</a></li>
+			<li class="tab activeTab"><a href="${contextPath}/intopieces/addIntopieces/create_jcjy.page?customerId=$!customerId&productId=$!productId">浜ゅ弶妫�獙</a></li>
+			<li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_dhd.page?customerId=$!customerId&productId=$!productId">鐐硅揣鍗�/a></li>
+			<li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_gdzc.page?customerId=$!customerId&productId=$!productId">鍥哄畾璧勪骇娓呭崟</a></li>
+			<li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_yfys.page?customerId=$!customerId&productId=$!productId">搴斾粯棰勬敹</a></li>
+			<li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_ysyf.page?customerId=$!customerId&productId=$!productId">搴旀敹棰勪粯</a></li>
+			<li class="tab"><a href="${contextPath}/intopieces/addIntopieces/create_lsfx.page?customerId=$!customerId&productId=$!productId">娴佹按鍒嗘瀽</a></li>
+         </ul>
+         </div>
+			
+			<div class="tabplace"></div>
+			<form id="id_module_form" action="${modulePath}/saveCrossExamination.page" method="post">
+				 <input type="hidden" id="customerId" name="customerId" value="$!customerId">
+    			 <input type="hidden" id="productId" name="productId" value="$!productId">
+				<input type="hidden" id="crossExaminationInfo" name="crossExaminationInfo" value=""/>
+				<div class="form-bd" id="formsId"  style="min-width:1000px;">
+					<div class="form-block clearfix" loan_type="1">
+						<div>
+							#foreach($crossExamination in $!crossExaminationList)
+								#if($crossExamination.loanType==1)
+								<div class="form-l"><span name="NAMES">閿�敭棰濅氦鍙夋楠�/span>锛�/div>
+								<div class="form-r">
+									<textarea style="width: 795px;" name="CONTENTS_TEXT_NUMBERS" maxlength="120">$!crossExamination.contentsTextNumbers</textarea>
+								</div>
+								#end
+							#end
+						</div>
+					</div>
+					<div class="form-block clearfix" loan_type="2">
+						<div>
+							#foreach($crossExamination in $!crossExaminationList)
+								#if($crossExamination.loanType==2)
+									<div class="form-l"><span name="NAMES">姣涘埄娑�鎴愭湰浜ゅ弶妫�獙</span>锛�/div>
+									<div class="form-r">
+										<textarea style="width: 795px;" name="CONTENTS_TEXT_NUMBERS" maxlength="120">$!crossExamination.contentsTextNumbers</textarea>
+									</div>
+								#end
+							#end
+						</div>
+					</div>
+					<div class="form-block clearfix" loan_type="3">
+						<div>
+							#foreach($crossExamination in $!crossExaminationList)
+								#if($crossExamination.loanType==3)
+									<div class="form-l"><span name="NAMES">姣涘埄娑�鎴愭湰浜ゅ弶妫�獙</span>锛�/div>
+									<div class="form-r">
+										<textarea style="width: 795px;" name="CONTENTS_TEXT_NUMBERS" maxlength="120">$!crossExamination.contentsTextNumbers</textarea>
+									</div>
+								#end
+							#end
+						</div>
+					</div>
+
+					<div class="form-block clearfix">
+						<div class="form-bd-l" loan_type="4">
+							#foreach($crossExamination in $!crossExaminationList)
+								#if($crossExamination.loanType==4)
+									<div class="form-block clearfix">
+										<div class="form-l"><span name="NAMES">$!crossExamination.names</span>锛�/div>
+										<div class="form-r">
+											#if($crossExamination.no==1)
+											<a href="#" class="btn" onclick="deleteRowItem($(this).parent().parent().parent())"><img src="${contextPath}/images/del.png" /></a> 
+											<a href="#" class="btn" onclick="addRowItem($(this).parent().parent().parent())"><img src="${contextPath}/images/add.png" /></a> 
+											#end
+											<input name="CONTENTS_TEXT_NUMBERS" type="text" maxlength="15" style="width: 125px;" value="$!crossExamination.contentsTextNumbers" 
+											#if($crossExamination.no==1) disabled="disabled" #else onblur="collectItem($(this).parent().parent().parent())" #end/> 鍏�
+										</div>
+									</div>
+								#end
+							#end
+						</div>
+						<div class="form-bd-r" loan_type="5">
+							#foreach($crossExamination in $!crossExaminationList)
+								#if($crossExamination.loanType==5)
+									<div class="form-block clearfix">
+										<div class="form-l"><span name="NAMES">$!crossExamination.names</span>锛�/div>
+										<div class="form-r">
+											#if($crossExamination.no==1)
+											<a href="#" class="btn" onclick="deleteRowItem($(this).parent().parent().parent())"><img src="${contextPath}/images/del.png" /></a> 
+											<a href="#" class="btn" onclick="addRowItem($(this).parent().parent().parent())"><img src="${contextPath}/images/add.png" /></a> 
+											#end
+											<input df="df" name="CONTENTS_TEXT_NUMBERS" type="text" maxlength="15" style="width: 125px;" value="$!crossExamination.contentsTextNumbers" 
+											#if($crossExamination.no==1) disabled="disabled" #else onblur="collectItem($(this).parent().parent().parent())" #end/> 鍏�
+										</div>
+									</div>
+								#end
+							#end
+						</div>
+					</div>
+
+					<div class="form-block clearfix">
+						<div class="form-bd-l" loan_type="6">
+							#foreach($crossExamination in $!crossExaminationList)
+								#if($crossExamination.loanType==6)
+									<div class="form-block clearfix">
+										<div class="form-l"><span name="NAMES">$!crossExamination.names</span>锛�/div>
+										<div class="form-r">
+											#if($crossExamination.no==1)
+											<a href="#" class="btn" onclick="deleteRowItem($(this).parent().parent().parent())"><img src="${contextPath}/images/del.png" /></a> 
+											<a href="#" class="btn" onclick="addRowItem($(this).parent().parent().parent())"><img src="${contextPath}/images/add.png" /></a> 
+											#end
+											<input name="CONTENTS_TEXT_NUMBERS" type="text" maxlength="15" style="width: 125px;" value="$!crossExamination.contentsTextNumbers" 
+											#if($crossExamination.no==1) disabled="disabled" #else onblur="collectItem($(this).parent().parent().parent())" #end/> 鍏�
+										</div>
+									</div>
+								#end
+							#end
+						</div>
+					</div>
+
+					<div class="form-block clearfix">
+						<div class="form-bd-l" loan_type="7">
+							#foreach($crossExamination in $!crossExaminationList)
+								#if($crossExamination.loanType==7)
+									<div class="form-block clearfix">
+										<div class="form-l"><span name="NAMES">$!crossExamination.names</span>锛�/div>
+										<div class="form-r">
+											<input name="CONTENTS_TEXT_NUMBERS" type="text" maxlength="15" style="width: 125px;" value="$!crossExamination.contentsTextNumbers" onblur="calculate()"/> 鍏�
+										</div>
+									</div>
+								#end
+							#end
+						</div>
+						<div class="form-bd-r" loan_type="8">
+							#foreach($crossExamination in $!crossExaminationList)
+								#if($crossExamination.loanType==8)
+									<div class="form-block clearfix">
+										<div class="form-l"><span name="NAMES">$!crossExamination.names</span>锛�/div>
+										<div class="form-r">
+											<input name="CONTENTS_TEXT_NUMBERS" type="text" maxlength="15" style="width: 125px;" value="$!crossExamination.contentsTextNumbers" onblur="calculate()"/> 鍏�
+										</div>
+									</div>
+								#end
+							#end
+						</div>
+
+					</div>
+
+					<div class="form-block clearfix">
+						<div class="form-bd-l" loan_type="9">
+							#foreach($crossExamination in $!crossExaminationList)
+								#if($crossExamination.loanType==9)
+									<div class="form-block clearfix">
+										<div class="form-l"><span name="NAMES">$!crossExamination.names</span>锛�/div>
+										<div class="form-r">
+											<input name="CONTENTS_TEXT_NUMBERS" type="text" maxlength="15" style="width: 125px;" value="$!crossExamination.contentsTextNumbers" disabled="disabled"/> 
+											#if($crossExamination.no==3)
+											 %
+											#else
+											 鍏�
+											#end
+										</div>
+									</div>
+								#end
+							#end
+						</div>
+						<div class="form-bd-r" loan_type="10">
+							<div class="form-block clearfix">
+								<div class="form-l"><span name="NAMES">瀹為檯鏉冪泭</span>锛�/div>
+								<div class="form-r">
+									<input type="text" name="CONTENTS_TEXT_NUMBERS" style="width: 125px;" value="$!sjsy" disabled="disabled"/> 鍏�
+								</div>
+							</div>
+							#foreach($crossExamination in $!crossExaminationList)
+								#if($crossExamination.loanType==10 and $crossExamination.no!=1)
+									<div class="form-block clearfix">
+										<div class="form-l"><span name="NAMES">$!crossExamination.names</span>锛�/div>
+										<div class="form-r">
+											<input name="CONTENTS_TEXT_NUMBERS" type="text" maxlength="15" style="width: 125px;" value="$!crossExamination.contentsTextNumbers" disabled="disabled"/> 鍏�
+										</div>
+									</div>
+								#end
+							#end
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<div class="submit">
+				<input id="id_save_button" type="button" value='#i18n("button.save")' class="current" /> 
+				<input type="button" onclick="returnClick();" value='#i18n("button.cancel")' />
+			</div>
+		</div>
+	</div>
+	 <script src='${contextPath}/js/customerInforUpdate/customerinfoupdate_jcjy.js'></script>
+	<script type="text/javascript">
+		var layout = new FormsLayout("formsId");
+		window.top.currentWindow.setLayout(layout);
+		
+		var msg = '#i18n("validator.required")';
+		$(document).ready(function() {
+			$("input:enabled[name]").each(function (index, domEle) { 
+				  // domEle == this 
+				  $(domEle).moneyFormat();
+			});
+			
+			$("#id_save_button").click(function() {
+				if(!validate())return;
+				// 鑾峰彇椤甸潰鏁版嵁
+				var jsonArrObj = getData();
+				var customerId = $("#customerId").val();
+				$("#crossExaminationInfo").val(JSONstringify1(jsonArrObj));
+				$("#id_module_form").submit();
+			});
+			
+			// 璁＄畻骞惰缃笟鍔℃暟鎹�
+			calculate();
+		});
+		function returnClick(){
+			
+			 window.location.href= contextPath + "/customer/basiccustomerinforUpdate/browse.page" ;
+		}
+	</script>
+</body>
+#parse ("common/iframe_page_footer.htm")

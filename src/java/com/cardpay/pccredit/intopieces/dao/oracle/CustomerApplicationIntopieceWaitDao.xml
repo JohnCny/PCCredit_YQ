@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.cardpay.pccredit.intopieces.dao.CustomerApplicationIntopieceWaitDao">
+	<resultMap id="BaseResultMap"
+		type="com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="CUSTOMER_ID" property="customerId" jdbcType="VARCHAR" />
+		<result column="CHINESE_NAME" property="chineseName" jdbcType="VARCHAR" />
+		<result column="RESIDENTIAL_ADDRESS" property="residentialAddress" jdbcType="VARCHAR" />
+		<result column="EXAMINE_AMOUNT" property="examineAmount" jdbcType="VARCHAR" />
+		<result column="CARD_TYPE" property="cardType" jdbcType="VARCHAR" />
+		<result column="CARD_ID" property="cardId" jdbcType="VARCHAR" />
+		<result column="APPLY_CREDIT" property="applyCredit" jdbcType="VARCHAR" />
+		<result column="PRODUCT_ID" property="productId" jdbcType="VARCHAR" />
+		<result column="APPLY_QUOTA" property="applyQuota" jdbcType="VARCHAR" />
+		<result column="FINAL_APPROVAL" property="finalApproval" jdbcType="VARCHAR" />
+		<result column="ACTUAL_QUOTE" property="actualQuote" jdbcType="VARCHAR" />
+		<result column="TEMPORARY_QUOTA" property="temporaryQuota" jdbcType="VARCHAR" />
+		<result column="CASH_ADVANCE_PROPORTION" property="cashAdvanceProportion" jdbcType="VARCHAR" />
+		<result column="CARD_STATUS" property="cardStatus" jdbcType="VARCHAR" />
+		<result column="ACCOUNT_STATUS" property="accountStatus" jdbcType="VARCHAR" />
+		<result column="BILLING_DATE" property="billingDate" jdbcType="VARCHAR" />
+		<result column="REPAYMENT_AGREEMENT" property="repaymentAgreement" jdbcType="VARCHAR" />
+		<result column="AUTOMATIC_REPAYMENT_AGREEMENT" property="automaticRepaymentAgreement" jdbcType="VARCHAR" />
+		<result column="CUSTOMER_RISK_RATING" property="customerRiskRating" jdbcType="VARCHAR" />
+		<result column="AGING" property="aging" jdbcType="VARCHAR" />
+		<result column="DEBIT_WAY" property="debitWay" jdbcType="VARCHAR" />
+		<result column="REPAYMENT_CARD_NUMBER" property="repaymentCardNumber" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="BEFORE_STATUS" property="beforeStatus" />
+		<result column="CURRENT_PROCESS" property="currentProcess" />
+		<result column="CURRENT_STATUS" property="currentStatus" />
+		<result column="EXAMINE_RESULT" property="examineResult" />
+		<result column="EXAMINE_USER" property="examineUser" />
+		<result column="EXAMINE_Amount" property="examineUser" />
+		<result column="START_EXAMINE_TIME" property="startExamineTime" />
+		<result column="SUBPROCESS_IS_CLOSED" property="subprocessIsClosed" />
+
+		<result column="APPLICATION_ID" property="applicationId" />
+		<result column="AUDIT_USER" property="auditUser" />
+		<result column="SERIAL_NUMBER" property="serialNumber" />
+		<result column="AUDIT_OPINION" property="auditOpinion" />
+		<result column="REFUSAL_REASON" property="refusalReason" />
+		<result column="FALLBACK_REASON" property="fallbackReason" />
+		<result column="NEXT_NODE_ID" property="nextNodeId" />
+		<result column="DELAY_AUDIT_USER" property="delayAuditUser" />
+		<result column="AUDIT_TIME" property="auditTime" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="NODE_NAME" property="nodeName" />
+
+		<result column="USER_ID" property="userId"/>
+		<result column="PRODUCT_NAME" property="productName"/>
+		<result column="DISPLAY_NAME" property="displayName" />
+	</resultMap>
+	
+	<resultMap id="IntoPiecesFilters" type="com.cardpay.pccredit.intopieces.model.IntoPiecesFilters">
+		<result property="id" column="id" />
+		<result property="customerId" column="customer_id" />
+		<result property="chineseName" column="chinese_name" />
+		<result property="productId" column="product_id" />
+		<result property="productName" column="product_name" />
+		<result property="displayName" column="display_name" />
+		<result property="cardId" column="card_id" />
+		<result property="applyQuota" column="apply_quota" />
+		<result property="creatime" column="CREATED_TIME" />
+			<result property="creatime1" column="time" />
+		<result property="PRODCREDITRANGE" column="PRODCREDITRANGE" />
+		<result property="status" column="status" />
+			<result property="refusqlReason" column="REFUSAL_REASON" />
+		<result property="fallBackReason" column="FALLBACK_REASON" />
+		<result property="zsw" column="zsw" />
+		<result property="userId" column="userId" />
+	</resultMap>
+	<select id="findStatus" resultMap="IntoPiecesFilters">
+		  select status as status from CUSTOMER_SP where CAPID =#{id}
+	</select>
+	<select id="findzsw" resultType="int">
+		  select count(*) from CUSTOMER_APPLICATION_SDH where CAPID =#{id} and zsw=1 and sdtime is not null
+	</select>
+	<select id="findfsw" resultMap="IntoPiecesFilters">
+		  select sdtime  as creatime from CUSTOMER_APPLICATION_SDH where CAPID =#{id} and zsw=0 and  sdwuser1!=#{userId} 
+	</select>
+	<select id="findfsw2" resultMap="IntoPiecesFilters">
+		  select sdtime  as creatime from CUSTOMER_APPLICATION_SDH where CAPID =#{id} and zsw=0 and  sdwuser1!=#{userId} and sdje is null and sdtime is not null
+	</select>
+		<select id="findzsw1" resultMap="IntoPiecesFilters">
+		  select SDWUSER1YJ as cardId,sdtime as creatime, sdje as applyQuota,SDQX  as customerId,LV  as chineseName,DBFS  as displayName from CUSTOMER_APPLICATION_SDH where CAPID =#{id} and zsw=1 
+	</select>
+	<!-- 查询最终审贷 -->
+	<select id="findCustomerApplicationIntopieceDecisionFormes" resultMap="IntoPiecesFilters">
+	    SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+				FROM (
+		<!--   select 
+          c.ID as id,c.CUSTOMER_ID as customerId,c.PRODUCT_ID as productId,
+          s.display_name as displayName,p.product_name as productName,b.card_id as cardId,
+          c.APPLY_QUOTA as applyQuota,c.CREATED_TIME as creatime,b.chinese_name as chineseName,
+          PROD_CREDIT_RANGE as PRODCREDITRANGE
+          from 
+          CUSTOMER_APPLICATION_INFO c,CUSTOMER_SP t,sys_user s,
+          product_attribute p,BASIC_CUSTOMER_INFORMATION b
+          where c.id=t.capid
+           and c.id not in (select capid from CUSTOMER_APPLICATION_SDH)
+          and s.id=b.user_id and b.id=c.customer_id and c.product_id=p.id 
+          and c.id in (select b.capid from (select sp.capid ,count(sp.capid) as nums from CUSTOMER_SP sp where sp.status not in '0' group by  sp.capid) b where b.nums=3) 
+          group by c.id,c.CUSTOMER_ID,c.PRODUCT_ID,s.display_name,p.product_name,b.card_id ,c.APPLY_QUOTA ，c.CREATED_TIME，b.chinese_name，PROD_CREDIT_RANGE
+          -->
+         select tt.capid as id ,b.id as customerId,c.product_id as productId,s.display_name as displayName,p.product_name as productName,b.card_id as cardId,
+          c.APPLY_QUOTA as applyQuota,c.CREATED_TIME as creatime,b.chinese_name as chineseName,tt.time as creatime1,tt.zsw as zsw,
+          p.PROD_CREDIT_RANGE as PRODCREDITRANGE
+from CUSTOMER_APPLICATION_INFO c,product_attribute p,BASIC_CUSTOMER_INFORMATION b,sys_user s,
+CUSTOMER_APPLICATION_SDH tt
+where tt.capid=c.id
+and c.product_id=p.id
+and c.customer_id=b.id
+and s.id=b.user_id
+and tt.sdtime is null
+and sdwuser1=#{userId}
+		 <if test="cardId!=null and cardId!=''">
+			and b.card_id=#{cardId}
+		</if>
+		<if test="chineseName!=null and chineseName!=''">
+			<![CDATA[ and b.chinese_name like '%'||#{chineseName}||'%' ]]>
+		</if>
+		<![CDATA[		
+							) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+	</select>
+	<select id="findCustomerApplicationIntopieceDecisionCountFormes"
+		resultType="int">
+		SELECT
+		COUNT (*)
+		FROM
+		(
+		select tt.capid as id ,b.id as customerId,c.product_id as productId,s.display_name as displayName,p.product_name as productName,b.card_id as cardId,
+          c.APPLY_QUOTA as applyQuota,c.CREATED_TIME as creatime,b.chinese_name as chineseName,tt.time as creatime1,tt.zsw as zsw,
+          p.PROD_CREDIT_RANGE as PRODCREDITRANGE
+from CUSTOMER_APPLICATION_INFO c,product_attribute p,BASIC_CUSTOMER_INFORMATION b,sys_user s,
+CUSTOMER_APPLICATION_SDH tt
+where tt.capid=c.id
+and c.product_id=p.id
+and c.customer_id=b.id
+and s.id=b.user_id
+and tt.sdtime is null
+and sdwuser1=#{userId}
+			 <if test="cardId!=null and cardId!=''">
+			and b.card_id=#{cardId}
+		</if>
+		<if test="chineseName!=null ">
+			<![CDATA[ and b.chinese_name like '%'||#{chineseName}||'%' ]]>
+		</if>
+		
+		)
+	</select>
+	
+
+<select id="findCustomerApplicationIntopieceDecisionForms" resultMap="IntoPiecesFilters">
+	    SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+				FROM (
+		<!--  select 
+		          c.ID as id,c.CUSTOMER_ID as customerId,c.PRODUCT_ID as productId,
+		          s.display_name as displayName,p.product_name as productName,b.card_id as cardId,
+		          c.APPLY_QUOTA as applyQuota,c.CREATED_TIME as creatime,b.chinese_name as chineseName,
+				  PROD_CREDIT_RANGE as PRODCREDITRANGE
+				  from 
+				  CUSTOMER_APPLICATION_INFO c,CUSTOMER_APPLICATION_SDH t,sys_user s,
+				  product_attribute p,BASIC_CUSTOMER_INFORMATION b
+				  where c.id=t.capid
+				  and s.id=b.user_id and b.id=c.customer_id and c.product_id=p.id 
+				  and (t.sdwuser1=#{userId} or t.sdwuser2=#{userId} or t.sdwuser3=#{userId})  -->
+				  select 
+              c.ID as id,c.CUSTOMER_ID as customerId,c.PRODUCT_ID as productId,
+              s.display_name as displayName,p.product_name as productName,b.card_id as cardId,
+              c.APPLY_QUOTA as applyQuota,c.CREATED_TIME as creatime,b.chinese_name as chineseName,
+        t.zsw as zsw,s.id as userId
+          from 
+          CUSTOMER_APPLICATION_INFO c,CUSTOMER_SP t,sys_user s,
+          product_attribute p,BASIC_CUSTOMER_INFORMATION b
+          where c.id=t.capid
+          and s.id=b.user_id and b.id=c.customer_id and c.product_id=p.id 
+          and t.status='0'
+          and (t.SPUSERID=#{userId}) 
+		 <if test="cardId!=null and cardId!=''">
+			and b.card_id=#{cardId}
+		</if>
+		<if test="chineseName!=null ">
+			<![CDATA[ and b.chinese_name like '%'||#{chineseName}||'%' ]]>
+		</if>
+		<![CDATA[		
+							) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+	</select>
+	<select id="findCustomerApplicationIntopieceDecisionCountForms"
+		resultType="int">
+		SELECT
+		COUNT (*)
+		FROM
+		(
+		<!--  select 
+		          c.ID as id,c.CUSTOMER_ID as customerId,c.PRODUCT_ID as productId,
+		          s.display_name as displayName,p.product_name as productName,b.card_id as cardId,
+		          c.APPLY_QUOTA as applyQuota,c.CREATED_TIME as creatime,b.chinese_name as chineseName,
+				  PROD_CREDIT_RANGE as PRODCREDITRANGE
+				  from 
+				  CUSTOMER_APPLICATION_INFO c,CUSTOMER_APPLICATION_SDH t,sys_user s,
+				  product_attribute p,BASIC_CUSTOMER_INFORMATION b
+				  where c.id=t.capid
+				  and s.id=b.user_id and b.id=c.customer_id and c.product_id=p.id and t.SDTIME is  null
+				  and (t.sdwuser1=#{userId} or t.sdwuser2=#{userId} or t.sdwuser3=#{userId})  -->
+				   select 
+              c.ID as id,c.CUSTOMER_ID as customerId,c.PRODUCT_ID as productId,
+              s.display_name as displayName,p.product_name as productName,b.card_id as cardId,
+              c.APPLY_QUOTA as applyQuota,c.CREATED_TIME as creatime,b.chinese_name as chineseName,
+          PROD_CREDIT_RANGE as PRODCREDITRANGE
+          from 
+          CUSTOMER_APPLICATION_INFO c,CUSTOMER_SP t,sys_user s,
+          product_attribute p,BASIC_CUSTOMER_INFORMATION b
+          where c.id=t.capid
+          and s.id=b.user_id and b.id=c.customer_id and c.product_id=p.id 
+           and t.status='0'
+          and (t.SPUSERID=#{userId}) 
+		 <if test="cardId!=null and cardId!=''">
+			and b.card_id=#{cardId}
+		</if>
+		<if test="chineseName!=null ">
+			<![CDATA[ and b.chinese_name like '%'||#{chineseName}||'%' ]]>
+		</if>
+		
+		)
+	</select>
+	<select id="findCustomerApplicationIntopieceWaitForm" resultMap="BaseResultMap">
+		SELECT
+		b.*, U.CHINESE_NAME as chineseName,
+		U.RESIDENTIAL_ADDRESS AS residentialAddress,
+		U.CARD_TYPE AS cardType,
+		U.CARD_ID AS cardId,
+		b.APPLY_QUOTA AS applyQuota,
+		A.SERIAL_NUMBER as SERIALNUMBER,
+   		N.NODE_NAME as nodeName,
+		A.AUDIT_TIME as auditTime
+		FROM
+		CUSTOMER_APPLICATION_INFO b,
+		BASIC_CUSTOMER_INFORMATION U,
+		CUSTOMER_APPLICATION_PROCESS A,
+   		NODE_AUDIT N
+		WHERE
+		1=1
+		and U.ID = b.CUSTOMER_ID
+		and a.APPLICATION_ID=b.ID
+		AND N.ID=A.NEXT_NODE_ID
+		AND A.DELAY_AUDIT_USER = #{loginId}
+		and b.status='audit'
+	</select>
+	<select id="findCustomerApplicationIntopieceWaitCountForm"
+		resultType="int">
+		SELECT
+		COUNT (*)
+		FROM
+		(
+		SELECT
+		b.*, U.CHINESE_NAME as chineseName,
+		U.RESIDENTIAL_ADDRESS AS residentialAddress,
+		U.CARD_TYPE AS cardType,
+		U.CARD_ID AS cardId,
+			b.APPLY_QUOTA AS applyQuota
+		FROM
+		CUSTOMER_APPLICATION_INFO b,
+		BASIC_CUSTOMER_INFORMATION U,
+		CUSTOMER_APPLICATION_PROCESS A
+		WHERE
+		1=1
+		and U.ID = b.CUSTOMER_ID
+		and a.APPLICATION_ID=b.ID
+		AND A.DELAY_AUDIT_USER = #{loginId}
+		and b.status='audit'
+		)
+	</select>
+	<update id="updateCustomerApplicationProcessBySerialNumber"
+		parameterType="com.cardpay.pccredit.intopieces.model.CustomerApplicationProcess">
+		UPDATE CUSTOMER_APPLICATION_PROCESS c 
+		<set>
+			<if test="auditUser!=null">
+				c.AUDIT_USER=#{auditUser},
+			</if>
+			<if test="examineAmount != null">
+				c.EXAMINE_AMOUNT=#{examineAmount},
+			</if>
+			<if test="fallbackReason !=null">
+				c.FALLBACK_REASON=#{fallbackReason},
+			</if>
+			<if test="nextNodeId !=null">
+				c.NEXT_NODE_ID=#{nextNodeId},
+			</if>
+			<if test="refusalReason!=null">
+				c.REFUSAL_REASON=#{refusalReason},
+			</if>
+			<if test="auditTime!=null">
+				c.AUDIT_TIME=#{auditTime},
+			</if>
+			<if test="processOpStatus!=null">
+				c.PROCESS_OP_STATUS=#{processOpStatus},
+			</if>
+			<if test="examineLv!=null">
+				c.EXAMINE_LV=#{examineLv},
+			</if>
+			c.Delay_Audit_User=''
+		</set>
+		WHERE c.SERIAL_NUMBER=#{serialNumber}
+	</update>
+
+	<select id="getCustomerApplicationInfoByUserId" resultType="int">
+		SELECT
+		count(1)
+		FROM
+		CUSTOMER_APPLICATION_INFO b,
+		BASIC_CUSTOMER_INFORMATION U,
+		customer_application_process A
+		WHERE 1 = 1
+		and U.ID = b.CUSTOMER_ID
+		and b.ID =A.APPLICATION_ID
+		AND A.DELAY_AUDIT_USER = #{userId}
+	</select>
+
+	<select id="findCustomerApplicationInfoAll"
+		resultType="com.cardpay.pccredit.intopieces.model.CustomerApplicationProcess">
+		select t.application_id as applicationId,t.next_node_id as nextNodeId,i.product_id as
+		productId,t.serial_Number as serialNumber from
+		customer_application_process t,customer_application_info i where
+		t.application_id=i.id 
+		and t.serial_Number = i.serial_Number
+		and (t.delay_audit_user is null or t.delay_audit_user='')
+		and i.status='audit'
+	</select>
+
+	<select id="findCustomerApplicationProcessBySerialNumber"
+		resultMap="BaseResultMap">
+		SELECT
+		c.*
+		FROM
+		CUSTOMER_APPLICATION_PROCESS c
+		WHERE
+		c.SERIAL_NUMBER = #{serialNumber}
+	</select>
+
+	<update id="updateCustomerApplicationProcess"
+		parameterType="com.cardpay.pccredit.intopieces.model.CustomerApplicationProcess">
+		update customer_application_process
+		<set>
+			audit_User='',
+			audit_Time=#{auditTime},
+			delay_audit_user=#{delayAuditUser}
+		</set>
+		where serial_number=#{serialNumber}
+	</update>
+	
+	<update id="autoAfterApplyTimeReleaseApply">
+		update customer_application_process t set t.delay_audit_user = ''
+		where t.application_id in(
+				select ad.id from customer_application_info ad 
+				where ad.status='audit'
+	        <![CDATA[ and ad.modified_time<sysdate - #{maxDay}]]>
+			)
+	</update>
+
+	<select id="findNotEqualsActualAndFinalAmount" resultMap="BaseResultMap">
+		SELECT  
+			c.CHINESE_NAME as chineseName,
+			c.CARD_TYPE AS cardType,
+			c.CARD_ID AS cardId,
+			app.FINAL_APPROVAL AS finalApproval,
+			app.ACTUAL_QUOTE AS actualQuote,
+			app.PRODUCT_ID as productId,
+			c.CHINESE_NAME as chineseName,
+			c.USER_ID as userId,
+			p.PRODUCT_NAME as productName
+		FROM  CUSTOMER_APPLICATION_INFO app 
+			left join BASIC_CUSTOMER_INFORMATION c 
+				on app.customer_id = c.id
+			left join PRODUCT_ATTRIBUTE p 
+				on app.product_id = p.id
+		WHERE
+			app.status='success'
+			and app.FINAL_APPROVAL is not null 
+			and app.ACTUAL_QUOTE is not null 
+			<![CDATA[ and app.ACTUAL_QUOTE <> FINAL_APPROVAL ]]>
+	</select>
+	
+	
+	
+	
+	<!-- <select id="findCustomerApplicationIntopieceDecisionForm" resultMap="BaseResultMap">
+	    SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+				FROM (
+	   select * from (
+			SELECT
+		b.*, U.CHINESE_NAME as chineseName,
+		U.RESIDENTIAL_ADDRESS AS residentialAddress,
+		U.CARD_TYPE AS cardType,
+		U.CARD_ID AS cardId,
+		b.APPLY_QUOTA AS applyQuota,
+		A.SERIAL_NUMBER as SERIALNUMBER,
+   		N.NODE_NAME as nodeName,
+		A.AUDIT_TIME as auditTime,
+		b.CREATED_TIME   as createdTime,
+		prod.PRODUCT_NAME as productName,
+		usr.display_name,
+		(select org.name
+                  from sys_organization org
+                 where id in
+                       (select t.org_id
+                          from sys_department t
+                         where t.id in (select tt.dept_id
+                                          from sys_dept_user tt
+                                         where tt.user_id = u.user_id))) as organcode
+		FROM
+		CUSTOMER_APPLICATION_INFO b,
+		BASIC_CUSTOMER_INFORMATION U,
+		CUSTOMER_APPLICATION_PROCESS A,
+   		NODE_AUDIT N,NODE_AUDIT_USER p,
+   		PRODUCT_ATTRIBUTE prod,sys_user usr
+		WHERE
+		1=1
+		and U.ID = b.CUSTOMER_ID
+		and a.APPLICATION_ID=b.ID
+		AND N.ID=A.NEXT_NODE_ID
+		and prod.id = b.PRODUCT_ID
+		and A.NEXT_NODE_ID=p.NODE_ID and p.USER_ID=#{userId}
+		and b.status='audit'
+		and usr.id = u.user_id ) where 1=1 
+		<if test="cardId!=null and cardId!=''">
+			and cardId=#{cardId}
+		</if>
+		<if test="chineseName!=null ">
+			<![CDATA[ and chineseName like '%'||#{chineseName}||'%' ]]>
+		</if>
+		<if test="nextNodeName!=null and nextNodeName!=''">
+			and nodeName=#{nextNodeName}
+		</if>
+		<if test="organName!=null and organName!=''">
+			and organcode=#{organName}
+		</if>
+		<![CDATA[		
+							) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+	</select>
+	<select id="findCustomerApplicationIntopieceDecisionCountForm"
+		resultType="int">
+		SELECT
+		COUNT (*)
+		FROM
+		(
+		select * from (
+		SELECT
+		b.*, U.CHINESE_NAME as chineseName,
+		U.RESIDENTIAL_ADDRESS AS residentialAddress,
+		U.CARD_TYPE AS cardType,
+		U.CARD_ID AS cardId,
+		b.APPLY_QUOTA AS applyQuota,
+		A.SERIAL_NUMBER as SERIALNUMBER,
+   		N.NODE_NAME as nodeName,
+		A.AUDIT_TIME as auditTime,
+		prod.PRODUCT_NAME as productName,
+		usr.display_name,
+		(select org.name
+                  from sys_organization org
+                 where id in
+                       (select t.org_id
+                          from sys_department t
+                         where t.id in (select tt.dept_id
+                                          from sys_dept_user tt
+                                         where tt.user_id = u.user_id))) as organcode
+		FROM
+		CUSTOMER_APPLICATION_INFO b,
+		BASIC_CUSTOMER_INFORMATION U,
+		CUSTOMER_APPLICATION_PROCESS A,
+   		NODE_AUDIT N,NODE_AUDIT_USER p,
+   		PRODUCT_ATTRIBUTE prod,sys_user usr
+		WHERE
+		1=1
+		and U.ID = b.CUSTOMER_ID
+		and a.APPLICATION_ID=b.ID
+		AND N.ID=A.NEXT_NODE_ID
+		and A.NEXT_NODE_ID=p.NODE_ID and p.USER_ID=#{userId}
+		and b.status='audit' 
+		and prod.id = b.PRODUCT_ID
+		and usr.id = u.user_id) where 1=1
+		<if test="cardId!=null and cardId!=''">
+			and U.card_id=#{cardId}
+			and cardId=#{cardId}
+		</if>
+		<if test="chineseName!=null ">
+			<![CDATA[ and U.chinese_name like '%'||#{chineseName}||'%' ]]>
+			<![CDATA[ and chineseName like '%'||#{chineseName}||'%' ]]>
+		</if>
+		<if test="nextNodeName!=null and nextNodeName!=''">
+			and N.NODE_NAME=#{nextNodeName}
+			and nodeName=#{nextNodeName}
+		</if>
+		<if test="organName!=null and organName!=''">
+			and organcode=#{organName}
+		</if>
+		)
+	</select> -->
+	<select id="findCustomerApplicationIntopieceDecisionForm" resultMap="BaseResultMap">
+	    SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+				FROM (
+			SELECT
+		b.*, U.CHINESE_NAME as chineseName,
+		U.RESIDENTIAL_ADDRESS AS residentialAddress,
+		U.CARD_TYPE AS cardType,
+		U.CARD_ID AS cardId,
+		b.APPLY_QUOTA AS applyQuota,
+		A.SERIAL_NUMBER as SERIALNUMBER,
+   		N.NODE_NAME as nodeName,
+		A.AUDIT_TIME as auditTime,
+		b.CREATED_TIME   as createdTime,
+		prod.PRODUCT_NAME as productName,
+		su.display_name as displayName,
+		su.id as userId
+		FROM
+		CUSTOMER_APPLICATION_INFO b,
+		BASIC_CUSTOMER_INFORMATION U,
+		CUSTOMER_APPLICATION_PROCESS A,
+   		NODE_AUDIT N,NODE_AUDIT_USER p,
+   		PRODUCT_ATTRIBUTE prod,
+   		sys_user su
+		WHERE
+		1=1
+		and su.id=u.user_id
+		and U.ID = b.CUSTOMER_ID
+		and a.APPLICATION_ID=b.ID
+		AND N.ID=A.NEXT_NODE_ID
+		and prod.id = b.PRODUCT_ID
+		and A.NEXT_NODE_ID=p.NODE_ID and p.USER_ID=#{userId}
+		and b.status='audit' 
+		and b.id not in (select APPLICATION_ID from T_APP_MANAGER_AUDIT_LOG)
+		<if test="cardId!=null and cardId!=''">
+			and U.card_id=#{cardId}
+		</if>
+		<if test="chineseName!=null ">
+			<![CDATA[ and U.chinese_name like '%'||#{chineseName}||'%' ]]>
+		</if>
+		<if test="nextNodeName!=null and nextNodeName!=''">
+			and N.NODE_NAME=#{nextNodeName}
+		</if>
+		<![CDATA[		
+							) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+	</select>
+	<select id="findCustomerApplicationIntopieceDecisionCountForm"
+		resultType="int">
+		SELECT
+		COUNT (*)
+		FROM
+		(
+		SELECT
+		b.*, U.CHINESE_NAME as chineseName,
+		U.RESIDENTIAL_ADDRESS AS residentialAddress,
+		U.CARD_TYPE AS cardType,
+		U.CARD_ID AS cardId,
+		b.APPLY_QUOTA AS applyQuota,
+		A.SERIAL_NUMBER as SERIALNUMBER,
+   		N.NODE_NAME as nodeName,
+		A.AUDIT_TIME as auditTime,
+		prod.PRODUCT_NAME as productName
+		FROM
+		CUSTOMER_APPLICATION_INFO b,
+		BASIC_CUSTOMER_INFORMATION U,
+		CUSTOMER_APPLICATION_PROCESS A,
+   		NODE_AUDIT N,NODE_AUDIT_USER p,
+   		PRODUCT_ATTRIBUTE prod
+		WHERE
+		1=1
+		and U.ID = b.CUSTOMER_ID
+		and a.APPLICATION_ID=b.ID
+		AND N.ID=A.NEXT_NODE_ID
+		and A.NEXT_NODE_ID=p.NODE_ID and p.USER_ID=#{userId}
+		and b.status='audit' 
+		and prod.id = b.PRODUCT_ID
+		and b.id not in (select APPLICATION_ID from T_APP_MANAGER_AUDIT_LOG)
+		<if test="cardId!=null and cardId!=''">
+			and U.card_id=#{cardId}
+		</if>
+		<if test="chineseName!=null ">
+			<![CDATA[ and U.chinese_name like '%'||#{chineseName}||'%' ]]>
+		</if>
+		<if test="nextNodeName!=null and nextNodeName!=''">
+			and N.NODE_NAME=#{nextNodeName}
+		</if>
+		)
+	</select>
+	
+    <resultMap id="Map1"
+		type="com.cardpay.pccredit.intopieces.model.CustomerApplicationProcess">
+		<result property="id" column="ID" />
+		<result property="applicationId" column="APPLICATION_ID" />
+		<result property="auditUser" column="AUDIT_USER" />
+		<result property="serialNumber" column="SERIAL_NUMBER" />
+		<result property="auditOpinion" column="AUDIT_OPINION" />
+		<result property="refusalReason" column="REFUSAL_REASON" />
+		<result property="fallbackReason" column="FALLBACK_REASON" />
+		<result property="examineAmount" column="EXAMINE_AMOUNT" />	
+		<result property="nextNodeId" column="NEXT_NODE_ID" />
+		<result property="delayAuditUser" column="DELAY_AUDIT_USER" />
+		<result property="auditTime" column="AUDIT_TIME" />
+		<result property="processOpStatus" column="PROCESS_OP_STATUS" />
+		<result property="fuheUser" column="fuhe_user" />
+	</resultMap>
+	
+     <select id="findByAppId" resultMap="Map1" parameterType="java.lang.String">
+		SELECT * from customer_application_process T
+		WHERE T.APPLICATION_ID = #{appId}
+	</select>
+	
+     
+        <select id="findSpRy" resultMap="BaseResultMap" >
+		
+select s.external_id as id,s.display_name as displayName,s.id as userId from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{userId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id
+	</select>
+	
+</mapper>

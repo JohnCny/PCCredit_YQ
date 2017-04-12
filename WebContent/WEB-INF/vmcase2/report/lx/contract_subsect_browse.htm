@@ -1,0 +1,68 @@
+#parse ("common/iframe_page_header.htm")
+<body>
+  <div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">授信(合同)金额分段统计报表</div>
+      </div>
+      <div class="inquiry">
+        <div class="search_tag">#i18n("label.browse.filter")</div>
+        <div class="search">
+          <form id="submitForm">
+            <ul>
+              
+              <li>
+	          	<span>开始时间:&nbsp;<input type="text" id ="startDate" name="startDate" value='' 
+	          		onmouseover="_calendar()" readonly="readonly" maxlength="30"/></span>
+              </li>
+              
+              <li>
+	          	<span>结束时间:&nbsp;<input type="text" id ="endDate" name="endDate" value='' 
+	          		onmouseover="_calendar()" readonly="readonly" maxlength="30"/></span>
+              </li>
+              
+              <li class="search_button">
+              	<input id="id_export_button" type="button" value="导出excel" class="search_button_export"
+                  title="#i18n('button.export.hint')" style="height: 26px; line-height: 24px;" />
+              </li>
+              
+            </ul>
+          </form>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</body>
+<script language="javascript" type="text/javascript">
+	var layout = new TableLayout(2);
+	window.top.currentWindow.setLayout(layout);
+
+	$(document).ready(function() {
+		var opsObj = new Object();
+		opsObj.formObj = $("#submitForm");
+		opsObj.createUrl = "${modulePath}/create.page";
+		opsObj.changeUrl = "${modulePath}/change.page";
+		opsObj.displayUrl = "${modulePath}/display.page";
+		opsObj.browseUrl = "${modulePath}/browse.page";
+		prepareOperations(opsObj);
+	});
+	
+	//导出
+	$("#id_export_button").click(function() {
+		
+		if($('#endDate').val() == "" || $('#endDate').val() == null){
+    		Dialog.message("请输入日期");
+    		return;
+    	}
+    	
+		var url = "${contextPath}/report/afterLoancollect/exportContractSubsectData.json";
+   		document.getElementById("submitForm").action = url;
+   		document.getElementById("submitForm").submit();
+    }); 
+	
+	
+	
+	
+</script>
+#parse ("common/iframe_page_footer.htm")

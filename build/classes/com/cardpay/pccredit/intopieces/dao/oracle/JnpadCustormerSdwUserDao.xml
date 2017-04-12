@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.intopieces.dao.JnpadCustormerSdwUserDao" >
+<resultMap type="com.cardpay.pccredit.intopieces.model.CustormerSdwUser" id="selectCustormerSdwUser">
+<result property="id" column="id" />
+<result property="CAPID" column="CAPID" />
+<result property="SDWUSER1" column="SDWUSER1" />
+<result property="SDWUSER2" column="SDWUSER2" />
+<result property="SDWUSER3" column="SDWUSER3" />
+<result property="SDWUSER1YJ" column="SDWUSER1YJ" />
+<result property="SDWUSER2YJ" column="SDWUSER2YJ" />
+<result property="SDWUSER3YJ" column="SDWUSER3YJ" />
+<result property="SDJE" column="SDJE" />
+<result property="SDQX" column="SDQX" />
+<result property="TIME" column="TIME" />
+<result property="SDTIME" column="SDTIME" />
+<result property="PID" column="PID" />
+<result property="CID" column="CID" />
+<result property="SDWJLY" column="SDWJLY" />
+<result property="LV" column="LV" />
+</resultMap>
+
+<resultMap type="com.cardpay.pccredit.intopieces.model.AppManagerAuditLog" id="selectAUDITLOG">
+<result property="id" column="id" />
+<result property="did" column="did" />
+<result property="applicationId" column="applicationId" />
+<result property="auditType" column="auditType" />
+<result property="userId_1" column="userId_1" />
+<result property="userId_2" column="userId_2" />
+<result property="userId_3" column="userId_3" />
+<result property="examineAmount" column="examineAmount" />
+<result property="examineLv" column="examineLv" />
+<result property="qx" column="qx" />
+<result property="userId_4" column="userId_4" />
+<result property="hkfs" column="hkfs" />
+<result property="beiZhu" column="beiZhu" />
+<result property="name1" column="name1" />
+<result property="name2" column="name2" />
+<result property="name3" column="name3" />
+<result property="dbfs" column="dbfs" />
+<result property="displayName" column="displayName" />
+<result property="pname" column="pname" />
+<result property="applyQuota" column="applyQuota" />
+<result property="cardId" column="cardId" />
+<result property="pid" column="pid" />
+<result property="cid" column="cid" />
+<result property="PRODCREDITRANGE" column="PRODCREDITRANGE" />
+</resultMap>
+<resultMap id="IntoPiecesFilters" type="com.cardpay.pccredit.intopieces.model.IntoPiecesFilters">
+		<result property="id" column="id" />
+		<result property="customerId" column="customer_id" />
+		<result property="chineseName" column="chinese_name" />
+		<result property="productId" column="product_id" />
+		<result property="productName" column="product_name" />
+		<result property="displayName" column="display_name" />
+		<result property="cardId" column="card_id" />
+		<result property="applyQuota" column="apply_quota" />
+		<result property="creatime" column="CREATED_TIME" />
+		<result property="PRODCREDITRANGE" column="PRODCREDITRANGE" />
+		<result property="status" column="status" />
+			<result property="refusqlReason" column="REFUSAL_REASON" />
+		<result property="fallBackReason" column="FALLBACK_REASON" />
+	</resultMap>
+<resultMap id="IntoPieces"
+		type="com.cardpay.pccredit.intopieces.model.IntoPieces">
+		<result property="id" column="id" />
+		<result property="customerId" column="customer_id" />
+		<result property="chineseName" column="chinese_name" />
+		<result property="productId" column="product_id" />
+		<result property="productName" column="product_name" />
+		<result property="displayName" column="display_name" />
+		<result property="cardId" column="card_id" />
+		<result property="applyQuota" column="apply_quota" />
+		<result property="creatime" column="CREATED_TIME" />
+			<result property="creatime1" column="MODIFIED_TIME" />
+		<result property="PRODCREDITRANGE" column="PRODCREDITRANGE" />
+		<result property="status" column="status" />
+			<result property="refusqlReason" column="REFUSAL_REASON" />
+		<result property="fallBackReason" column="FALLBACK_REASON" />
+		<result property="splv" column="splv" />
+		<result property="spqx" column="spqx" />
+		<result property="beizhu" column="beizhu" />
+		<result property="jjyy" column="jjyy" />
+		<result property="dbfs" column="dbfs" />
+		<result property="zsw" column="zsw" />
+	</resultMap>
+	<resultMap id="ResultMap" type="com.cardpay.pccredit.riskControl.model.RiskCustomer">
+		<result property="id" column="id" />
+		<result property="customerId" column="customer_id" />
+		<result property="riskLevel" column="risk_level" />
+		<result property="riskCreateType" column="risk_create_type" />
+		<result property="status" column="status" />
+		<result property="refuseReason" column="refuse_reason" />
+		<result property="reportedIdManager" column="reported_id_manager" />
+		<result property="customerName" column="customerName" />
+		<result property="cardType" column="cardType" />
+		<result property="cardId" column="cardId" />
+		<result property="riskDes" column="risk_des" />
+		<result property="numRisk" column="numRisk" />
+		<result property="riskAttribute" column="risk_attribute" />
+		<result property="riskDescription" column="riskDescription" />
+		<result property="maxRiskLevel" column="maxRiskLevel" />
+		<result property="customerId" column="customerId" />
+		<result property="productName" column="productName" />
+		<result property="productId" column="productId" />
+		<result property="CREATED_TIME" column="CREATED_TIME" />
+	</resultMap>
+	
+	
+	
+	
+		<resultMap id="selectResultMap" type="com.cardpay.pccredit.jnpad.model.JnpadCsSdModel">
+		<result property="SDWUSER1YJ" column="SDWUSER1YJ" />
+		<result property="dbfs" column="dbfs" />
+			<result property="zsw" column="zsw" />
+		<result property="SDWUSER2YJ" column="SDWUSER2YJ" />
+		<result property="SDWUSER3YJ" column="SDWUSER3YJ" />
+		<result property="SDJE" column="SDJE" />
+		<result property="SDQX" column="SDQX" />
+		<result property="SDTIME" column="SDTIME" />
+		<result property="SDLV" column="SDLV" />
+		<result property="SDWUSER1" column="SDWUSER1" />
+		<result property="SDWUSER2" column="SDWUSER2" />
+		<result property="SDWUSER3" column="SDWUSER3" />
+		<result property="SDWJLY" column="SDWJLY" />
+		<result property="examineAmount" column="examineAmount" />
+		<result property="examineLv" column="examineLv" />
+		<result property="qx" column="qx" />
+		<result property="name1" column="name1" />
+		<result property="name2" column="name2" />
+		<result property="name3" column="name3" />
+		<result property="created_time" column="created_time" />
+		<result property="name4" column="name4" />
+		<result property="status" column="status" />
+		<result property="jlyys" column="jlyy" />
+		<result property="spuserid" column="spuserid" />
+		<result property="names" column="names" />
+			<result property="dbfs" column="dbfs" />
+				<result property="zsw" column="zsw" />
+					<result property="time" column="time" />
+	</resultMap>
+	<select id="findEndCount" resultMap="IntoPieces">
+	    	select SPUSERID as id, zsw as zsw, spje as applyQuota,splv as splv,spqx as spqx,dbfs as dbfs
+	from CUSTOMER_SP  
+	where 
+	status='1'
+	and CAPID=#{id} 
+	 </select>   
+	<!-- 进件审批查询审贷记录2 -->
+	<select id="findsdh2" resultMap="IntoPieces">
+select * from 
+(select c.id as id,c.status as status,t.examine_amount as applyQuota,c.MODIFIED_TIME as creatime1,t.CREATED_TIME as creatime from 
+ basic_customer_information b left join customer_application_info c on b.id=c.customer_id
+ left join t_app_manager_audit_log t on t.application_id=c.id
+ where c.id=#{id})cc,
+ (select s.display_name as displayName,c.id as id from customer_application_info c,sys_user s,NODE_AUDIT n,NODE_AUDIT_USER u
+ where c.product_id=n.product_id
+ and n.id=u.node_id
+ and u.user_id=s.id
+ and n.node_name='进件初审'
+ and c.id=#{id})tt
+ where tt.id=cc.id
+		</select>
+<!-- 进件审批查询审贷记录 -->
+	<select id="findsdh1" resultMap="IntoPieces">
+	select c.zsw as zsw,c.dbfs as dbfs,c.SPLV as splv,c.SPQX as spqx,s.display_name as displayName, c.SPTIME as creatime,c.SPJE as applyQuota,c.STATUS as status,c.SPLV as splv,
+	c.SPQX as spqx,c.beizhu as beizhu,c.jlyy as jjyy
+	from CUSTOMER_SP c,sys_user s 
+	where 
+	c.SPUSERID=s.id
+	and c.CAPID=#{id}
+	and  c.SPTIME is not null
+		</select>
+		<!-- 进件审批查询终审记录 -->
+	<select id="findsph1" resultMap="IntoPieces">
+	select c.zsw as zsw,c.dbfs as dbfs,c.LV as splv,c.SDQX as spqx,s.display_name as displayName, c.SDTIME as creatime,c.SDJE as applyQuota,t.STATUS as status,c.lv as splv,c.sdqx as spqx,c.SDWUSER1YJ as beizhu,c.JJYY as jjyy
+	from CUSTOMER_APPLICATION_SDH c,sys_user s,CUSTOMER_APPLICATION_INFO t
+	where 
+	c.SDWUSER1=s.id
+	and c.CAPID=#{id} AND c.CAPID=t.ID
+	and c.SDTIME is not null
+	
+		</select>
+		
+	
+	<!-- 进件审批查询审贷记录 -->
+	<select id="findsdh" resultMap="IntoPieces">
+	select c.zsw as zsw,c.dbfs as dbfs,c.SPLV as splv,c.SPQX as spqx,s.display_name as displayName, c.SPTIME as creatime,c.SPJE as applyQuota,c.STATUS as status
+	from CUSTOMER_SP c,sys_user s 
+	where 
+	c.SPUSERID=s.id
+	
+	and c.sptime is not null
+	and c.CAPID=#{id} group by s.display_name, c.SPTIME,c.SPJE,c.STATUS,c.zsw,c.dbfs ,c.SPLV ,c.SPQX 
+		</select>
+	<!-- 进件审批查询终审记录 -->
+	<select id="findsph" resultMap="IntoPieces">
+	select c.zsw as zsw, s.display_name as displayName, c.SDTIME as creatime,c.SDJE as applyQuota,t.STATUS as status
+	from CUSTOMER_APPLICATION_SDH c,sys_user s,CUSTOMER_APPLICATION_INFO t
+	where 
+	c.SDWUSER1=s.id
+	and c.CAPID=#{id} AND c.CAPID=t.ID and c.SDTIME is not null
+	group by s.display_name, c.SDTIME,c.SDJE,t.STATUS,c.zsw
+		</select>
+<delete id="deleteCustormerSdwUser" parameterType="java.lang.Integer" >
+   delete from CUSTOMER_APPLICATION_SDH where CAPID=#{CAPID}
+</delete>
+<delete id="deleteCsJl" parameterType="java.lang.Integer" >
+   delete from T_APP_MANAGER_AUDIT_LOG where APPLICATION_ID=#{applicationId}
+</delete>
+<insert id="insertRiskSdwUser" parameterType="java.lang.Integer" >
+   insert into RISK_LIST (ID,CUSTOMER_ID,RISK_CREATE_TYPE,REFUSE_REASON,REPORTED_ID_MANAGER,CREATED_BY,CREATED_TIME,PRODUCT_ID,CUST_MANAGER_ID) 
+			values (#{id},#{customerId},#{riskCreateType},#{refuseReason},#{userId},#{userId},#{CREATED_TIME},#{productId},#{custManagerId})
+</insert>
+     <update id="updateCustormerProSdwUser" parameterType="java.lang.Integer" >
+   update  CUSTOMER_APPLICATION_PROCESS set AUDIT_USER=#{userId},REFUSAL_REASON=#{REFUSAL_REASON},FALLBACK_REASON=#{fallBackReason},EXAMINE_AMOUNT=#{applyQuota},EXAMINE_LV=#{splv},QX=#{spqx},DBFS=#{dbfs},AUDIT_TIME=#{creatime}
+   where APPLICATION_ID=#{id}
+</update>   
+     <update id="updateCustormerInfoSdwUser" parameterType="java.lang.Integer" >
+   update  CUSTOMER_APPLICATION_INFO set FINAL_APPROVAL=#{final_approval},STATUS=#{status},MODIFIED_TIME=#{creatime}
+   where id=#{id}
+</update>   
+  <update id="updateCustormerSdwUser" parameterType="java.lang.Integer" >
+   update  CUSTOMER_APPLICATION_SDH set SDWUSER1YJ=#{SDWUSER1YJ},SDWUSER2YJ=#{SDWUSER2YJ},SDWUSER3YJ=#{SDWUSER3YJ},SDWJLY=#{SDWJLY},SDTIME=#{SDTIME},SDJE=#{SDJE},SDQX=#{SDQX},lv=#{LV}
+   where CAPID=#{CAPID}
+</update> 
+
+  <insert id="insertCustormerSdwUser1" >
+   insert into CUSTOMER_APPLICATION_SDH (id,CAPID,PID,CID,SDWUSER1,TIME,ZSW) 
+			values (#{id},#{CAPID},#{PID},#{CID},#{SDWUSER1},#{TIME},#{ZSW})
+</insert>
+  <insert id="updateCustormerSdwUser1" >
+   update  CUSTOMER_APPLICATION_SDH set SDWUSER1YJ=#{SDWUSER1YJ},SDJE=#{SDJE},SDQX=#{SDQX},SDTIME=#{SDTIME},LV=#{LV},JJYY=#{JJYY},DBFS=#{dbfs}
+	where CAPID=#{CAPID} and SDWUSER1=#{SDWUSER1} and ZSW=#{ZSW}
+</insert>
+
+  
+<insert id="insertCustormerSdwUser" parameterType="java.lang.Integer" >
+   insert into CUSTOMER_APPLICATION_SDH (id,CAPID,PID,CID,SDWUSER1,SDWUSER2,SDWUSER3,TIME) 
+			values (#{id},#{CAPID},#{PID},#{CID},#{SDWUSER1},#{SDWUSER2},#{SDWUSER3},#{TIME})
+</insert>
+
+<insert id="insertCsJl" parameterType="java.lang.Integer" >
+   insert into T_APP_MANAGER_AUDIT_LOG (id,APPLICATION_ID,AUDIT_TYPE,USER_ID_1,USER_ID_2,USER_ID_3,EXAMINE_AMOUNT,EXAMINE_LV,qx,USER_ID_4,dbfs) 
+			values (#{id},#{applicationId},#{auditType},#{userId_1},#{userId_2},#{userId_3},#{examineAmount},#{examineLv},#{qx},#{userId_4},#{dbfs})
+</insert>
+
+<select id="selectaId" resultMap="selectAUDITLOG">
+  select id as applicationId from CUSTOMER_APPLICATION_INFO where 
+  CUSTOMER_ID=#{cid} and PRODUCT_ID=#{pid}
+</select>
+
+<select id="selectSDH" resultMap="IntoPieces">
+<!-- select c.ID as id,c.CUSTOMER_ID as customerId,c.PRODUCT_ID as productId,s.display_name as displayName,p.product_name as productName,b.card_id as cardId
+,c.APPLY_QUOTA as applyQuota,c.CREATED_TIME as creatime,b.chinese_name as chineseName,PROD_CREDIT_RANGE as PRODCREDITRANGE
+ from CUSTOMER_APPLICATION_INFO c,CUSTOMER_APPLICATION_SDH t,sys_user s,product_attribute p,BASIC_CUSTOMER_INFORMATION b
+where c.id=t.capid
+and s.id=b.user_id and
+b.id=c.customer_id and
+c.product_id=p.id and
+ (t.sdwuser1=#{userId} or t.sdwuser2=#{userId} or t.sdwuser3=#{userId})
+ and t.SDTIME is  null -->
+ select c.ID as id,c.CUSTOMER_ID as customerId,c.PRODUCT_ID as productId,s.display_name as displayName,p.product_name as productName,b.card_id as cardId
+,c.APPLY_QUOTA as applyQuota,c.CREATED_TIME as creatime,b.chinese_name as chineseName,PROD_CREDIT_RANGE as PRODCREDITRANGE
+ from CUSTOMER_APPLICATION_INFO c,CUSTOMER_SP t,sys_user s,product_attribute p,BASIC_CUSTOMER_INFORMATION b
+where c.id=t.capid
+and s.id=b.user_id and
+b.id=c.customer_id and
+c.product_id=p.id and
+ t.spuserid=#{userId}
+ and t.status ='0'
+</select>
+
+<select id="selectSDH1" resultMap="IntoPieces">
+select c.id as id,s.display_name as displayName,p.product_name as productName,b.card_id as cardId
+,c.APPLY_QUOTA as applyQuota,c.CREATED_TIME as creatime,b.chinese_name as chineseName
+ from CUSTOMER_APPLICATION_INFO c,CUSTOMER_APPLICATION_SDH t,sys_user s,product_attribute p,BASIC_CUSTOMER_INFORMATION b
+where c.id=t.capid
+and s.id=b.user_id and
+b.id=c.customer_id and
+c.product_id=p.id and
+ (t.sdwuser1=#{userId} or t.sdwuser2=#{userId} or t.sdwuser3=#{userId})
+ and t.SDTIME is  null
+</select>
+
+
+<select id="selectSDH1Count" resultType="int">
+select count(*)
+ from CUSTOMER_APPLICATION_INFO c,CUSTOMER_APPLICATION_SDH t,sys_user s,product_attribute p,BASIC_CUSTOMER_INFORMATION b
+where c.id=t.capid
+and s.id=b.user_id and
+b.id=c.customer_id and
+c.product_id=p.id and
+ (t.sdwuser1=#{userId} or t.sdwuser2=#{userId} or t.sdwuser3=#{userId})
+ and t.SDTIME is  null
+</select>
+
+<select id="sdwcy" resultMap="IntoPieces">
+select 
+e.displayName5 as name1,f.displayName6 as name2,g.displayName7 as name3
+from 
+(select s.display_name as displayName5
+from CUSTOMER_APPLICATION_SDH t,sys_user s 
+where t.SDWUSER1=s.id
+and t.CAPID=#{id})e,
+(select s.display_name as displayName6
+from CUSTOMER_APPLICATION_SDH t,sys_user s 
+where t.SDWUSER2=s.id
+and t.CAPID=#{id})f,
+(select s.display_name as displayName7
+from CUSTOMER_APPLICATION_SDH t,sys_user s 
+where t.SDWUSER3=s.id
+and t.CAPID=#{id})g
+</select>
+
+
+
+<select id="selectCSJLA" resultMap="selectAUDITLOG">
+<!-- select t.examine_amount as examineAmount,t.examine_lv as examineLv,t.qx as qx,a.displayName1 as userId_1,b.displayName2 as userId_2,c.displayName3 as userId_3,d.displayName4 as userId_4 
+,e.displayName5 as name1,f.displayName6 as name2,g.displayName7 as name3,s.id as did
+from 
+T_APP_MANAGER_AUDIT_LOG t,BASIC_CUSTOMER_INFORMATION b,sys_user s,CUSTOMER_APPLICATION_INFO c,
+(select s.display_name as displayName1
+from T_APP_MANAGER_AUDIT_LOG t,sys_user s 
+where t.user_id_1=s.id
+and t.application_id=#{id})a,
+(select s.display_name as displayName2
+from T_APP_MANAGER_AUDIT_LOG t,sys_user s 
+where t.user_id_2=s.id
+and t.application_id=#{id})b,
+(select s.display_name as displayName3
+from T_APP_MANAGER_AUDIT_LOG t,sys_user s 
+where t.user_id_3=s.id
+and t.application_id=#{id})c,
+(select s.display_name as displayName4
+from T_APP_MANAGER_AUDIT_LOG t,sys_user s 
+where t.user_id_4=s.id
+and t.application_id=#{id})d,
+(select s.display_name as displayName5
+from CUSTOMER_APPLICATION_SDH t,sys_user s 
+where t.SDWUSER1=s.id
+and t.CAPID=#{id})e,
+(select s.display_name as displayName6
+from CUSTOMER_APPLICATION_SDH t,sys_user s 
+where t.SDWUSER2=s.id
+and t.CAPID=#{id})f,
+(select s.display_name as displayName7
+from CUSTOMER_APPLICATION_SDH t,sys_user s 
+where t.SDWUSER3=s.id
+and t.CAPID=#{id})g
+where t.application_id=#{id} and 
+c.CUSTOMER_ID=b.id and 
+c.id=t.application_id and 
+b.user_id=s.id -->
+
+
+select t.examine_amount as examineAmount,t.examine_lv as examineLv,
+t.qx as qx,a.displayName1 as userId_1,b.displayName2 as userId_2,c.displayName3 as userId_3
+,d.displayName4 as userId_4 
+,s.id as did ,c.id as cid,p.id as pid,b.id as id,p.PROD_CREDIT_RANGE as PRODCREDITRANGE
+,b.CHINESE_NAME as displayName,p.product_name as pname,b.card_id as cardId,c.APPLY_QUOTA as applyQuota,dd.displayname as name1
+from T_APP_MANAGER_AUDIT_LOG t,BASIC_CUSTOMER_INFORMATION b,sys_user s,
+CUSTOMER_APPLICATION_INFO c,product_attribute p,
+ (select s.display_name as displayName1 from T_APP_MANAGER_AUDIT_LOG t,sys_user s where t.user_id_1=s.id and t.application_id=#{id})a,
+  (select s.display_name as displayName2 from T_APP_MANAGER_AUDIT_LOG t,sys_user s where t.user_id_2=s.id and t.application_id=#{id})b,
+   (select s.display_name as displayName3 from T_APP_MANAGER_AUDIT_LOG t,sys_user s where t.user_id_3=s.id and t.application_id=#{id})c,
+    (select s.display_name as displayName4 from T_APP_MANAGER_AUDIT_LOG t,sys_user s where t.user_id_4=s.id and t.application_id=#{id})d,
+     (select s.display_name as displayname from BASIC_CUSTOMER_INFORMATION b,sys_user s,CUSTOMER_APPLICATION_INFO c where b.id=c.customer_id and b.user_id=s.id and c.id=#{id})dd
+       where t.application_id=#{id} and c.CUSTOMER_ID=b.id and c.id=t.application_id and b.user_id=s.id   
+       and b.id=c.customer_id and
+		c.product_id=p.id and
+		c.id=t.application_id
+</select>
+
+
+<select id="findCsSd" resultMap="selectResultMap">
+select h.sdwuser1yj as SDWUSER1YJ,h.sdwuser2yj as SDWUSER2YJ,h.sdwuser3yj as SDWUSER3YJ,h.sdje as SDJE,h.sdqx as SDQX ,h.sdtime SDTIME ,h.lv as SDLV,t.created_time as created_time,t.examine_amount as examineAmount,t.examine_lv as examineLv,t.qx as qx,a.displayName1 as name1,b.displayName2 as name2,c.displayName3 as name3,d.displayName4 as name4 
+,e.displayName5 as SDWUSER1,f.displayName6 as SDWUSER2,g.displayName7 as SDWUSER3
+from CUSTOMER_APPLICATION_SDH h,T_APP_MANAGER_AUDIT_LOG t,
+(select s.display_name as displayName1
+from T_APP_MANAGER_AUDIT_LOG t,sys_user s 
+where t.user_id_1=s.id
+and t.application_id=#{id})a,
+(select s.display_name as displayName2
+from T_APP_MANAGER_AUDIT_LOG t,sys_user s 
+where t.user_id_2=s.id
+and t.application_id=#{id})b,
+(select s.display_name as displayName3
+from T_APP_MANAGER_AUDIT_LOG t,sys_user s 
+where t.user_id_3=s.id
+and t.application_id=#{id})c,
+(select s.display_name as displayName4
+from T_APP_MANAGER_AUDIT_LOG t,sys_user s 
+where t.user_id_4=s.id
+and t.application_id=#{id})d,
+(select s.display_name as displayName5
+from CUSTOMER_APPLICATION_SDH t,sys_user s 
+where t.SDWUSER1=s.id
+and t.CAPID=#{id})e,
+(select s.display_name as displayName6
+from CUSTOMER_APPLICATION_SDH t,sys_user s 
+where t.SDWUSER2=s.id
+and t.CAPID=#{id})f,
+(select s.display_name as displayName7
+from CUSTOMER_APPLICATION_SDH t,sys_user s 
+where t.SDWUSER3=s.id
+and t.CAPID=#{id})g
+where h.capid=#{id}
+and t.application_id=#{id}
+</select>
+
+
+
+<select id="findCsSdRefuse" resultMap="selectResultMap">
+select p.refusal_reason as refusalreaso, h.sdwuser1yj as SDWUSER1YJ,h.sdwuser2yj as SDWUSER2YJ,h.sdwuser3yj as SDWUSER3YJ,h.sdje as SDJE,h.sdqx as SDQX ,h.sdtime SDTIME ,h.lv as SDLV,t.created_time as created_time,t.examine_amount as examineAmount,t.examine_lv as examineLv,t.qx as qx
+ from CUSTOMER_APPLICATION_INFO c left join T_APP_MANAGER_AUDIT_LOG t on c.id=t.application_id
+ left join CUSTOMER_APPLICATION_SDH h on t.application_id=h.capid left join CUSTOMER_APPLICATION_PROCESS p on p.application_id=h.capid
+where c.id=#{id}
+</select>
+
+
+<select id="findCsSdBlack" resultMap="selectResultMap">
+select p.FALLBACK_REASON as FALLBACK_REASON, h.sdwuser1yj as SDWUSER1YJ,h.sdwuser2yj as SDWUSER2YJ,h.sdwuser3yj as SDWUSER3YJ,h.sdje as SDJE,h.sdqx as SDQX ,h.sdtime SDTIME ,h.lv as SDLV,t.created_time as created_time,t.examine_amount as examineAmount,t.examine_lv as examineLv,t.qx as qx
+ from CUSTOMER_APPLICATION_INFO c left join T_APP_MANAGER_AUDIT_LOG t on c.id=t.application_id
+ left join CUSTOMER_APPLICATION_SDH h on t.application_id=h.capid left join CUSTOMER_APPLICATION_PROCESS p on p.application_id=h.capid
+where c.id=#{id}
+</select>
+
+<select id="findUser" resultMap="selectResultMap">
+select a.displayName1 as name1,b.displayName2 as name2,c.displayName3 as name3,d.displayName4 as name4 
+,e.displayName5 as SDWUSER1,f.displayName6 as SDWUSER2,g.displayName7 as SDWUSER3 from
+(select s.display_name as displayName1
+from T_APP_MANAGER_AUDIT_LOG t,sys_user s 
+where t.user_id_1=s.id
+and t.application_id=#{id})a,
+(select s.display_name as displayName2
+from T_APP_MANAGER_AUDIT_LOG t,sys_user s 
+where t.user_id_2=s.id
+and t.application_id=#{id})b,
+(select s.display_name as displayName3
+from T_APP_MANAGER_AUDIT_LOG t,sys_user s 
+where t.user_id_3=s.id
+and t.application_id=#{id})c,
+(select s.display_name as displayName4
+from T_APP_MANAGER_AUDIT_LOG t,sys_user s 
+where t.user_id_4=s.id
+and t.application_id=#{id})d,
+(select s.display_name as displayName5
+from CUSTOMER_APPLICATION_SDH t,sys_user s 
+where t.SDWUSER1=s.id
+and t.CAPID=#{id})e,
+(select s.display_name as displayName6
+from CUSTOMER_APPLICATION_SDH t,sys_user s 
+where t.SDWUSER2=s.id
+and t.CAPID=#{id})f,
+(select s.display_name as displayName7
+from CUSTOMER_APPLICATION_SDH t,sys_user s 
+where t.SDWUSER3=s.id
+and t.CAPID=#{id})g
+</select>
+
+
+
+<select id="selectCount" resultType="int">
+   select count(*) from T_APP_MANAGER_AUDIT_LOG  where application_id=#{id}
+</select>
+
+
+
+<!-- PC审贷会 -->
+<select id="selectSDHLists" resultMap="IntoPiecesFilters">
+		  SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+				FROM (
+			   select 
+		          c.ID as id,c.CUSTOMER_ID as customerId,c.PRODUCT_ID as productId,
+		          s.display_name as displayName,p.product_name as productName,b.card_id as cardId,
+		          c.APPLY_QUOTA as applyQuota,c.CREATED_TIME as creatime,b.chinese_name as chineseName,
+				  PROD_CREDIT_RANGE as PRODCREDITRANGE
+				  from 
+				  CUSTOMER_APPLICATION_INFO c,CUSTOMER_APPLICATION_SDH t,sys_user s,
+				  product_attribute p,BASIC_CUSTOMER_INFORMATION b
+				  where 1=1 
+				  and c.id=t.capid and s.id=b.user_id and b.id=c.customer_id 
+				  and c.product_id=p.id <!-- and t.SDTIME is  null -->
+				  <if test="userId!='' and userId!=null and userId!='000001'">
+				  and (t.sdwuser1=#{userId} or t.sdwuser2=#{userId} or t.sdwuser3=#{userId}) 
+				  </if>
+                   <![CDATA[		
+							) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+
+	</select>
+	
+	<select id="selectSDHCountLists" resultType="int" parameterType="com.cardpay.pccredit.intopieces.model.IntoPiecesFilters" >
+		  select count(*)
+		          from (
+		          select 
+		          c.ID as id,c.CUSTOMER_ID as customerId,c.PRODUCT_ID as productId,
+		          s.display_name as displayName,p.product_name as productName,b.card_id as cardId,
+		          c.APPLY_QUOTA as applyQuota,c.CREATED_TIME as creatime,b.chinese_name as chineseName,
+				  PROD_CREDIT_RANGE as PRODCREDITRANGE
+				  from 
+				  CUSTOMER_APPLICATION_INFO c,CUSTOMER_APPLICATION_SDH t,sys_user s,
+				  product_attribute p,BASIC_CUSTOMER_INFORMATION b
+				  where c.id=t.capid
+				  and s.id=b.user_id and b.id=c.customer_id and c.product_id=p.id and t.SDTIME is  null
+				  <if test="userId!='' and userId!=null and userId!='000001'">
+				  and (t.sdwuser1=#{userId} or t.sdwuser2=#{userId} or t.sdwuser3=#{userId}) 
+				  </if>
+                  )
+	</select>
+	
+<select id="selectCSJLAPC" resultMap="selectAUDITLOG">
+
+	
+	select t.examine_amount as examineAmount,t.examine_lv as examineLv,
+	t.qx as qx,a.displayName1 as userId_1,b.displayName2 as userId_2,c.displayName3 as userId_3,
+	d.displayName4 as userId_4 ,s.id as did ,c.id as cid,p.id as pid,b.id as id,p.PROD_CREDIT_RANGE as PRODCREDITRANGE,
+	b.CHINESE_NAME as displayName,p.product_name as pname,b.card_id as cardId,c.APPLY_QUOTA as applyQuota,dd.displayname as name1
+	from T_APP_MANAGER_AUDIT_LOG t,BASIC_CUSTOMER_INFORMATION b,sys_user s,
+	CUSTOMER_APPLICATION_INFO c,product_attribute p,
+ 	(select s.display_name as displayName1 from T_APP_MANAGER_AUDIT_LOG t,sys_user s where t.user_id_1=s.id and t.application_id=#{appId} )a,
+  	(select s.display_name as displayName2 from T_APP_MANAGER_AUDIT_LOG t,sys_user s where t.user_id_2=s.id and t.application_id=#{appId} )b,
+   	(select s.display_name as displayName3 from T_APP_MANAGER_AUDIT_LOG t,sys_user s where t.user_id_3=s.id and t.application_id=#{appId} )c,
+    (select s.display_name as displayName4 from T_APP_MANAGER_AUDIT_LOG t,sys_user s where t.user_id_4=s.id and t.application_id=#{appId} )d,
+   (select s.display_name as displayName from T_APP_MANAGER_AUDIT_LOG t,sys_user s where s.id=#{uId} and t.application_id=#{appId} )dd
+    where t.application_id=#{appId} and c.CUSTOMER_ID=b.id and c.id=t.application_id and b.user_id=s.id   
+    and b.id=c.customer_id and
+    c.product_id=p.id and
+    c.id=t.application_id
+	</select>
+	
+	<!-- 成功的 -->
+	<select id="findCsSds" resultMap="selectResultMap">
+	select h.beizhu as SDWUSER1YJ,h.spje as SDJE,h.spqx as SDQX ,h.splv as SDLV,u.display_name as names,
+	(case 
+	when h.status ='0' then '0'
+	when h.status ='1' then 'approved'
+	when h.status ='2' then 'refuse'
+	  when h.status ='3' then 'returnedToFirst'
+	end
+	) as status,
+	h.JLYY as jlyy
+  from CUSTOMER_SP h,sys_user u
+  where  1=1 and h.capid=#{appId} and h.spuserid=#{uId} and h.spuserid=u.id 
+	</select>
+<select id="findCsSdRefuses" resultMap="selectResultMap">
+select p.refusal_reason as refusalreaso, h.sdwuser1yj as SDWUSER1YJ,h.sdwuser2yj as SDWUSER2YJ,h.sdwuser3yj as SDWUSER3YJ,h.sdje as SDJE,h.sdqx as SDQX ,h.sdtime SDTIME ,h.lv as SDLV,t.created_time as created_time,t.examine_amount as examineAmount,t.examine_lv as examineLv,t.qx as qx
+ from CUSTOMER_APPLICATION_INFO c left join T_APP_MANAGER_AUDIT_LOG t on c.id=t.application_id
+ left join CUSTOMER_APPLICATION_SDH h on t.application_id=h.capid left join CUSTOMER_APPLICATION_PROCESS p on p.application_id=h.capid
+where c.id=#{appId}
+</select>
+
+<select id="findCsSdBlacks" resultMap="selectResultMap">
+select p.FALLBACK_REASON as FALLBACK_REASON, h.sdwuser1yj as SDWUSER1YJ,h.sdwuser2yj as SDWUSER2YJ,h.sdwuser3yj as SDWUSER3YJ,h.sdje as SDJE,h.sdqx as SDQX ,h.sdtime SDTIME ,h.lv as SDLV,t.created_time as created_time,t.examine_amount as examineAmount,t.examine_lv as examineLv,t.qx as qx
+ from CUSTOMER_APPLICATION_INFO c left join T_APP_MANAGER_AUDIT_LOG t on c.id=t.application_id
+ left join CUSTOMER_APPLICATION_SDH h on t.application_id=h.capid left join CUSTOMER_APPLICATION_PROCESS p on p.application_id=h.capid
+where c.id=#{appId}
+</select>
+<!-- 重新提交时删除审贷表中的数据 -->
+<delete id="deletePCCustormerSdwUser" parameterType="java.lang.Integer" >
+   delete from CUSTOMER_APPLICATION_SDH where CAPID=#{applicationId}
+</delete>
+
+<delete id="deletePCCsJl" parameterType="java.lang.Integer" >
+   delete from T_APP_MANAGER_AUDIT_LOG where APPLICATION_ID=#{applicationId}
+</delete>
+
+<delete id="deleteByApplicationId" parameterType="java.lang.Integer" >
+   delete from customer_sp where CAPID=#{applicationId}
+</delete>
+
+<update id="updateHistory" parameterType="java.lang.Integer">
+ update  WF_STATUS_QUEUE_RECORD set EXAMINE_USER=#{userId},EXAMINE_RESULT='RETURNAPPROVE',START_EXAMINE_TIME=#{times}
+   where CURRENT_PROCESS in
+(select A.CURRENT_PROCESS from wf_status_queue_record a,wf_process_record c,
+        customer_application_process cap,customer_application_info cai
+        where cai.id=cap.application_id
+        and cap.serial_number=c.id
+        and c.id=a.current_process
+        and cai.id=#{applicationId})
+</update>
+<update id="updateCSZT" parameterType="java.lang.Integer">
+ update  WF_STATUS_QUEUE_RECORD set EXAMINE_RESULT='初审通过',START_EXAMINE_TIME=#{times},
+ EXAMINE_USER= #{userId} ,EXAMINE_AMOUNT = #{money}
+ where CURRENT_PROCESS in
+(select A.CURRENT_PROCESS from wf_status_queue_record a,wf_process_record c,
+        customer_application_process cap,customer_application_info cai
+        where cai.id=cap.application_id
+        and cap.serial_number=c.id
+        and c.id=a.current_process
+        and cai.id=#{applicationId})
+</update>
+<update id="updateHistorys" parameterType="java.lang.Integer">
+ update  WF_STATUS_QUEUE_RECORD set EXAMINE_USER=#{userId},EXAMINE_RESULT='REJECTAPPROVE',START_EXAMINE_TIME=#{times}
+   where CURRENT_PROCESS in
+(select A.CURRENT_PROCESS from wf_status_queue_record a,wf_process_record c,
+        customer_application_process cap,customer_application_info cai
+        where cai.id=cap.application_id
+        and cap.serial_number=c.id
+        and c.id=a.current_process
+        and cai.id=#{applicationId})
+</update>
+
+<update id="updateCSZTs" parameterType="java.lang.Integer">
+ update  WF_STATUS_QUEUE_RECORD set EXAMINE_RESULT='APPROVE',START_EXAMINE_TIME=#{times},
+ EXAMINE_USER= #{userId} ,EXAMINE_AMOUNT = #{money}
+ where CURRENT_PROCESS in
+(select A.CURRENT_PROCESS from wf_status_queue_record a,wf_process_record c,
+        customer_application_process cap,customer_application_info cai
+        where cai.id=cap.application_id
+        and cap.serial_number=c.id
+        and c.id=a.current_process
+        and cai.id=#{applicationId})
+</update>
+<!-- 审贷委的ID -->
+	<select id="findCsSdId" resultMap="selectResultMap">
+	select h.spuserid from CUSTOMER_SP h where h.capid=#{appId}
+	</select>
+	
+	<select id="findCsSdId1" resultMap="selectResultMap">
+	select h.spuserid from CUSTOMER_SP h where h.capid=#{appId} and h.SPTIME is not null
+	</select>
+	
+	<select id="findBySdwId" resultMap="selectResultMap">
+	select h.capid as spuserid,h.sptime as time, h.dbfs,h.zsw, h.beizhu as SDWUSER1YJ,h.spje as SDJE,h.spqx as SDQX ,h.splv as SDLV,u.display_name as names,
+	(case 
+	when h.status ='0' then '0'
+	when h.status ='1' then 'approved'
+	when h.status ='2' then 'refuse'
+	  when h.status ='3' then 'returnedToFirst'
+	end
+	) as status,
+	h.JLYY as jlyy
+    from CUSTOMER_SP h,sys_user u
+	where  1=1 and h.capid=#{appId} and h.spuserid=#{sdwId} and h.spuserid=u.id 
+	</select>
+	
+	
+	<!--最终审贷委 -->
+	<select id="findZzCsSds" resultMap="selectResultMap">
+	select sdh.SDWUSER1YJ as SDWUSER1YJ,sdh.sdje as SDJE,sdh.sdqx as SDQX ,
+	sdh.lv as SDLV,u.display_name as names,sdh.SDWUSER2YJ as jlyy
+  	from CUSTOMER_APPLICATION_SDH sdh,sys_user u
+  	where  1=1 and sdh.sdwjly=u.id  and sdh.capid=#{appId}
+	</select>
+	
+	
+</mapper> 
