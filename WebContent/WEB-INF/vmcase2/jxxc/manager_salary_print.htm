@@ -1,0 +1,101 @@
+#parse ("common/iframe_page_header.htm")
+<html>
+	<head>
+ 	<title>打印页面</title>
+		<style type="text/css">
+		
+			.STYLE2 {font-size: 14px;
+         		text-align:center;
+
+			}
+			
+			#Layer1 {
+				position:absolute;
+				width:79px;
+				height:26px;
+				z-index:1;
+				left: 84px;
+				top: 93px;
+			}
+			
+			.STYLE3 {font-size: 14px; font-weight: bold; }
+			
+			.line {
+				border-bottom: 1px dashed #ccc
+			}
+		</style>
+	</head>
+	<body>
+	<div class="panel" id="panel">
+		
+			<div align="left" id="noprint">
+				<input type="button" onClick="printme()" value="打印" class="btn80"
+					style="color: red;" />
+			</div>
+			<h2 align="center">济南农商行小微信贷中心客户经理工资单</h2>
+			<table align="center" class="STYLE2" width="800" height="400" border="1" cellpadding="0" cellspacing="0" bordercolor="#000000">
+				<tr>
+					<td  height="450" colspan="4">
+						<table width="800" height="440" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td  width="800" height="30" >
+									<table>
+										<tr>
+											<td width="100" height="30" style="font-size: 13px" align="center">年份</td>
+											<td width="100" height="30" style="font-size: 13px" align="center">月份</td>
+											<td width="160" height="30" style="font-size: 13px" align="center">所属机构 </td>
+											<td width="160" height="30" style="font-size: 13px" align="center">客户经理</td>
+											<td width="160" height="30" style="font-size: 13px" align="center">基本工资(元)</td>
+											<td width="160" height="30" style="font-size: 13px" align="center">贷款业务绩效</td>
+											<td width="160" height="30" style="font-size: 13px" align="center">其他业务绩效 </td>
+											<td width="160" height="30" style="font-size: 13px" align="center">风险保证金</td>
+											<td width="160" height="30" style="font-size: 13px" align="center">补扣款项</td>
+											<td width="160" height="30" style="font-size: 13px" align="center"><span style="color:red">当月工资</span></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td class="line"></td>
+							</tr>
+							<tr>
+								<td width="800" height="330" >
+									<table>
+										#foreach ($managerSalary in $result)
+										<tr>		
+											<td width="100" style="font-size: 13px" align="center" class="line">$!managerSalary.year</td>
+											<td width="100" style="font-size: 13px" align="center" class="line">$!managerSalary.month</td>
+											<td width="160" style="font-size: 13px" align="center" class="line">$!managerSalary.instCode</td>
+											<td width="160" style="font-size: 13px" align="center" class="line">$!managerSalary.managerName</td>
+											<td width="160" style="font-size: 13px" align="center" class="line">$format.formatNumber(2, $!managerSalary.basePay)</td>
+											<td width="160" style="font-size: 13px" align="center" class="line">$!managerSalary.year</td>
+											<td width="160" style="font-size: 13px" align="center" class="line">$!managerSalary.year</td>
+											<td width="160" style="font-size: 13px" align="center" class="line">$!managerSalary.year</td>
+											<td width="160" style="font-size: 13px" align="center" class="line">$!managerSalary.year</td>
+											<td width="160" style="font-size: 13px" align="center" class="line">$!managerSalary.year</td>
+										</tr>
+										#end	
+										<tr>
+											<td width="800" height="270" colspan="7">
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>
+
+<script language="javascript">
+			function printme() {
+				document.getElementById("noprint").style.display = "none";
+				document.body.innerHTML = document.getElementById('panel').innerHTML;
+				window.print();
+			}
+</script>
+
+#parse ("common/iframe_page_footer.htm")

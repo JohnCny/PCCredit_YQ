@@ -1,0 +1,64 @@
+<body>
+  <div class="content_main">
+    <div class="contentinner">
+      <!-- <div class="place">
+        <div class="title">审批历史信息</div>
+      </div> -->
+        <div id="topDiv" class="inquiry_list inquiry_top">
+          <table>
+            <colgroup>
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%"/>
+              <col width="10%"/>
+              <col width="10%" />
+              <col width="10%"/>
+              <col width="10%"/>
+            </colgroup>
+            <tr class="title">
+              <th nowrap="nowrap">序号</th>
+              <th nowrap="nowrap">利率</th>
+              <th nowrap="nowrap">借款日期</th>
+              <th nowrap="nowrap">到期日期</th>
+              <th nowrap="nowrap">贷款期限(月)</th>
+              <th nowrap="nowrap">发放金额</th>
+              <th nowrap="nowrap">贷款金额</th>
+              <th nowrap="nowrap">已收利息</th>
+              <th nowrap="nowrap">逾期本金</th>
+            </tr>
+          </table>
+        </div>
+        <div id="downDiv" class="inquiry_list inquiry_down">
+          <table>
+            <colgroup>
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%"/>
+              <col width="10%"/>
+              <col width="10%" />
+              <col width="10%"/>
+              <col width="10%"/>
+            </colgroup>
+            #foreach ($history in $forms)
+            <tr>
+              <td nowrap="nowrap">$velocityCount</td>
+              <td nowrap="nowrap">$!history.interest</td>
+              <td nowrap="nowrap">$!history.loandate</td>
+              <td nowrap="nowrap">$!history.enddate</td>
+              <td nowrap="nowrap">$!history.limit</td>
+              <td nowrap="nowrap">$!history.money</td>
+              <td nowrap="nowrap">$!history.balamt</td>
+              <td nowrap="nowrap">$!history.paydebt</td>
+              <td nowrap="nowrap">$!history.dlayamt</td>
+            </tr>
+            #end
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

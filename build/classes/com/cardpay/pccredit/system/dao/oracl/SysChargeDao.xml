@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.system.dao.SysChargeDao">
+	<select id="findUserByFilter" resultType="com.cardpay.pccredit.system.model.SystemUser">
+	    SELECT * FROM
+		(SELECT ROW_.*,ROWNUM ROWNUM_
+		FROM (
+		
+			SELECT 
+			t.id as id,
+			t.display_name as displayName, 
+			t.age as age, 
+			t.gender as gender
+			from sys_user t
+			WHERE t.id in 
+			(
+				select user_id from sys_charge where 1=1
+				<if test="orgId != null and orgId != '' ">
+					AND org_id=#{orgId}
+				</if>
+				<if test="deptId != null and deptId != '' ">
+					AND dept_id=#{deptId}
+				</if>
+				<if test="(orgId == null or orgId == '') and (deptId == null or deptId == '')">
+				 	AND　1=0
+				</if>
+			)
+		 <![CDATA[		
+				) ROW_
+			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+		WHERE ROWNUM_ > #{limit}*#{page}
+		]]>
+	</select>
+	
+	<select id="findUserCountByFilter" resultType="int" 
+		parameterType="com.cardpay.pccredit.system.filter.SystemChargeFilter">
+		select count(*) from sys_charge where 1=1
+		<if test="orgId != null and orgId != '' ">
+			AND org_id=#{orgId}
+		</if>
+		<if test="deptId != null and deptId != '' ">
+			AND dept_id=#{deptId}
+		</if>
+	</select>
+	
+	<select id="findChargeByFilter" resultType="com.cardpay.pccredit.system.model.SystemCharge">
+	    SELECT t.* from sys_charge t
+			WHERE t.user_id in 
+			(
+				#{userIds}
+			)
+			<if test="orgId != null and orgId != '' ">
+				AND org_id=#{orgId}
+			</if>
+			<if test="deptId != null and deptId != '' ">
+				AND dept_id=#{deptId}
+			</if>
+	</select>
+	
+	<select id="findCharge" resultType="com.cardpay.pccredit.system.model.SystemCharge">
+	    SELECT t.* from sys_charge t WHERE 1=1
+			<if test="userId != null and userId != '' ">
+				AND user_id=#{userId}
+			</if>
+			<if test="orgId != null and orgId != '' ">
+				AND org_id=#{orgId}
+			</if>
+			<if test="deptId != null and deptId != '' ">
+				AND dept_id=#{deptId}
+			</if>
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<select id="findLoginLogByFilter" resultType="com.wicresoft.jrad.modules.log.model.LoginLog">
+	    SELECT * FROM
+		(SELECT ROW_.*,ROWNUM ROWNUM_
+		FROM (
+			SELECT t.id,
+			       t.login,
+			       t.type,
+			       t.action,
+			       t.action_time as actionTime,
+			       t.result,
+			       t.ip_address  as ipAddress 
+			       FROM SYS_LOGIN_LOG t where 1=1 
+		        <if test="login != null and login != '' ">
+					AND login=#{login}
+			    </if>
+				<if test="action != null and action != '' ">
+					AND action=#{action}
+				</if>
+				
+				<if test="startDate != null and startDate != '' ">
+					AND action_time &gt; to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') 
+				</if>
+				
+			    <if test="endDate != null and endDate != '' ">
+					AND action_time &lt; to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') 
+				</if>   
+				order by t.action_time desc
+		 <![CDATA[		
+				) ROW_
+			WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+		WHERE ROWNUM_ > #{limit}*#{page}
+		]]>
+	</select>
+	
+	<select id="findLoginLogCountByFilter" resultType="int" parameterType="com.wicresoft.jrad.modules.log.model.LoginLog">
+		select count(*) from SYS_LOGIN_LOG where 1=1
+		<if test="login != null and login != '' ">
+			AND login=#{login}
+	    </if>
+		<if test="action != null and action != '' ">
+			AND action=#{action}
+		</if>
+		
+		<if test="startDate != null and startDate != '' ">
+			AND action_time &gt; to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') 
+		</if>
+		
+	    <if test="endDate != null and endDate != '' ">
+			AND action_time &lt; to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') 
+		</if>   
+	</select>
+	
+	
+	<select id="findLoginLogList" resultType="com.wicresoft.jrad.modules.log.model.LoginLog">
+			SELECT t.id,
+			       t.login,
+			       t.type,
+			       t.action,
+			       t.action_time as actionTime,
+			       t.result,
+			       t.ip_address  as ipAddress 
+			       FROM SYS_LOGIN_LOG t where 1=1 
+		        <if test="login != null and login != '' ">
+					AND login=#{login}
+			    </if>
+				<if test="action != null and action != '' ">
+					AND action=#{action}
+				</if>
+				
+				<if test="startDate != null and startDate != '' ">
+					AND action_time &gt; to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') 
+				</if>
+				
+			    <if test="endDate != null and endDate != '' ">
+					AND action_time &lt; to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') 
+				</if>   
+				order by t.action_time desc
+	</select>
+</mapper>

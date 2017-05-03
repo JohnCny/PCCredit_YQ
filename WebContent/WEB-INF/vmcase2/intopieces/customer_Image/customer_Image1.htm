@@ -1,0 +1,59 @@
+#parse ("common/iframe_page_header.htm")
+#parse ("common/customerInfor.htm")
+<script src="${contextPath}/common/js/common/jquery.form.js"></script>
+<script src="${contextPath}/js/intopieces/intopieces.js"></script>
+<body class="whitebg">
+<input id="id" type="hidden" value="$!filter.pid/$!filter.cid/$!filter.page/$!filter.count"/>
+      <div class="place">
+        <div class="title">影像资料</div>
+      </div>
+<div style="margin-top:30px;margin-left:80px">
+<span > 
+<input id="syy" type="submit" value="上一页"/>
+</span>  
+<span >
+      #foreach($list in $result.items)
+<img width="750" height="400" src="data:image/png;base64,$!list.uri"/>
+#end
+</span>
+<span > 
+<input id="xyy" type="submit" value="下一页"/>
+</span>  
+  </div>
+</body>
+
+
+
+
+<script language="javascript" type="text/javascript">
+
+		 $("#xyy").click(function() {
+			var pid=$("#id").val().split("/")[0];
+			var cid=$("#id").val().split("/")[1];
+			var page=parseInt($("#id").val().split("/")[2]);
+			var count=parseInt($("#id").val().split("/")[3]);
+			if((count-1)>page){
+				var url = "${contextPath}/intopieces/intopiecesquery/selectAllImageByPcId.page?pid=" + pid+"&cid="+cid+"&page="+page+"&type=1"+"&sxtype=0";
+				window.location.href = url;
+			}else{
+				Dialog.message("已经是最后一页!");
+			}
+		 });
+		 $("#syy").click(function() {
+			 var pid=$("#id").val().split("/")[0];
+				var cid=$("#id").val().split("/")[1];
+				var page= parseInt($("#id").val().split("/")[2]);
+				var count=parseInt($("#id").val().split("/")[3]);
+				if(page>0){
+					var url = "${contextPath}/intopieces/intopiecesquery/selectAllImageByPcId.page?pid=" + pid+"&cid="+cid+"&page="+page+"&type=1"+"&sxtype=1";
+					window.location.href = url;
+				}else{
+					Dialog.message("已经是第一页!");
+				}
+		 });
+	
+
+</script>
+   <script src="${contextPath}/js/customerInfor/customer_infor.js"></script>
+#parse ("common/iframe_page_footer.htm")
+

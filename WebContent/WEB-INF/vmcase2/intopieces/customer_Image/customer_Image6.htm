@@ -1,0 +1,176 @@
+#parse ("common/iframe_page_header.htm")
+#parse ("common/macro.htm")
+ <link href="${contextPath}/css/photoswipe.css" rel="stylesheet" />
+	<link href="${contextPath}/css/default-skin.css" rel="stylesheet" />
+	<script src="${contextPath}/js/jquery-1.11.2.min.js"></script>
+	<script src="${contextPath}/js/photoswipe.min.js"></script>
+	<script src="${contextPath}/js/photoswipe-ui-default.min.js"></script>
+
+	<script src="${contextPath}/js/jquery.transit.js"></script>
+	<script src="${contextPath}/js/hammer.js"></script>
+	<script src="${contextPath}/js/jquery.hammer.js"></script>
+<body class="whitebg">
+ <div class="place">
+        <div class="title">客户原始信息>影像信息</div>
+  </div>
+    <div class="tabplace" style="height:34px; line-height:39px; margin:15px 15px 0 15.5px;">
+            <ul class="com-tab" style="color: rgb(106, 106, 106);">
+           <li class="tab" style="list-style-type:none;
+float:left;
+margin-right: -1px;
+border:solid 1px #B9C4CF;
+width:7%;
+background: -moz-linear-gradient(center top , rgb(254, 255, 255), rgb(218, 232, 246)) repeat scroll 0% 0% transparent;
+background-color:#EBF3FA;
+height:23px;
+line-height:23px;
+text-align: center;
+padding: 5px 5px 4px 8px;
+border-top-left-radius: 3px;
+border-top-right-radius: 3px;
+text-overflow: ellipsis;"><a href="${contextPath}/customer/firsthend/iframe_11.page?id=$!customerNm">基本信息</a></li>
+	            <li class="tab activeTab" style="list-style-type:none;
+float:left;
+margin-right: -1px;
+border:solid 1px #B9C4CF;
+width:7%;
+background: -moz-linear-gradient(center top , rgb(254, 255, 255), rgb(218, 232, 246)) repeat scroll 0% 0% transparent;
+background-color:#135aa4;
+height:23px;
+line-height:23px;
+text-align: center;
+padding: 5px 5px 4px 8px;
+border-top-left-radius: 3px;
+border-top-right-radius: 3px;
+text-overflow: ellipsis;"><a href="${contextPath}/intopieces/intopiecesquery/selectBycardId.page?page=0&type=1&sxtype=4&id=${customerNm}&cardId=$!customercardId">影像资料</a></li>
+            </ul>
+         </div>
+<!-- 第一种,都在同一组,一组里面很多个 -->
+	<div class="gallery">
+	    #foreach($result in $list)
+	    <a href="data:image/png;base64,$!result" data-size="1000x800" data-med="data:image/png;base64,$!result" data-med-size="1920x1200">
+			<img width="750" height="400" src="data:image/png;base64,$!result"/>
+		</a>
+#end
+	</div>
+	
+	<!-- 图片弹出模态框 -->
+	<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="pswp__bg"></div>
+		<div class="pswp__scroll-wrap">
+			<div class="pswp__container">
+				<div class="pswp__item"></div>
+				<div class="pswp__item"></div>
+				<div class="pswp__item"></div>
+			</div>
+			<div class="pswp__ui pswp__ui--hidden">
+				<div class="pswp__top-bar" style="opacity:0;">
+					<div class="pswp__counter"></div>
+					<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+					<button class="pswp__button pswp__button--share" title="Share"></button>
+					<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+					<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+					<div class="pswp__preloader">
+						<div class="pswp__preloader__icn">
+							<div class="pswp__preloader__cut">
+								<div class="pswp__preloader__donut"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="pswp__loading-indicator">
+					<div class="pswp__loading-indicator__line"></div>
+				</div>
+				<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+					<div class="pswp__share-tooltip">
+						<a href="#" class="pswp__share--facebook"></a>
+						<a href="#" class="pswp__share--twitter"></a>
+						<a href="#" class="pswp__share--pinterest"></a>
+						<a href="#" download class="pswp__share--download"></a>
+					</div>
+				</div>
+				<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+				<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+				<div class="pswp__caption">
+					<div class="pswp__caption__center"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+ </body>
+ <script type="text/javascript">
+	    (function() {//获取图片原始尺寸
+	    	// 读取尺寸大小
+	    	var imgReady = (function () {
+	    		var list = [], intervalId = null,
+	    		// 用来执行队列
+	    		tick = function () {
+	    			var i = 0;
+	    			for (; i < list.length; i++) {
+	    				list[i].end ? list.splice(i--, 1) : list[i]();
+	    			};
+	    			!list.length && stop();
+	    		},
+	    		// 停止所有定时器队列
+	    		stop = function () {
+	    			clearInterval(intervalId);
+	    			intervalId = null;
+	    		};
+	    		return function (url, ready, load, error) {
+	    			var onready, width, height, newWidth, newHeight,img = new Image();
+	    			img.src = url;
+	    			// 如果图片被缓存，则直接返回缓存数据
+	    			if (img.complete) {
+	    				ready.call(img);
+	    				load && load.call(img);
+	    				return;
+	    			};
+	    			width = img.width;
+	    			height = img.height;
+	    			img.onerror = function () {
+	    				error && error.call(img);
+	    				onready.end = true;
+	    				img = img.onload = img.onerror = null;
+	    			};
+	    			// 图片尺寸就绪
+	    			onready = function () {
+	    				newWidth = img.width;
+	    				newHeight = img.height;
+	    				if (newWidth !== width || newHeight !== height || newWidth * newHeight > 1024){
+	    					// 如果图片已经在其他地方加载可使用面积检测
+	    					ready.call(img);
+	    					onready.end = true;
+	    				};
+	    			};
+	    			onready();
+	    			// 完全加载完毕的事件
+	    			img.onload = function () {
+	    				// onload在定时器时间差范围内可能比onready快
+	    				// 这里进行检查并保证onready优先执行
+	    				!onready.end && onready();
+	    				load && load.call(img);
+	    				// IE gif动画会循环执行onload，置空onload即可
+	    				img = img.onload = img.onerror = null;
+	    			};
+	    			// 加入队列中定期执行
+	    			if (!onready.end) {
+	    				list.push(onready);
+	    				// 无论何时只允许出现一个定时器，减少浏览器性能损耗
+	    				if (intervalId === null) intervalId = setInterval(tick, 40);
+	    			};
+	    		};
+	    	})();
+			$(".article img").each(function(index, el) {//自定义——将其他图片做成这种形式
+				var self = $(this);
+				imgReady($(this).attr("src"), function () {
+					$(self).wrap('<div class="gallery"><a href="'+$(self).attr("src")+'" data-size="'+this.width+"x"+this.height+'" data-med="'+$(self).attr("src")+'" data-med-size="'+this.width+"x"+this.height+'"></div>');
+				});
+			});
+		});
+	</script>
+	<script src="${contextPath}/js/initPhotoSwipeFromDOM.js"></script>
+	<script>initPhotoSwipeFromDOM('.gallery');</script>
+#parse ("common/iframe_page_footer.htm")
+
+
+

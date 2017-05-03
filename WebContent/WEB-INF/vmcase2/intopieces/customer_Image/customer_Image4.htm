@@ -1,0 +1,68 @@
+#parse ("common/iframe_page_header.htm")
+#parse ("common/macro.htm")
+  <link rel="stylesheet" type="text/css" href="${uicasePath}/css/specialtab.css" />
+<body class="whitebg">
+  <div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">客户原始信息>基本信息</div>
+        <input id="id" type="hidden" value="$!filter.pid/$!filter.page/$!filter.count/$!customerNm"/>
+      </div>
+        <div class="tabplace">
+            <ul class="com-tab" >
+           <li class="tab "><a href="${contextPath}/customer/firsthend/iframe_11.page?id=$!customerNm">基本信息</a></li>
+	            <li class="tab activeTab"><a href="${contextPath}/intopieces/intopiecesquery/selectBycardId.page?page=0&type=1&sxtype=4&id=${customerNm}&cardId=$!customercardId">影像资料</a></li>
+            </ul>
+         </div>
+<div style="margin-top:30px;margin-left:80px">
+<span > 
+<input id="syy" type="submit" value="上一页"/>
+</span>  
+<span >
+      #foreach($list in $result.items)
+<img width="750" height="400" src="data:image/png;base64,$!list.uri"/>
+#end
+</span>
+<span > 
+<input id="xyy" type="submit" value="下一页"/>
+</span>  
+  </div>
+  </div>
+  </div>
+</body>
+
+
+
+
+<script language="javascript" type="text/javascript">
+
+		 $("#xyy").click(function() {
+			var pid=$("#id").val().split("/")[0];
+			var id=$("#id").val().split("/")[3];
+			var page=parseInt($("#id").val().split("/")[1]);
+			var count=parseInt($("#id").val().split("/")[2]);
+			if((count-1)>page){
+				var url = "${contextPath}/intopieces/intopiecesquery/selectBycardId.page?id="+id+"&cardId="+pid+"&page="+page+"&type=1"+"&sxtype=0";
+				window.location.href = url;
+			}else{
+				Dialog.message("已经是最后一页!");
+			}
+		 });
+		 $("#syy").click(function() {
+				var pid=$("#id").val().split("/")[0];
+				var id=$("#id").val().split("/")[3];
+				var page=parseInt($("#id").val().split("/")[1]);
+				var count=parseInt($("#id").val().split("/")[2]);
+				if(page>0){
+					var url = "${contextPath}/intopieces/intopiecesquery/selectBycardId.page?id="+id+"&cardId="+pid+"&page="+page+"&type=1"+"&sxtype=1";
+					window.location.href = url;
+				}else{
+					Dialog.message("已经是第一页!");
+				}
+		 });
+	
+
+</script>
+   <script src="${contextPath}/js/customerInfor/customer_infor.js"></script>
+#parse ("common/iframe_page_footer.htm")
+

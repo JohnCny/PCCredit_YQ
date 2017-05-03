@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.jnpad.dao.JnpadPcCustomerDao">
+
+
+<resultMap type="com.cardpay.pccredit.jnpad.model.JnpadPcCustomer" id="JnpadPcCustomerDao">
+<result property="id" column="id" />
+<result property="name" column="name" />
+<result property="csrq" column="csrq" />
+<result property="cjsj" column="cjsj" />
+<result property="cardid" column="cardid" />
+<result property="sfzdz" column="sfzdz" />
+<result property="hy" column="hy" />
+<result property="dpdz" column="dpdz" />
+<result property="userid" column="userid" />
+<result property="displayName" column="displayName" />
+
+</resultMap>
+<resultMap id="BaseResultMap" type="com.cardpay.pccredit.intopieces.web.LocalImageForm">
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="attachment" property="attachment" jdbcType="VARCHAR" />
+    <result column="uri" property="uri" jdbcType="VARCHAR" />
+    <result column="createdTime" property="createdTime" jdbcType="VARCHAR" />
+    <result column="cardid" property="cardid" jdbcType="VARCHAR" />
+    <result column="userId" property="userId" jdbcType="VARCHAR" />
+  </resultMap>
+    <insert id="insertPCImage">
+        INSERT INTO LOCAL_PCIMAGE
+        (id,
+        attachment,
+        uri,
+        CREATED_TIME,
+        cardid,
+        userid
+        )
+        VALUES(
+        #{id},
+        #{attachment},
+        #{uri},
+        #{createdTime},
+        #{cardid},
+        #{userId}
+        )
+    </insert>
+
+
+<select id="selectPCustomer" resultMap="JnpadPcCustomerDao">
+select b.*,s.display_name as displayName from BASIC_CUSTOMER_PCINFORMATION b,sys_user s where b.userid=#{userId}
+and b.userid=s.id
+</select>
+    <insert id="insertPCustomer">
+        INSERT INTO BASIC_CUSTOMER_PCINFORMATION
+        (id,
+        name,
+        csrq,
+        cjsj,
+        cardid,
+        sfzdz,
+        hy,
+        dpdz,
+        userid
+        )
+        VALUES(
+        #{id},
+        #{name},
+        #{csrq},
+        #{cjsj},
+        #{cardid},
+         #{sfzdz},
+        #{hy},
+        #{dpdz},
+        #{userid}
+        )
+    </insert>
+    
+    <select id="selectCardId" resultMap="JnpadPcCustomerDao">
+select s.display_name as name from BASIC_CUSTOMER_INFORMATION b,sys_user s where 
+s.id=b.user_id and
+b.CARD_ID=#{cardid}
+</select>
+
+        <select id="selectUri" resultMap="BaseResultMap">
+select *  from LOCAL_PCIMAGE where 
+cardid=#{cardid}
+order by CREATED_TIME asc
+</select>
+
+<select id="selectUriById" resultMap="BaseResultMap">
+select *  from LOCAL_PCIMAGE where 
+id=#{id}
+</select>
+
+<delete id="deleteId">
+delete  from LOCAL_PCIMAGE where 
+id=#{id}
+</delete>
+
+<select id="findAllqyjl" resultMap="JnpadPcCustomerDao">
+		   select amp.user_id as id
+     FROM  manager_belong_map mbm
+     LEFT JOIN account_manager_parameter amp
+       on amp.id = mbm.child_id
+     LEFT JOIN sys_user su
+		    ON su.id = amp.user_id
+		 WHERE   mbm.parent_id ='100000'
+	</select>
+	
+<select id="findxzz" resultMap="JnpadPcCustomerDao">
+		     select amp.user_id as id
+     FROM  manager_belong_map mbm
+    ,account_manager_parameter amp
+
+     , sys_user su,
+     ( select id from account_manager_parameter where user_id=#{id}) cc
+
+     WHERE   mbm.parent_id =cc.id
+     and amp.id = mbm.child_id
+     and su.id = amp.user_id
+	</select>
+      <select id="findSpRy" resultMap="JnpadPcCustomerDao" >
+		
+select s.display_name as name,s.id as userid from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{userId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id
+	</select>
+</mapper>

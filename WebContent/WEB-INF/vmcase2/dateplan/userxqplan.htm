@@ -1,0 +1,122 @@
+#parse ("common/iframe_page_header.htm")
+<body>
+  <div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">每日任务>任务完成情况</div>
+      </div>
+        <div id="topDiv" class="inquiry_list inquiry_top">
+          <table>
+            <colgroup>
+              <col width="10%" />
+              <col width="10%" />
+                <col width="10%" />
+              <col width="10%" />
+            </colgroup>
+            <tr class="title">
+              <th nowrap="nowrap">工作任务内容</th>
+              <th nowrap="nowrap">计划完成数量</th>
+               <th nowrap="nowrap">实际完成数量</th>
+                <th nowrap="nowrap">完成状态</th>
+            </tr>
+          </table>
+        </div>
+        <div id="downDiv" class="inquiry_list inquiry_down">
+          <table>
+            <colgroup>
+              <col width="10%" />
+              <col width="10%" />
+                <col width="10%" />
+              <col width="10%" />
+            </colgroup>
+            <tr>
+              <td nowrap="nowrap">客户营销（陌拜）</td>
+                   
+              <td nowrap="nowrap">$!result.mbsl</td>
+               <td nowrap="nowrap">$!result.mbsll</td>
+               #if($!result.mbsl>$!result.mbsll)
+              <td nowrap="nowrap">未完成</td>
+                #else($!result.mbsl=<$!result.mbsll)
+                  <td nowrap="nowrap">完成</td>
+                   #end
+            </tr>
+               <tr>
+              <td nowrap="nowrap">客户维护</td>
+              <td nowrap="nowrap">$!result.whsl</td>
+               <td nowrap="nowrap">$!result.whsll</td>
+                #if($!result.whsl>$!result.whsll)
+              <td nowrap="nowrap">未完成</td>
+                #else($!result.whsl=<$!result.whsll)
+                  <td nowrap="nowrap">完成</td>
+                   #end
+            </tr>
+               <tr>
+              <td nowrap="nowrap">贷前调查</td>
+              <td nowrap="nowrap">$!result.dcsl</td>
+               <td nowrap="nowrap">$!result.dqsll</td>
+               #if($!result.dcsl>$!result.dqsll)
+              <td nowrap="nowrap">未完成</td>
+                #else($!result.dcsl=<$!result.dqsll)
+                  <td nowrap="nowrap">完成</td>
+                   #end
+            </tr>
+               <tr>
+              <td nowrap="nowrap">贷后维护</td>
+              <td nowrap="nowrap">$!result.dhsl</td>
+               <td nowrap="nowrap">$!result.dhsll</td>
+               #if($!result.dhsl>$!result.dhsll)
+              <td nowrap="nowrap">未完成</td>
+                #else($!result.dhsl=<$!result.dhsll)
+                  <td nowrap="nowrap">完成</td>
+                   #end
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="pagebar">
+        <div class="controlbtn">
+          <!-- <a id="id_next_button" class="btn_g" href="javascript:void(0);" title="下一步">下一步</a>
+           -->
+        </div>
+        #parse ("common/pagination.htm")
+        <div class="clear"></div>
+      </div>
+    </div>
+  </div>
+</body>
+<script language="javascript" type="text/javascript">
+	var layout = new TableLayout(2);
+	window.top.currentWindow.setLayout(layout);
+
+	$(document).ready(function() {
+		var opsObj = new Object();
+		opsObj.formObj = $("#submitForm");
+		opsObj.browseUrl = "${modulePath}/browseProduct.page";
+        
+		prepareOperations(opsObj);
+		$("#id_next_button").click(function() {
+            if ($(".checkbox :checked").length == 1) {
+            	
+                var rowid = $($(".checkbox :checked")[0]).attr("value");
+                var url = "${contextPath}//sys/user/creat.page?id="+rowid;
+                var url1 = "${contextPath}//sys/user/creat2.page?id="+rowid;
+                $.ajax({
+      				url : url1,
+      				type : "get",
+      				success : function(data) {
+      				 if(data.message=="1"){
+      					 Dialog.message("选中客户经理当天任务已经添加，请勿重新添加!!!");
+      				}else{
+      					window.location.href=url;
+      				} }
+      				});
+                
+                
+               // window.location.href = url;
+            } else {
+                Dialog.message("请选择一行");
+            }
+        });
+	});
+</script>
+#parse ("common/iframe_page_footer.htm")

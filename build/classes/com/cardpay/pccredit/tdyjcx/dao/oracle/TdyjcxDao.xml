@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.tdyjcx.dao.TdyjcxDao" >
+
+	<resultMap id="AccountManagerParameterFormMap"
+		type="com.cardpay.pccredit.manager.web.AccountManagerParameterForm">
+		<result property="id" column="ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="displayName" column="DISPLAY_NAME" />
+		<result property="rewardIncentiveInformation" column="REWARD_INCENTIVE_INFORMATION" />
+		<result property="levelInformation" column="LEVEL_INFORMATION" />
+		<result property="creditLine" column="CREDIT_LINE" />
+		<result property="monthlyOverdraftBalance" column="MONTHLY_OVERDRAFT_BALANCE" />
+		<result property="teamOverdraftBalance" column="TEAM_OVERDRAFT_BALANCE" />
+		<result property="tubeNumber" column="TUBE_NUMBER" />
+		<result property="activationRate" column="ACTIVATION_RATE" />
+		<result property="activeRate" column="ACTIVE_RATE" />
+		<result property="entryTime" column="ENTRY_TIME" />
+		<result property="riskTolerance" column="RISK_TOLERANCE" />
+		<result property="createdTime" column="CREATED_TIME" />
+		<result property="createdBy" column="CREATED_BY" />
+		<result property="modifiedTime" column="MODIFIED_TIME" />
+		<result property="modifiedBy" column="MODIFIED_BY" />
+	</resultMap>
+	<resultMap id="MaintenanceWebResultMap" type="com.cardpay.pccredit.tdyjcx.model.MaintenanceForm">
+		<result property="id" column="id" />
+		<result property="customerId" column="customer_id" />
+		<result property="chineseName" column="chinese_name" />
+		<result property="customerManagerId" column="customer_manager_id" />
+		<result property="maintenanceGoal" column="maintenance_goal" />
+		<result property="maintenanceWay" column="maintenance_way" />
+		<result property="maintenanceDay" column="maintenance_day" />
+		<result property="createWay" column="create_way" />
+		<result property="endResult" column="end_result" />
+		<result property="remarksCreateReason" column="remarks_create_reason" />
+		<result property="maintenanceEndtime" column="maintenance_endtime" />
+		<result property="maintenancePlanId" column="maintenance_plan_id" />
+		<result property="maintenanceResult" column="maintenance_result" />
+		<result property="maintenanceStartTime" column="maintenance_start_time" />
+		<result property="maintenanceEndTime" column="maintenance_end_time" />
+		<result property="userName" column="display_name" />
+		<result property="size" column="countAction" />
+		<result property="productName" column="product_name" />
+		<result property="cardId" column="card_id" />
+		
+		<result property="startDay" column="startDay" />
+		<result property="endDay" column="endDay" />
+		<result property="appId" column="appId" />
+		<result property="customerManagerId" column="user_id" />
+		
+		<result property="dkye" column="dkye" />
+		<result property="custidcount" column="custidcount" />
+	</resultMap>
+	
+	<resultMap type="com.cardpay.pccredit.tdyjcx.model.ManagerPerformmance"
+		id="managerperform">
+		<result property="id" column="ID" />
+		<result property="manager_id" column="manager_id" />
+		<result property="visitcount" column="visitcount" />
+		<result property="applycount" column="applycount" />
+		<result property="applyrefuse" column="applyrefuse" />
+		<result property="creditcount" column="creditcount" />
+		<result property="creditrefuse" column="creditrefuse" />
+		<result property="realycount" column="realycount" />
+		<result property="reportcount" column="reportcount" />
+		<result property="internalcount" column="internalcount" />
+		<result property="meetingcout" column="meetingcout" />
+		<result property="passcount" column="passcount" />
+		<result property="signcount" column="signcount" />
+		<result property="givemoneycount" column="givemoneycount" />
+		<result property="crateday" column="crateday" />
+	</resultMap>
+	
+	<resultMap type="com.cardpay.pccredit.tdyjcx.model.Tdyjcx"
+		id="Tdyjcxform">
+		<result property="applycount" column="applycount" />
+		<result property="manager_id" column="manager_id" />
+	</resultMap>
+
+
+
+<select id="findcustomermanager" resultMap="AccountManagerParameterFormMap">
+		SELECT T.*, s.DISPLAY_NAME
+		FROM ACCOUNT_MANAGER_PARAMETER T
+		LEFT JOIN SYS_USER s ON s.id = T.USER_ID
+		WHERE  s.USER_TYPE = '1'
+		ORDER BY t.CREATED_TIME DESC
+	</select>
+	
+<select id="fincustomerinfo"  parameterType="String" resultType="com.cardpay.pccredit.customeradd.model.CIPERSONBASINFO" >
+	select * from T_CIPERSONBASINFO where CARDNUM=#{cardid}
+</select>
+<select id="findMaintenancePlansList" resultMap="MaintenanceWebResultMap" 
+			parameterType="com.cardpay.pccredit.customer.filter.MaintenanceFilter">
+					SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+				FROM (
+					select  
+					sysuser.id as userId,
+					sysuser.display_name,
+					amp.level_information as user_type,
+					sum(t.money) as reqlmtsum,
+					sum(t.BALAMT) as balamtsum,
+					sum(t.DLAYAMT+t.INDEBTAMT+t.OUTDEBTAMT) as dlayamtsum,
+		            count(distinct(t.CUSTID)) as custidcount
+		           <!--  count(t.CUSTID)/( select count(distinct basic.id)from basic_customer_information basic ,
+		            customer_application_info app where basic.id=app.customer_id) as zhlv -->
+		         from 
+		        T_MIBUSIDATA_VIEW t,
+		        basic_customer_information basic,
+		        sys_user sysuser,
+		        ACCOUNT_MANAGER_PARAMETER amp
+		        where basic.ty_customer_id=t.custid and
+		        basic.user_id=sysuser.id and
+		        sysuser.id=amp.user_id
+				<if test="customerManagerId != null and customerManagerId != '' ">
+				  and basic.user_id=#{customerManagerId}
+				</if>
+				<if test="customerManagerIds != null and customerManagerIds != '' ">  
+ 					  	AND basic.user_id in  
+	 					<foreach collection="customerManagerIds" index="index" item="item" open="(" separator="," close=")"> 
+							#{item.userId} 
+						</foreach>
+					</if>
+				  group by sysuser.id , sysuser.display_name,amp.level_information
+		 <![CDATA[		
+							) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+	</select>
+	
+<select id="findMaintenancePlansCountList" resultType="int"
+			parameterType="com.cardpay.pccredit.customer.filter.MaintenanceFilter">
+		  select  	   count(*)
+				       from(select  
+				       sysuser.id as userId,
+				       sysuser.display_name,
+				       amp.level_information as user_type,
+				       sum(t.money) as reqlmtsum,
+				       sum(t.BALAMT) as balamtsum,
+				       sum(t.DLAYAMT+t.INDEBTAMT+t.OUTDEBTAMT) as dlayamtsum,
+		        	   count(distinct t.CUSTID) as custidcount
+		              <!--  count(t.CUSTID)/( select count(distinct basic.id)  from basic_customer_information basic ,
+		               customer_application_info app where basic.id=app.customer_id) as zhlv -->
+		         from 
+		        T_MIBUSIDATA_VIEW t,
+		        basic_customer_information basic,
+		        sys_user sysuser,
+		        ACCOUNT_MANAGER_PARAMETER amp
+		        where basic.ty_customer_id=t.custid and
+		        basic.user_id=sysuser.id and
+		        sysuser.id=amp.user_id
+				<if test="customerManagerId != null and customerManagerId != '' ">
+				  and basic.user_id=#{customerManagerId}
+				</if>
+				<if test="customerManagerIds != null and customerManagerIds != '' ">  
+ 					  	AND basic.user_id in  
+	 					<foreach collection="customerManagerIds" index="index" item="item" open="(" separator="," close=")"> 
+							#{item.userId} 
+						</foreach>
+					</if>
+				  group by sysuser.id , sysuser.display_name,amp.level_information)
+	</select>
+	
+	<!-- 客户数 -->
+	<select id="fiindcustomercount" resultType="int"
+			parameterType="com.cardpay.pccredit.customer.filter.MaintenanceFilter">
+		   select count(distinct basic.id)  from basic_customer_information basic ,customer_application_info app where basic.id=app.customer_id
+     <!--  and basic.user_id=#{customerManagerId} -->
+      <if test="customerManagerId != null and customerManagerId != '' ">
+				  and basic.user_id=#{customerManagerId}
+				</if>
+				<!-- <if test="customerManagerIds != null and customerManagerIds != '' ">  
+ 					  	AND basic.user_id in  
+	 					<foreach collection="customerManagerIds" index="index" item="item" open="(" separator="," close=")"> 
+							#{item.userId} 
+						</foreach>
+					</if> -->
+	</select>
+	
+	<!-- 不良金额 -->
+	<select id="findbadAmountsum" resultType="String"
+			parameterType="com.cardpay.pccredit.customer.filter.MaintenanceFilter">
+		   select sum(nvl(tc.REFERAOMUNT,0)) from t_cipersonbadrecord tc,basic_customer_information basic
+        where 1=1 and basic.ty_customer_id=tc.custid
+      <if test="customerManagerId != null and customerManagerId != '' ">
+				  and basic.user_id=#{customerManagerId}
+				</if>
+				<if test="customerManagerIds != null and customerManagerIds != '' ">  
+ 					  	AND basic.user_id in  
+	 					<foreach collection="customerManagerIds" index="index" item="item" open="(" separator="," close=")"> 
+							#{item.userId} 
+						</foreach>
+					</if>
+	</select>
+	
+	<!--查询进件的信息  -->
+	<select id="finManagerPerformmanceById" resultMap="managerperform">
+		SELECT *  FROM manager_performmance 
+		WHERE 1=1 
+		<if test="customerManagerIds != null and customerManagerIds != '' ">  
+ 					  	AND manager_id in  
+	 					<foreach collection="customerManagerIds" index="index" item="item" open="(" separator="," close=")"> 
+							#{item.userId} 
+						</foreach>
+					</if>
+		<if test="customerManagerId != null and customerManagerId != '' ">
+		  and manager_id=#{customerManagerId}
+		</if>
+		<!-- and anager_id=#{customerManagerId} -->
+		<!-- and trunc(CRATEDAY)=trunc(sysdate) -->
+
+	</select>
+	
+		<select id="findappcount" resultMap="Tdyjcxform">
+		select count(app.id) as applycount ,sysuser.id as manager_id from basic_customer_information basic,
+		customer_application_info app,
+		sys_user sysuser
+		where 1=1 and
+		app.customer_id=basic.id and
+		basic.user_id=sysuser.id
+		<if test="customerManagerIds != null and customerManagerIds != '' ">  
+ 					  	AND basic.user_id in  
+	 					<foreach collection="customerManagerIds" index="index" item="item" open="(" separator="," close=")"> 
+							#{item.userId} 
+						</foreach>
+					</if>
+		<if test="customerManagerId != null and customerManagerId != '' ">
+		  and basic.user_id=#{customerManagerId}
+		</if>
+		 group by sysuser.id
+		</select>
+</mapper>
