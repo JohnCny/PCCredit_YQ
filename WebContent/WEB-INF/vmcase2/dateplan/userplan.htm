@@ -1,0 +1,67 @@
+#parse ("common/iframe_page_header.htm")
+#parse ("common/macro.htm")
+  <link rel="stylesheet" type="text/css" href="${uicasePath}/css/specialtab.css" />
+<body class="whitebg">
+  <div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">每日任务>我的任务</div>
+      </div>
+       
+         <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">
+          <table cellpadding="0" cellspacing="0" class="table-bd" border="1" bordercolor="#cccccc" style="width: 50%">
+            <colgroup>
+              <col width="10%" />
+              <col width="30%" />
+              <col width="10%" />
+              <col width="30%" />
+            </colgroup>
+              <tr><td class="titlec" colspan="4" style="text-align: center;">任务信息</td></tr>
+            <tr>
+              <td class="titlefc3"><label for="chineseName">任务制订人:</label></td>
+              <td><input class="rinpsty"  type="text" id="chineseName" name="chineseName" value="$datePlanModel.name" readonly/></td>
+            </tr>
+            <tr>
+              <td class="titlefc3"><label for="chineseName">客户营销（陌拜）数量:</label></td>
+              <td><input class="rinpsty"  type="text" id="mbcount"  value="$datePlanModel.mbsl" readonly/></td>
+                <td class="titlefc3"><label for="chineseName">客户维护数量:</label></td>
+              <td><input class="rinpsty"  type="text" id="whsl"  value="$datePlanModel.whsl" readonly/></td>
+			
+           
+            </tr>
+            <tr>
+             	<td class="titlefc3"><label for="cardId">贷前调查数量:</label></td>
+                <td><input class="rinpsty"  type="text"  id="dqsl"  value="$datePlanModel.dcsl " readonly/></td>
+                	<td class="titlefc3"><label for="cardId">贷后维护数量:</label></td>
+                <td><input class="rinpsty"  type="text" id="dhwh"   value="$datePlanModel.dhsl" readonly/></td>
+            </tr>
+            
+         
+          </table>
+        </div>
+      <div class="submit" style="text-align:left;">
+        #if($!datePlanModel.name!="暂无制定人")
+        <input id="save" type="button" value="完成状况" class="current" />
+        #end
+      </div>
+    </div>
+  </div>
+ 
+  <script type="text/javascript">
+  var layout = new TableLayout(2);
+	window.top.currentWindow.setLayout(layout);
+	 $("#save").click(function() {
+		 var mbsl=$("#mbcount").val();
+		 var dcsl=$("#dqsl").val();
+		 var dhsl=$("#dhwh").val();
+		 var whsl=$("#whsl").val();
+			 var url = "${contextPath}//sys/user/rwxq.page?&mbsl="+mbsl+"&dcsl="+dcsl+
+				"&dhsl="+dhsl+"&whsl="+whsl;
+			 window.location.href=url;
+     });
+	
+	
+  </script>
+  
+</body>
+#parse ("common/iframe_page_footer.htm")

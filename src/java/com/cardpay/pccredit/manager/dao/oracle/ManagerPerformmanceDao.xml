@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.manager.dao.ManagerPerformmanceDao">
+
+	<resultMap id="ResultMap"
+		type="com.cardpay.pccredit.manager.form.DeptMemberForm">
+		<result property="id" column="ID" />
+		<result property="oname" column="oname" />
+		<result property="name" column="name" />
+		<result property="display_name" column="display_name" />
+		<result property="external_id" column="external_id" />
+	</resultMap>
+	<resultMap type="com.cardpay.pccredit.manager.form.BankListForm"
+		id="bankList">
+		<result property="id" column="ID" />
+		<result property="name" column="name" />
+	</resultMap>
+	<resultMap type="com.cardpay.pccredit.manager.model.ManagerPerformmance"
+		id="managerperform">
+		<result property="id" column="ID" />
+		<result property="manager_id" column="manager_id" />
+		<result property="visitcount" column="visitcount" />
+		<result property="applycount" column="applycount" />
+		<result property="applyrefuse" column="applyrefuse" />
+		<result property="creditcount" column="creditcount" />
+		<result property="creditrefuse" column="creditrefuse" />
+		<result property="realycount" column="realycount" />
+		<result property="reportcount" column="reportcount" />
+		<result property="internalcount" column="internalcount" />
+		<result property="meetingcout" column="meetingcout" />
+		<result property="passcount" column="passcount" />
+		<result property="signcount" column="signcount" />
+		<result property="givemoneycount" column="givemoneycount" />
+		<result property="crateday" column="crateday" />
+		<result property="money" column="money" />
+	</resultMap>
+	<resultMap type="com.cardpay.pccredit.manager.form.ManagerPerformmanceForm"
+		id="managerperformsum">
+		<result property="id" column="ID" />
+		<result property="manager_id_s" column="manager_id" />
+		<result property="visitcount_s" column="visitcount" />
+		<result property="applycount_s" column="applycount" />
+		<result property="applyrefuse_s" column="applyrefuse" />
+		<result property="creditcount_s" column="creditcount" />
+		<result property="creditrefuse_s" column="creditrefuse" />
+		<result property="realycount_s" column="realycount" />
+		<result property="reportcount_s" column="reportcount" />
+		<result property="internalcount_s" column="internalcount" />
+		<result property="meetingcout_s" column="meetingcout" />
+		<result property="passcount_s" column="passcount" />
+		<result property="signcount_s" column="signcount" />
+		<result property="givemoneycount_s" column="givemoneycount" />
+		<result property="crateday_s" column="crateday" />
+
+	</resultMap>
+	<resultMap type="com.cardpay.pccredit.manager.form.ManagerPerformmanceForm"
+		id="resultsum">
+		<result property="manager_id_s" column="manager_id" />
+		<result property="visitcount_s" column="visitcount_s" />
+		<result property="applycount_s" column="applycount_s" />
+		<result property="applyrefuse_s" column="applyrefuse_s" />
+		<result property="creditcount_s" column="creditcount_s" />
+		<result property="creditrefuse_s" column="creditrefuse_s" />
+		<result property="realycount_s" column="realycount_s" />
+		<result property="reportcount_s" column="reportcount_s" />
+		<result property="internalcount_s" column="internalcount_s" />
+		<result property="meetingcout_s" column="meetingcout_s" />
+		<result property="passcount_s" column="passcount_s" />
+		<result property="signcount_s" column="signcount_s" />
+		<result property="givemoneycount_s" column="givemoneycount_s" />
+		<result property="crateday_s" column="crateday_s" />
+		<result property="manager_id" column="manager_id" />
+		<result property="visitcount" column="visitcount" />
+		<result property="applycount" column="applycount" />
+		<result property="applyrefuse" column="applyrefuse" />
+		<result property="creditcount" column="creditcount" />
+		<result property="creditrefuse" column="creditrefuse" />
+		<result property="realycount" column="realycount" />
+		<result property="reportcount" column="reportcount" />
+		<result property="internalcount" column="internalcount" />
+		<result property="meetingcout" column="meetingcout" />
+		<result property="passcount" column="passcount" />
+		<result property="signcount" column="signcount" />
+		<result property="givemoneycount" column="givemoneycount" />
+		<result property="crateday" column="crateday" />
+		<result property="money" column="money" />
+		<result property="money1" column="money1" />
+		<result property="team" column="team" />
+		<result property="ordteam" column="ordteam" />
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+	</resultMap>
+	<select id="findMumberByDeptId" resultMap="ResultMap">
+		select o.name as oname ,d.name,t.* from sys_user t
+		left join sys_dept_user sd on t.id = sd.user_id
+		left join sys_department d on sd.dept_id = d.id
+		left join sys_organization o on d.org_id = o.id
+		where 1=1 and d.org_id=#{id}
+	</select>
+	<insert id="insertManager">
+	    insert into MANAGER_PERFORMMANCE (ID,MANAGER_ID,VISITCOUNT,APPLYCOUNT,APPLYREFUSE,CREDITCOUNT,CREDITREFUSE,REALYCOUNT,REPORTCOUNT,INTERNALCOUNT,MEETINGCOUT,PASSCOUNT,SIGNCOUNT,GIVEMONEYCOUNT,CRATEDAY)
+	    values (#{id},#{manager_id},#{visitcount},#{applycount},#{applyrefuse},#{creditcount},#{creditrefuse},#{realycount},#{reportcount},#{internalcount},#{meetingcout},#{passcount},#{signcount},#{givemoneycount},#{crateday})
+	</insert>
+	<select id="finManagerPerformmanceSumById" resultMap="managerperform">
+		select * from MANAGER_PERFORMMANCE
+
+		where 1=1 and manager_id=#{managerId} and to_char(crateday,'yyyy-mm-dd')=#{changedate}
+	</select>
+
+	<select id="finManagerPerformmanceById" resultMap="managerperform">
+		SELECT *  FROM manager_performmance 
+		WHERE manager_id=#{managerId}
+		--and trunc(CRATEDAY)=trunc(sysdate)
+		order by CRATEDAY desc
+
+	</select>
+	<select id="finManagerPerformmanceById1" resultMap="managerperform">
+		SELECT *  FROM manager_performmance 
+		WHERE manager_id=#{managerId}
+		and trunc(CRATEDAY)=trunc(sysdate)
+
+	</select>
+
+	<update id="updateManagerPerformmanceSum">
+		update manager_performmance_sum m set
+		m.visitcount_s = m.visitcount_s+#{visitcount_s},
+		m.applycount_s = m.applycount_s+#{applycount_s},
+		m.applyrefuse_s = m.applyrefuse_s+#{applyrefuse_s},
+		m.creditcount_s = m.creditcount_s+#{creditcount_s},
+		m.creditrefuse_s = m.creditrefuse_s+#{creditrefuse_s},
+		m.realycount_s = m.realycount_s+#{realycount_s},
+		m.reportcount_s = m.reportcount_s+#{reportcount_s},
+		m.internalcount_s = m.internalcount_s+#{internalcount_s},
+		m.meetingcout_s = m.meetingcout_s+#{meetingcout_s},
+		m.passcount_s = m.passcount_s+#{passcount_s},
+		m.signcount_s = m.signcount_s+#{signcount_s},
+		m.givemoneycount_s = m.givemoneycount_s+#{givemoneycount_s},
+		m.crateday_s =#{crateday_s}
+		where m.manager_id_s=#{manager_id_s}
+
+
+
+	</update>
+
+
+	<select id="findSumPerformmanceById" resultMap="managerperformsum">
+		SELECT 		
+		nvl(sum(ma.MONEY), 0)AS money,sum (p.VISITCOUNT) AS VISITCOUNT_S,sum (p.APPLYCOUNT) AS APPLYCOUNT_S, sum (p.APPLYREFUSE) AS APPLYREFUSE_S,
+		sum (p.CREDITCOUNT) AS CREDITCOUNT_S, sum (p.CREDITREFUSE) AS CREDITREFUSE_S,
+		sum (p.REALYCOUNT) AS REALYCOUNT_S, sum (p.REPORTCOUNT) AS REPORTCOUNT_S,
+		sum (p.INTERNALCOUNT) AS INTERNALCOUNT_S, sum (p.MEETINGCOUT) AS MEETINGCOUT_S,sum (p.PASSCOUNT) AS PASSCOUNT_S, 
+		sum (p.SIGNCOUNT) AS SIGNCOUNT_S, 
+		sum (p.GIVEMONEYCOUNT) AS GIVEMONEYCOUNT_S
+		FROM MANAGER_PERFORMMANCE p 
+		left JOIN BASIC_CUSTOMER_INFORMATION bci ON p.MANAGER_ID = bci.USER_ID
+		left JOIN t_MIBUSIDATA_VIEW ma ON ma.CUSTID=bci.TY_CUSTOMER_ID
+		left JOIN SYS_USER su ON su.ID=bci.USER_ID
+		where p.manager_id = #{managerId}
+		<if test="startDate != null and startDate != ''">
+		and p.crateday >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')  
+		</if>
+		<if test="endDate != null and endDate != ''">
+		AND  to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>= p.crateday
+		</if>
+		
+	</select>
+
+	<select id="findDeptSumPerformmanceById" resultMap="managerperformsum">
+		SELECT 
+		nvl(sum(ma.MONEY), 0)AS money,sum(s.VISITCOUNT) AS VISITCOUNT_S, sum(s.APPLYCOUNT) AS APPLYCOUNT_S,
+		sum(s.APPLYREFUSE) AS APPLYREFUSE_S,
+		sum(s.CREDITCOUNT) AS CREDITCOUNT_S, sum(s.CREDITREFUSE) AS CREDITREFUSE_S,
+		sum(s.REALYCOUNT) AS REALYCOUNT_S,sum(s.REPORTCOUNT) AS
+		REPORTCOUNT_S,
+		sum(s.INTERNALCOUNT) AS INTERNALCOUNT_S, sum(s.MEETINGCOUT) AS MEETINGCOUT_S,
+		sum(s.PASSCOUNT) AS PASSCOUNT_S,
+		sum(s.SIGNCOUNT) AS SIGNCOUNT_S, sum(s.GIVEMONEYCOUNT) AS GIVEMONEYCOUNT_S
+		FROM MANAGER_PERFORMMANCE s
+		left JOIN BASIC_CUSTOMER_INFORMATION bci ON s.MANAGER_ID = bci.USER_ID
+		left JOIN t_MIBUSIDATA_VIEW ma ON ma.CUSTID=bci.TY_CUSTOMER_ID
+		left JOIN SYS_USER su ON su.ID=bci.USER_ID
+		where s.manager_id IN (select t.ID from sys_user t
+		left join sys_dept_user sd on t.id = sd.user_id
+		left join sys_department d on sd.dept_id = d.id
+		left join sys_organization o on d.org_id = o.id
+		where 1=1 and d.org_id=#{orgId} )
+			<if test="startDate != null and startDate != ''">
+		and s.crateday >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')  
+		</if>
+		<if test="endDate != null and endDate != ''">
+		AND  to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>= s.crateday
+		</if>
+<!-- 		SELECT sum (p.VISITCOUNT) AS VISITCOUNT, sum(p.APPLYCOUNT) AS APPLYCOUNT,
+		sum(p.APPLYREFUSE) AS APPLYREFUSE,
+		sum(p.CREDITCOUNT) AS CREDITCOUNT, sum(p.CREDITREFUSE) AS CREDITREFUSE,sum(p.REALYCOUNT)
+		AS REALYCOUNT,
+		sum(p.REPORTCOUNT) AS REPORTCOUNT , sum(p.INTERNALCOUNT) AS
+		INTERNALCOUNT,sum(p.MEETINGCOUT) AS MEETINGCOUT,
+		sum(p.PASSCOUNT) AS PASSCOUNT, sum(p.SIGNCOUNT) AS SIGNCOUNT, sum(p.GIVEMONEYCOUNT) AS
+		GIVEMONEYCOUNT,
+		sum(s.VISITCOUNT_S) AS VISITCOUNT_S, sum(s.APPLYCOUNT_S) AS APPLYCOUNT_S,
+		sum(s.APPLYREFUSE_S) AS APPLYREFUSE_S,
+		sum(s.CREDITCOUNT_S) AS CREDITCOUNT_S, sum(s.CREDITREFUSE_S) AS CREDITREFUSE_S,
+		sum(s.REALYCOUNT_S) AS REALYCOUNT_S,sum(s.REPORTCOUNT_S) AS
+		REPORTCOUNT_S,
+		sum(s.INTERNALCOUNT_S) AS INTERNALCOUNT_S, sum(s.MEETINGCOUT_S) AS MEETINGCOUT_S,
+		sum(s.PASSCOUNT_S) AS PASSCOUNT_S,
+		sum(s.SIGNCOUNT_S) AS SIGNCOUNT_S, sum(s.GIVEMONEYCOUNT_S) AS GIVEMONEYCOUNT_S
+		FROM MANAGER_PERFORMMANCE p INNER JOIN MANAGER_PERFORMMANCE_sum s ON
+		p.manager_id=s.manager_id_s
+		where p.manager_id IN (select t.ID from sys_user t
+		left join sys_dept_user sd on t.id = sd.user_id
+		left join sys_department d on sd.dept_id = d.id
+		left join sys_organization o on d.org_id = o.id
+		where 1=1 and d.org_id=#{orgId} ) -->
+	</select>
+	
+	<select id="findDeptTodayPerformmanceById" resultMap="managerperform">
+		SELECT 
+		sum(s.VISITCOUNT) AS VISITCOUNT, sum(s.APPLYCOUNT) AS APPLYCOUNT,
+		sum(s.APPLYREFUSE) AS APPLYREFUSE,
+		sum(s.CREDITCOUNT) AS CREDITCOUNT, sum(s.CREDITREFUSE) AS CREDITREFUSE,
+		sum(s.REALYCOUNT) AS REALYCOUNT,sum(s.REPORTCOUNT) AS
+		REPORTCOUNT,
+		sum(s.INTERNALCOUNT) AS INTERNALCOUNT, sum(s.MEETINGCOUT) AS MEETINGCOUT,
+		sum(s.PASSCOUNT) AS PASSCOUNT,
+		sum(s.SIGNCOUNT) AS SIGNCOUNT, sum(s.GIVEMONEYCOUNT) AS GIVEMONEYCOUNT
+		FROM MANAGER_PERFORMMANCE s
+		where s.manager_id IN (select t.ID from sys_user t
+		left join sys_dept_user sd on t.id = sd.user_id
+		left join sys_department d on sd.dept_id = d.id
+		left join sys_organization o on d.org_id = o.id
+		where 1=1 and d.org_id=#{orgId} ) and trunc(s.CRATEDAY)=trunc(sysdate)
+		
+		</select>
+
+	<select id="findALlbank" resultMap="bankList">
+
+		select s.id,s.name from sys_organization s where is_deleted=0 and
+		parent_id='000000' order by seq_no
+
+	</select>
+	<select id="findALLDeptSumPerformmanceById" resultMap="managerperformsum">
+
+		SELECT 
+		nvl(sum(ma.MONEY), 0)AS money,sum(s.VISITCOUNT) AS VISITCOUNT_S, sum(s.APPLYCOUNT) AS APPLYCOUNT_S,
+		sum(s.APPLYREFUSE) AS APPLYREFUSE_S,
+		sum(s.CREDITCOUNT) AS CREDITCOUNT_S, sum(s.CREDITREFUSE) AS CREDITREFUSE_S,
+		sum(s.REALYCOUNT) AS REALYCOUNT_S,sum(s.REPORTCOUNT) AS REPORTCOUNT_S,
+		sum(s.INTERNALCOUNT) AS INTERNALCOUNT_S, sum(s.MEETINGCOUT) AS MEETINGCOUT_S,
+		sum(s.PASSCOUNT) AS PASSCOUNT_S,
+		sum(s.SIGNCOUNT) AS SIGNCOUNT_S, sum(s.GIVEMONEYCOUNT) AS GIVEMONEYCOUNT_S
+		FROM MANAGER_PERFORMMANCE s 
+		left JOIN BASIC_CUSTOMER_INFORMATION bci ON s.MANAGER_ID = bci.USER_ID
+		left JOIN t_MIBUSIDATA_VIEW ma ON ma.CUSTID=bci.TY_CUSTOMER_ID
+		left JOIN SYS_USER su ON su.ID=bci.USER_ID
+		where 1=1
+		<if test="startDate != null and startDate != ''">
+		and s.crateday >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')  
+		</if>
+		<if test="endDate != null and endDate != ''">
+		AND  to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>= s.crateday
+		</if>
+<!-- 		SELECT sum (p.VISITCOUNT) AS VISITCOUNT, sum(p.APPLYCOUNT) AS APPLYCOUNT,
+		sum(p.APPLYREFUSE) AS APPLYREFUSE,
+		sum(p.CREDITCOUNT) AS CREDITCOUNT, sum(p.CREDITREFUSE) AS CREDITREFUSE,sum(p.REALYCOUNT)
+		AS REALYCOUNT,
+		sum(p.REPORTCOUNT) AS REPORTCOUNT , sum(p.INTERNALCOUNT) AS
+		INTERNALCOUNT,sum(p.MEETINGCOUT) AS MEETINGCOUT,
+		sum(p.PASSCOUNT) AS PASSCOUNT, sum(p.SIGNCOUNT) AS SIGNCOUNT, sum(p.GIVEMONEYCOUNT) AS
+		GIVEMONEYCOUNT,
+		sum(s.VISITCOUNT_S) AS VISITCOUNT_S, sum(s.APPLYCOUNT_S) AS APPLYCOUNT_S,
+		sum(s.APPLYREFUSE_S) AS APPLYREFUSE_S,
+		sum(s.CREDITCOUNT_S) AS CREDITCOUNT_S, sum(s.CREDITREFUSE_S) AS CREDITREFUSE_S,
+		sum(s.REALYCOUNT_S) AS REALYCOUNT_S,sum(s.REPORTCOUNT_S) AS
+		REPORTCOUNT_S,
+		sum(s.INTERNALCOUNT_S) AS INTERNALCOUNT_S, sum(s.MEETINGCOUT_S) AS MEETINGCOUT_S,
+		sum(s.PASSCOUNT_S) AS PASSCOUNT_S,
+		sum(s.SIGNCOUNT_S) AS SIGNCOUNT_S, sum(s.GIVEMONEYCOUNT_S) AS GIVEMONEYCOUNT_S
+		FROM MANAGER_PERFORMMANCE p INNER JOIN MANAGER_PERFORMMANCE_sum s ON
+		p.manager_id=s.manager_id_s -->
+
+	</select>
+	<select id="findDeptTodaySumPerformmanceById" resultMap="managerperform">
+
+		SELECT 
+		sum(s.VISITCOUNT) AS VISITCOUNT, sum(s.APPLYCOUNT) AS APPLYCOUNT,
+		sum(s.APPLYREFUSE) AS APPLYREFUSE,
+		sum(s.CREDITCOUNT) AS CREDITCOUNT, sum(s.CREDITREFUSE) AS CREDITREFUSE,
+		sum(s.REALYCOUNT) AS REALYCOUNT,sum(s.REPORTCOUNT) AS REPORTCOUNT,
+		sum(s.INTERNALCOUNT) AS INTERNALCOUNT, sum(s.MEETINGCOUT) AS MEETINGCOUT,
+		sum(s.PASSCOUNT) AS PASSCOUNT,
+		sum(s.SIGNCOUNT) AS SIGNCOUNT, sum(s.GIVEMONEYCOUNT) AS GIVEMONEYCOUNT
+		FROM MANAGER_PERFORMMANCE s 
+		INNER JOIN BASIC_CUSTOMER_INFORMATION bci ON s.MANAGER_ID = bci.USER_ID
+		INNER JOIN t_MIBUSIDATA_VIEW ma ON ma.CUSTID=bci.TY_CUSTOMER_ID
+		where trunc(s.CRATEDAY)=trunc(sysdate)
+
+	</select>
+	<update id="updateManagerPerformmanceSumInfor">
+		update manager_performmance m set
+		m.visitcount = #{visitcount},
+		m.applycount = #{applycount},
+		m.applyrefuse = #{applyrefuse},
+		m.creditcount = #{creditcount},
+		m.creditrefuse = #{creditrefuse},
+		m.realycount = #{realycount},
+		m.reportcount = #{reportcount},
+		m.internalcount = #{internalcount},
+		m.meetingcout = #{meetingcout},
+		m.passcount = #{passcount},
+		m.signcount = #{signcount},
+		m.givemoneycount = #{givemoneycount}
+		where m.manager_id=#{manager_id}
+	</update>
+	
+	
+	<!--统计当天的拒绝申请次数  -->
+	<select id="queryRefuse" resultType="int">
+	select count(status) from CUSTOMER_APPLICATION_INFO a,
+	basic_customer_information b
+  	where status='refuse'
+  	and a.CUSTOMER_ID = b.id
+    and ((select trunc (sysdate) from dual)=trunc (a.CREATED_TIME) or (select trunc (sysdate) from dual)=trunc (a.MODIFIED_TIME))
+    and b.USER_ID=#{userId}
+	</select>
+	
+	<!--统计当天的申请次数  -->
+	<select id="queryApply" resultType="int">
+	select count(*) from Node_Audit na,
+	CUSTOMER_APPLICATION_INFO cai,
+	customer_application_process cap,
+	basic_customer_information b
+	where na.id=cap.next_node_id
+	and cap.application_id=cai.id
+	and cai.CUSTOMER_ID = b.id
+	and ((select trunc (sysdate) from dual)=trunc (cai.CREATED_TIME) or (select trunc (sysdate) from dual)=trunc (cai.MODIFIED_TIME))
+	and b.USER_ID=#{userId}
+	</select>
+	
+	<!--统计当天的内审次数  -->
+	<select id="queryAudit" resultType="int">
+	select count(*) from Node_Audit na,
+	CUSTOMER_APPLICATION_INFO cai,
+	customer_application_process cap,
+	basic_customer_information b
+	where na.id=cap.next_node_id
+	and cap.application_id=cai.id
+	and cai.CUSTOMER_ID = b.id
+	and  na.NODE_NAME !='进件初审'
+	and ((select trunc (sysdate) from dual)=trunc (cai.CREATED_TIME) or (select trunc (sysdate) from dual)=trunc (cai.MODIFIED_TIME))
+	and b.USER_ID=#{userId}
+	</select>
+	
+	<!--统计当天的上会次数  -->
+	<select id="queryWill" resultType="int">
+	select count(*) from Node_Audit na,
+	CUSTOMER_APPLICATION_INFO cai,
+	customer_application_process cap,
+	basic_customer_information b
+	where na.id=cap.next_node_id
+	and cap.application_id=cai.id
+	and cai.CUSTOMER_ID = b.id
+	and na.NODE_NAME !='进件初审' 
+	and na.NODE_NAME !='审贷决议'
+	and ((select trunc (sysdate) from dual)=trunc (cai.CREATED_TIME) or (select trunc (sysdate) from dual)=trunc (cai.MODIFIED_TIME))
+	and b.USER_ID=#{userId}
+	</select>
+	
+	<!--统计当天的通过次数  -->
+	<select id="queryPass" resultType="int">
+	select count(*) from Node_Audit na,
+	CUSTOMER_APPLICATION_INFO cai,
+	customer_application_process cap,
+	basic_customer_information b
+	where na.id=cap.next_node_id
+	and cap.application_id=cai.id
+	and cai.CUSTOMER_ID = b.id
+	and na.NODE_NAME ='结束'
+	and ((select trunc (sysdate) from dual)=trunc (cai.CREATED_TIME) or (select trunc (sysdate) from dual)=trunc (cai.MODIFIED_TIME))
+	and b.USER_ID=#{userId}
+	</select>
+<select id="finManagerPerformmanceByIdAndDate" resultMap="managerperform">
+    SELECT *  FROM manager_performmance 
+		WHERE manager_id=#{managerId}
+		and trunc(#{reportDate})=trunc(crateday)  
+</select>
+<select id="findmanagerName" resultType="String">
+    SELECT s.DISPLAY_NAME FROM SYS_USER s WHERE s.ID=#{managerId}
+</select>
+<select id="findSumPerformmanceRanking" resultMap="managerperform">
+    SELECT nvl(sum(ma.MONEY), 0)AS money,s.MANAGER_ID,sum(s.VISITCOUNT) AS VISITCOUNT, sum(s.APPLYCOUNT) AS APPLYCOUNT,
+		sum(s.APPLYREFUSE) AS APPLYREFUSE,
+		sum(s.CREDITCOUNT) AS CREDITCOUNT, sum(s.CREDITREFUSE) AS CREDITREFUSE,
+		sum(s.REALYCOUNT) AS REALYCOUNT,sum(s.REPORTCOUNT) AS REPORTCOUNT,
+		sum(s.INTERNALCOUNT) AS INTERNALCOUNT, sum(s.MEETINGCOUT) AS MEETINGCOUT,
+		sum(s.PASSCOUNT) AS PASSCOUNT,
+		sum(s.SIGNCOUNT) AS SIGNCOUNT, sum(s.GIVEMONEYCOUNT) AS GIVEMONEYCOUNT
+		FROM MANAGER_PERFORMMANCE s 
+		left JOIN BASIC_CUSTOMER_INFORMATION bci ON s.MANAGER_ID = bci.USER_ID
+		left JOIN t_MIBUSIDATA_VIEW ma ON ma.CUSTID=bci.TY_CUSTOMER_ID
+		left JOIN SYS_USER su ON su.ID=bci.USER_ID
+		where s.manager_id IN (select t.ID from sys_user t
+		left join sys_dept_user sd on t.id = sd.user_id
+		left join sys_department d on sd.dept_id = d.id
+		left join sys_organization o on d.org_id = o.id
+		where 1=1
+		<if test="orgId != null and orgId != '' and orgId != '000000'">
+		 and d.org_id=#{orgId}   
+		</if>
+		 )
+		<if test="startDate != null and startDate != ''">
+		and s.crateday >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')  
+		</if>
+		<if test="endDate != null and endDate != ''">
+		AND  to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>= s.crateday
+		</if>
+		GROUP BY s.MANAGER_ID 
+		ORDER BY ${classes} DESC
+</select>
+<!-- 查询新的客户经理 -->
+<select id="selectNewManager" resultMap="resultsum">
+   select o.name as ordteam,s.id as manager_id ,t.name as team from sys_organization o,sys_department t,sys_dept_user d,sys_user s
+where o.id=t.org_id
+and t.id=d.dept_id
+and d.user_id=s.id
+and s.id  not in （select manager_id from MANAGER_PERFORMMANCE1)
+group by o.name,s.id,t.name
+
+</select>
+<!-- 添加新客户经理的业绩总数-->
+<insert id="insertALLManager" >
+	    insert into MANAGER_PERFORMMANCE1 (ID,MANAGER_ID,VISITCOUNT,APPLYCOUNT,APPLYREFUSE,CREDITCOUNT,CREDITREFUSE,REALYCOUNT,REPORTCOUNT,INTERNALCOUNT,MEETINGCOUT,PASSCOUNT,SIGNCOUNT,GIVEMONEYCOUNT,CRATEDAY,team，ordteam,money)
+	    values (#{id},#{manager_id},#{visitcount},#{applycount},#{applyrefuse},#{creditcount},#{creditrefuse},#{realycount},#{reportcount},#{internalcount},#{meetingcout},#{passcount},#{signcount},#{givemoneycount},#{crateday},#{team},#{ordteam},#{money})
+</insert>
+<!-- 查询客户经理的基本业绩 -->
+<select id="selectManagerYj" resultMap="resultsum">
+     select 0 as creditcount,0 as creditrefuse,0 as realycount,b as reportcount,0 as signcount,a as visitcount,b as applycount,c as applyrefuse,b as internalcount,b as meetingcout,d as passcount,e as givemoneycount, f as money
+      from
+    --通过
+    ( select count(*) as d from sys_user s,basic_customer_information b,customer_application_info c
+    where s.id=b.user_id
+    and b.id=c.customer_id
+    and s.id=#{id}
+    and c.status='approved')d,
+        --拒绝
+     (select count(*)as c from sys_user s,basic_customer_information b,customer_application_info c
+    where s.id=b.user_id
+    and b.id=c.customer_id
+    and s.id=#{id}
+    and c.status='refuse')c,
+        --拜访数
+     (select count(*)as a from sys_user s,basic_customer_information b
+    where s.id=b.user_id
+    and s.id=#{id})a,
+            --申请数
+     (select count(*)as b from sys_user s,basic_customer_information b,customer_application_info c
+    where s.id=b.user_id
+    and b.id=c.customer_id
+    and s.id=#{id}
+    and c.status='audit')b,
+             --放宽数
+    ( select count(*)as e from mibusidata
+    where userid=#{id})e,
+            --放宽总额
+     (select sum(REQLMT)as f from mibusidata
+    where userid=#{id})f
+</select>
+<!-- 查询所有客户经理 -->
+<select id="selectAllManager" resultMap="resultsum">
+   select o.name as ordteam,s.id as manager_id ,t.name as team from sys_organization o,sys_department t,sys_dept_user d,sys_user s
+where o.id=t.org_id
+and t.id=d.dept_id
+and d.user_id=s.id
+group by o.name,s.id,t.name
+
+</select>
+<!-- 定时每日更新客户经理业绩信息 -->
+<update id="updateManagerDate">
+		update manager_performmance1 m set
+		m.visitcount = #{visitcount},
+		m.applycount = #{applycount},
+		m.applyrefuse = #{applyrefuse},
+		m.reportcount = #{reportcount},
+		m.internalcount = #{internalcount},
+		m.meetingcout = #{meetingcout},
+		m.passcount = #{passcount},
+		m.givemoneycount = #{givemoneycount},
+		m.money=#{money},
+		m.team=#{team},
+		m.ordteam=#{ordteam}
+		where m.manager_id=#{manager_id}
+	</update>
+	
+<!-- 客户经理每日添加 -->
+<update id="updateManagerDateByUser">
+		update manager_performmance1 m set
+		m.visitcount = m.visitcount+#{visitcount},
+		m.applycount = m.applycount+#{applycount},
+		m.applyrefuse = m.applyrefuse+#{applyrefuse},
+		m.reportcount = m.reportcount+#{reportcount},
+		m.internalcount = m.internalcount+#{internalcount},
+		m.meetingcout = m.meetingcout+#{meetingcout},
+		m.passcount = m.passcount+#{passcount},
+		m.signcount = m.signcount+#{signcount},
+		m.givemoneycount = m.givemoneycount+#{givemoneycount},
+		m.creditcount = m.creditcount+#{creditcount},
+		m.creditrefuse = m.creditrefuse+#{creditrefuse},
+		m.realycount = m.realycount+#{realycount}
+		where m.manager_id=#{manager_id}
+	</update>
+	<!-- 查询所有客户经理的业绩 -->
+	<select id="selectAllManegerYj" resultMap="resultsum">
+	   select t.*,nvl(t.money,0)as money1,
+nvl(t1.VISITCOUNT,0) as visitcount_s,
+nvl(t1.APPLYCOUNT,0) as applycount_s,
+nvl(t1.APPLYREFUSE,0) as applyrefuse_s,
+nvl(t1.CREDITCOUNT,0) as creditcount_s,
+nvl(t1.CREDITREFUSE,0) as creditrefuse_s,
+nvl(t1.REALYCOUNT,0) as realycount_s,
+nvl(t1.REPORTCOUNT,0) as reportcount_s,
+nvl(t1.INTERNALCOUNT,0) as internalcount_s,
+nvl(t1.MEETINGCOUT,0) as meetingcout_s,
+nvl(t1.PASSCOUNT,0) as passcount_s,
+nvl(t1.SIGNCOUNT,0) as signcount_s,
+nvl(t1.GIVEMONEYCOUNT,0) as givemoneycount_s,
+s.display_name as name
+ from MANAGER_PERFORMMANCE1 t left join (select m.* from MANAGER_PERFORMMANCE m left join MANAGER_PERFORMMANCE m1 on m.manager_id=m1.manager_id  where m.crateday=#{crateday}) t1
+on (t.manager_id=t1.manager_id) left join sys_user s on (s.id=t.manager_id)
+where 1=1
+    and  t.team=#{team}
+    and t.ordteam=#{ordteam}
+	</select>
+	
+<!-- 查询所有的机构，团队 -->
+<select id="selectAllManegerTeam" resultMap="resultsum">
+select distinct (team),t.ordteam from MANAGER_PERFORMMANCE1,(select distinct (ordteam), manager_id as id from MANAGER_PERFORMMANCE1)t
+where manager_id=t.id
+	</select>
+	
+<!-- 查询所有的机构，团队 总业绩-->
+<select id="selectAllTeamYj" resultMap="resultsum">
+select sum(nvl(t.VISITCOUNT,0))as visitcount,sum(nvl(t.applycount,0))as applycount,sum(nvl(t.applyrefuse,0))as applyrefuse,sum(nvl(t.creditcount,0))as creditcount,sum(nvl(t.creditrefuse,0))as creditrefuse,
+sum(nvl(t.realycount,0))as realycount,sum(nvl(t.reportcount,0))as reportcount,sum(nvl(t.internalcount,0))as internalcount,sum(nvl(t.meetingcout,0))as meetingcout,sum(nvl(t.passcount,0))as passcount,
+sum(nvl(t.signcount,0))as signcount,sum(nvl(t.givemoneycount,0))as givemoneycount,sum(nvl(t.money,0))as money1,
+sum(nvl(t1.VISITCOUNT,0))as visitcount_s,sum(nvl(t1.applycount,0))as applycount_s,sum(nvl(t1.applyrefuse,0))as applyrefuse_s,sum(nvl(t1.creditcount,0))as creditcount_s,sum(nvl(t1.creditrefuse,0))as creditrefuse_s,
+sum(nvl(t1.realycount,0))as realycount_s,sum(nvl(t1.reportcount,0))as reportcount_s,sum(nvl(t1.internalcount,0))as internalcount_s,sum(nvl(t1.meetingcout,0))as meetingcout_s,sum(nvl(t1.passcount,0))as passcount_s,
+sum(nvl(t1.signcount,0))as signcount_s,sum(nvl(t1.givemoneycount,0))as givemoneycount_s
+from MANAGER_PERFORMMANCE1 t  left join (select m.* from MANAGER_PERFORMMANCE m left join MANAGER_PERFORMMANCE m1 on m.manager_id=m1.manager_id  where m.crateday=#{crateday}) t1
+on  t.manager_id=t1.manager_id 
+where 1=1
+<if test="team != null and team != ''">
+    and  t.team=#{team}
+    </if>
+    <if test="ordteam != null and ordteam != ''">
+    and t.ordteam=#{ordteam}
+    </if>
+
+	</select>
+</mapper>

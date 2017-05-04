@@ -1,0 +1,114 @@
+#parse ("common/iframe_page_header.htm")
+<script src='${contextPath}/common/js/common/highcharts.js'></script>
+<script src='${contextPath}/common/js/common/exporting.js'></script>
+ <script language="JavaScript">
+$(document).ready(function() {  
+   var chart = {
+      type: 'column'
+   };
+   var title = {
+      text: '各流程转化率'   
+   };
+   var xAxis = {
+      categories: ['拜访到申请','申请到内审','内审到上会','过会比率','放款比率'],
+      crosshair: true
+   };
+   var yAxis = {
+	  max:100, 
+      min: 0,
+      title: {
+         text: '百分比(%)'         
+      }      
+   };
+   var tooltip = {
+      headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+         '<td style="padding:0"><b>{point.y:.2f} %</b></td></tr>',
+      footerFormat: '</table>',
+      shared: true,
+      useHTML: true
+   };
+   var plotOptions = {
+      column: {
+         pointPadding: 0.2,
+         borderWidth: 0
+      }
+   };  
+   var credits = {
+      enabled: false
+   };
+   
+   var series= [
+        {
+        	name: '转化率',
+            data: $!classifiedJsonData//[49.9, 71.5, 67.4, 29.2, 44.0]
+        }];     
+      
+   var json = {};   
+   json.chart = chart; 
+   json.title = title;   
+   json.tooltip = tooltip;
+   json.xAxis = xAxis;
+   json.yAxis = yAxis;  
+   json.series = series;
+   json.plotOptions = plotOptions;  
+   json.credits = credits;
+   $('#container_2').highcharts(json);
+  
+});
+</script>
+ <style> 
+body{ text-align:center} 
+.box{margin:0 auto;width:600px; height:500px;border:1px }
+</style> 
+<body class="whitebg" >
+	<div class="content_main">
+		<div class="contentinner">
+			<div class="place">
+				<div class="title">客户经理业绩进度转化率</div>
+			</div>
+			<div class="search">
+          <form id="submitForm" >
+            <ul>
+              <li>
+	          	<span>开始日期:&nbsp;<input type="text" id ="date" name="startdate" value="$!satrtDates"
+	          		onmouseover="_calendar()" readonly="readonly" maxlength="30"/></span>
+              </li>
+              <li>
+	          	<span>结束日期:&nbsp;<input type="text" id ="enddate" name="enddate" value="$!endDates"
+	          		onmouseover="_calendar()" readonly="readonly" maxlength="30"/></span>
+              </li>
+              <li>
+	          	<span>支行名称:&nbsp;<select id="orgId" name="orgId">
+                 			   <option value=""></option>
+                			    #dict("Organizations","$!orgId")
+                			  </select></span></li>
+              <li class="search_button">
+                <input id="id_browse_button" type="button" value="#i18n('button.browse')" class="search_button_inquiry"
+                  title="#i18n('button.browse.hint')" style="height: 26px; line-height: 24px;" />
+              </li>
+            </ul>
+          </form>
+        </div>
+   		<div id="container_2" class="box"></div>
+   		<div class="submit"><a href="javascript:history.back();" class="btn_g">返回</a>
+   		</div>
+   		</div>
+   		</div>
+</body>
+ <script type="text/javascript">
+ $(document).ready(function() {
+ $("#id_browse_button").click(function() {
+      var url = "${contextPath}/manager/performmance/performMakeRates.page";
+     document.getElementById("submitForm").action = url;
+     document.getElementById("submitForm").submit(); 
+ });
+ $("#orgId").change(function() {
+     var url = "${contextPath}/manager/performmance/performMakeRates.page";
+     document.getElementById("submitForm").action = url;
+     document.getElementById("submitForm").submit();
+ });
+ 
+ })
+ </script>
+</html>

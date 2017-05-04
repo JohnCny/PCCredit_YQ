@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.report.dao.ClassifiedStatisiticDao">
+
+	<resultMap id="ResultMap"
+		type="com.cardpay.pccredit.report.model.ClassifiedForm">
+		<result property="chineseName" column="chinese_name" />
+		<result property="cardId" column="card_id" />
+		<result property="productName" column="product_name" />
+		<result property="reqlmt" column="REQLMT" />
+		<result property="money" column="MONEY" />
+		<result property="balamt" column="BALAMT" />
+		<result property="interest" column="INTEREST" />
+		<result property="accountstate" column="ACCOUNTSTATES" />
+		<result property="loandate" column="LOANDATE" />
+		<result property="managerName" column="DISPLAY_NAME" />
+	</resultMap>
+
+	<select id="findloansInfoByfilter" resultMap="ResultMap" parameterType="com.cardpay.pccredit.report.filter.ClassfiedFilter">
+		SELECT * FROM
+		(SELECT ROW_.*,ROWNUM ROWNUM_
+		FROM (
+		SELECT b.chinese_name ,b.card_id,
+		p.PRODUCT_NAME,m.CONTRACTMONEY as REQLMT,m.MONEY,m.BALAMT,m.INTEREST,trim(m.ACCOUNTSTATE) as ACCOUNTSTATES,m.LOANDATE,
+		s.DISPLAY_NAME FROM BASIC_CUSTOMER_INFORMATION b
+		INNER JOIN CUSTOMER_APPLICATION_INFO a ON a.CUSTOMER_ID = b.ID
+		INNER JOIN PRODUCT_ATTRIBUTE p ON p.ID=a.PRODUCT_ID
+		INNER JOIN t_MIBUSIDATA_VIEW m ON m.CUSTID=b.TY_CUSTOMER_ID
+		INNER JOIN sys_user s ON s.ID=b.USER_ID
+		WHERE a.STATUS ='end'
+		<if test="startDate != null and startDate != '' and endDate != null and endDate != '' ">
+			AND m.LOANDATE between  #{startDate} and #{endDate}
+		</if>
+		<if test="managerName != null and managerName != '' ">
+			AND s.ID = #{managerName}
+		</if>
+		<if test="assureMeans != null and assureMeans != '' ">
+			AND p.ASSURE_MEANS = #{assureMeans}
+		</if>
+		order by m.LOANDATE desc 
+		
+		<![CDATA[) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+	</select>
+	<select id="findlExcelDataoansInfoByfilter" resultMap="ResultMap" parameterType="com.cardpay.pccredit.report.filter.ClassfiedFilter">
+		
+		SELECT b.chinese_name ,b.card_id,
+		p.PRODUCT_NAME,m.CONTRACTMONEY as REQLMT,m.MONEY,m.BALAMT,m.INTEREST,trim(m.ACCOUNTSTATE) as ACCOUNTSTATES,m.LOANDATE,
+		s.DISPLAY_NAME FROM BASIC_CUSTOMER_INFORMATION b
+		INNER JOIN CUSTOMER_APPLICATION_INFO a ON a.CUSTOMER_ID = b.ID
+		INNER JOIN PRODUCT_ATTRIBUTE p ON p.ID=a.PRODUCT_ID
+		INNER JOIN t_MIBUSIDATA_VIEW m ON m.CUSTID=b.TY_CUSTOMER_ID
+		INNER JOIN sys_user s ON s.ID=b.USER_ID
+		WHERE a.STATUS ='end'
+		<if test="startDate != null and startDate != '' and endDate != null and endDate != '' ">
+			AND m.LOANDATE between  #{startDate} and #{endDate}
+		</if>
+		<if test="managerName != null and managerName != '' ">
+			AND s.ID = #{managerName}
+		</if>
+		<if test="assureMeans != null and assureMeans != '' ">
+			AND p.ASSURE_MEANS = #{assureMeans}
+		</if>
+		order by m.LOANDATE desc 
+	</select>
+	<select id="findloansInfoSizeByfilter" resultType="int" parameterType="com.cardpay.pccredit.report.filter.ClassfiedFilter">
+		SELECT count(*) FROM BASIC_CUSTOMER_INFORMATION b
+		INNER JOIN CUSTOMER_APPLICATION_INFO a ON a.CUSTOMER_ID = b.ID
+		INNER JOIN PRODUCT_ATTRIBUTE p ON p.ID=a.PRODUCT_ID
+		INNER JOIN t_MIBUSIDATA_VIEW m ON m.CUSTID=b.TY_CUSTOMER_ID
+		INNER JOIN sys_user s ON s.ID=b.USER_ID
+		WHERE a.STATUS ='end'
+		<if test="startDate != null and startDate != '' and endDate != null and endDate != '' ">
+			AND m.LOANDATE between  #{startDate} and #{endDate}
+		</if>
+		<if test="managerName != null and managerName != '' ">
+			AND s.ID = #{managerName}
+		</if>
+		<if test="assureMeans != null and assureMeans != '' ">
+			AND p.ASSURE_MEANS = #{assureMeans}
+		</if>
+		order by m.LOANDATE desc 
+		
+	
+	</select>
+
+
+
+
+
+</mapper>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.dateplan.dao.SysUserDao">
+	
+	<resultMap id="ResultMap"
+		type="com.cardpay.pccredit.manager.web.ManagerBelongMapForm">
+		<result property="parentId" column="parentId" />
+		<result property="childId" column="childId" />
+		<result property="isLeaf" column="isLeaf" />
+		<result property="userName" column="userName" />
+		<result property="levelInformation" column="levelInformation" />
+	</resultMap>
+	
+		<resultMap id="ResultMap1" type="com.cardpay.pccredit.dateplan.model.JBUser">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="qname" column="qname" />
+		<result property="parentId" column="PARENT_ID" />
+		<result property="childId" column="CHILD_ID" />
+		<result property="userId" column="USER_ID" />
+		<result property="orgId" column="ORG_ID" />
+		<result property="displayName" column="display_name" />
+		<result property="zt" column="zt" />
+	</resultMap>
+	<resultMap id="ResultMap2" type="com.cardpay.pccredit.dateplan.model.datePlanModel">
+		<result property="id" column="id" />
+		<result property="userid" column="userid" />
+		<result property="gxuserid" column="gxuserid" />
+		<result property="zdtime" column="zdtime" />
+		<result property="mbsl" column="mbsl" />
+		<result property="zt" column="zt" />
+		<result property="wcqk" column="wcqk" />
+		<result property="whsl" column="whsl" />
+		<result property="dcsl" column="dcsl" />
+		<result property="dhsl" column="dhsl" />
+	</resultMap>
+	<resultMap id="ResultMap3" type="com.cardpay.pccredit.dateplan.model.dateTimeModel">
+		<result property="time" column="time" />
+	</resultMap>
+<!-- 查询小组长ID -->
+		<select id="selectAllGxUser" resultMap="ResultMap">
+		   select amp.user_id as parentId
+     FROM  manager_belong_map mbm
+     LEFT JOIN account_manager_parameter amp
+       on amp.id = mbm.child_id
+     LEFT JOIN sys_user su
+		    ON su.id = amp.user_id
+		 WHERE   mbm.parent_id ='100000'
+	</select>
+	<!-- 查询小组成员 -->
+	<select id="selectDepart" resultMap="ResultMap1" parameterType="com.cardpay.pccredit.dateplan.model.JBUser">	
+		  select u.id as id ,u.display_name as displayName,cc.name as name
+    from SYS_DEPT_USER d,sys_user u,(select su.id,su.name from SYS_DEPARTMENT su,SYS_DEPT_USER d,sys_user u
+        where d.dept_id=su.id
+        and d.user_id=u.id
+        and d.user_id=#{id})cc
+        where d.dept_id=cc.id
+        and u.id=d.user_id
+      </select>		
+	<!-- 添加任务 -->
+<insert id="insertRw" parameterType="java.lang.Integer">
+insert into SYS_DATEPLAN (ID,USERID,GXUSERID,ZDTIME,MBSL,ZT,WCQK,WHSL,DCSL,DHSL) values (#{id},#{userid},#{gxuserid},#{zdtime},#{mbsl},#{zt},#{wcqk},#{whsl},#{dcsl},#{dhsl})
+</insert>
+
+	<select id="selectAllTime" resultMap="ResultMap2" parameterType="com.cardpay.pccredit.dateplan.model.datePlanModel">	
+		 select ZDTIME as zdtime from SYS_DATEPLAN where userid=#{id}
+    </select>
+    	<select id="selectAllTime1" resultMap="ResultMap2" parameterType="com.cardpay.pccredit.dateplan.model.datePlanModel">	
+		 select cc.zdtime as zdtime from(select max(ZDTIME) as zdtime from SYS_DATEPLAN where userid=#{id})cc
+		 where cc.zdtime is not null
+    </select>
+    
+		<select id="selectByUser" resultMap="ResultMap2" parameterType="com.cardpay.pccredit.dateplan.model.datePlanModel">	
+		 select id as id, GXUSERID as gxuserid,MBSL as mbsl,WHSL as whsl,DCSL as dcsl,DHSL as dhsl,ZT as zt,ZDTIME as zdtime from SYS_DATEPLAN
+		 where userid=#{id}
+    </select>
+    	<select id="selectByUser1" resultMap="ResultMap2" parameterType="com.cardpay.pccredit.dateplan.model.datePlanModel">	
+		 select display_name as name from sys_user 
+		 where id=#{id}
+      </select>
+      
+    	<update id="updateRw" parameterType="java.lang.Integer">
+		update  SYS_DATEPLAN set ZT='1' where id=#{id}
+		</update>
+		
+    	<select id="selectdqsl" resultMap="ResultMap2" parameterType="com.cardpay.pccredit.dateplan.model.datePlanModel">	
+		select  t.created_time as zdtime from  LOCAL_EXCEL t,BASIC_CUSTOMER_INFORMATION b 
+		where b.id=t.customer_id and
+		b.user_id=#{id}
+      </select>
+      
+    	<select id="selectmbsl" resultMap="ResultMap2" parameterType="com.cardpay.pccredit.dateplan.model.datePlanModel">	
+		select cc.zdtime as zdtime from (select t.created_time as zdtime from BASIC_CUSTOMER_INFORMATION t where 
+		t.user_id=#{id})cc 
+		where cc.zdtime is not null
+		
+      </select>
+      
+    	<select id="selectwhsl" resultMap="ResultMap2" parameterType="com.cardpay.pccredit.dateplan.model.datePlanModel">	
+		select cc.zdtime as zdtime from(select t.modified_time as zdtime from BASIC_CUSTOMER_INFORMATION t where 
+		t.user_id=#{id})cc where cc.zdtime is not null
+		   </select>
+		<select id="selectdhsl" resultMap="ResultMap2" parameterType="com.cardpay.pccredit.dateplan.model.datePlanModel">	
+		select cc.zdtime as zdtime from(select t.created_time as zdtime from dh_appln_attachment_list t ,BASIC_CUSTOMER_INFORMATION b
+		where t.CUSTOMER_ID=b.id and 
+		b.user_id=#{id})cc
+      </select>
+      
+			<select id="selectzgUser" resultMap="ResultMap1" parameterType="com.cardpay.pccredit.dateplan.model.JBUser">	
+		select u.display_name as displayName,s.name as name,u.id as id from SYS_DEPARTMENT s,SYS_DEPT_USER d,sys_user u
+		where s.id=d.dept_id
+		and u.id=d.user_id and
+		u.id=#{id}
+      </select>
+      <select id="selectByTime" resultMap="ResultMap3" parameterType="com.cardpay.pccredit.dateplan.model.dateTimeModel">	
+	 	select ZDTIME as time from SYS_DATEPLAN where userid=#{id}
+  		order by ZDTIME
+		</select>
+		<select id="selectAlluser" resultMap="ResultMap1" parameterType="com.cardpay.pccredit.dateplan.model.JBUser">	
+		  SELECT * FROM
+		(SELECT ROW_.*,ROWNUM ROWNUM_
+		FROM (
+		  select id as id ,display_name as name from sys_user where 1=1 and user_type='1'
+		 <![CDATA[		
+							) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+      </select>		
+      	<select id="selectzgUserCount"  resultType="int">	
+		select count(*) from sys_user where 1=1 and user_type='1'
+      </select>
+</mapper>

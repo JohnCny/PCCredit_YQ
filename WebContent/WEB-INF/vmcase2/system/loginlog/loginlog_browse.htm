@@ -1,0 +1,98 @@
+#parse ("common/iframe_page_header.htm")
+<body>
+	<div class="content_main">
+		<div class="contentinner">
+			<div class="place">
+				<div class="title">登录日志浏览</div>
+			</div>
+			<div class="inquiry">
+				<div class="search_tag">登录日志浏览</div>
+				<div class="search">
+					<form id="submitForm">
+						<ul>
+							<li><span>登录名：<input type="text" id ="login" name="login" value='$!result.filter.dictType'/></span></li>
+							<li><span>操作：<input type="text" id ="action" name="action" value='$!result.filter.typeCode' /></span></li>
+							<li><span>操作时间：<input type="text" id="actionTime" name="actionTime" readonly="readonly" onmouseover="_calendar()" value="" maxlength="30" /></span></li>
+							<li class="search_button"><input id="id_browse_button"
+								type="button" value="筛选"
+								class="search_button_inquiry"
+								title="#i18n('button.browse.hint')"
+								style="height: 26px; line-height: 24px;" /></li>
+						</ul>
+					</form>
+				</div>
+				<div id="topDiv" class="inquiry_list inquiry_top">
+					<table>
+						<colgroup>
+							<col width="10%" />
+							<col width="20%" />
+							<col width="15%" />
+							<col width="15%" />
+							<col width="15%" />
+							<col width="15%" />
+						</colgroup>
+						<tr class="title">
+							<th nowrap="nowrap"></th>
+							<th nowrap="nowrap">登录名</th>
+							<th nowrap="nowrap">操作</th>
+							<th nowrap="nowrap">操作时间</th>
+							<th nowrap="nowrap">登录结果</th>
+							<th nowrap="nowrap">IP地址</th>
+						</tr>
+					</table>
+				</div>
+				<div id="downDiv" class="inquiry_list inquiry_down">
+					<table>
+						<colgroup>
+							<col width="10%" />
+							<col width="20%" />
+							<col width="15%" />
+							<col width="15%" />
+							<col width="15%" />
+							<col width="15%" />
+						</colgroup>
+						#foreach ($dict in $result.items)
+						<tr>
+							<td class="checkbox"><input type="radio" name="checkbox"
+								value="$!dict.id" #if ($!request.getParameter("recordId") ==
+								$dict.id) checked="checked" #end /></td>
+							<td nowrap="nowrap">$!dict.login</td>
+							<td nowrap="nowrap">$!dict.action</td>
+							<td nowrap="nowrap">$!date.format("yyyy-MM-dd HH:mm:ss",$!dict.actionTime)</td>
+							<td nowrap="nowrap">$!dict.result</td>
+							<td nowrap="nowrap">$!dict.ipAddress</td>
+						</tr>
+						#end
+					</table>
+				</div>
+			</div>
+			<div class="pagebar">
+				<div class="controlbtn">
+					<a id="id_display_button" class="btn_gr" href="javascript:void(0);" title="显示选中记录的详情">显&nbsp;示</a>
+					<a id="id_export_button" class="btn_gr" href="javascript:void(0);" title="导出记录到Excel文件">导&nbsp;出</a>
+				</div>
+				#parse ("common/pagination.htm")
+				<div class="clear"></div> 
+			</div>
+		</div>
+	</div>
+</body>
+<script language="javascript" type="text/javascript">
+	var layout = new TableLayout(2);
+	window.top.currentWindow.setLayout(layout);
+
+	$(document).ready(function() {
+		var opsObj = new Object();
+		opsObj.formObj = $("#submitForm");
+		opsObj.displayUrl = "${contextPath}/system/loginlog//display.page";            
+		opsObj.browseUrl = "${contextPath}/system/charge//loginLogBrowse.page";    
+		prepareOperations(opsObj);
+	
+	  });
+	
+	$("#id_export_button").click(function() {
+		var url = "${contextPath}/system/charge/exportData.json?login="+$('#login').val() +"&action="+$('#action').val()+"&actionTime="+$('#actionTime').val();
+		window.location.href = url;
+    }); 
+</script>
+</html>

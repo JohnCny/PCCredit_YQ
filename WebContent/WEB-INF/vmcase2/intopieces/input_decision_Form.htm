@@ -1,0 +1,481 @@
+#parse ("common/iframe_page_header.htm")
+#parse ("common/macro.htm")
+  <link rel="stylesheet" type="text/css" href="${uicasePath}/css/specialtab.css" />
+<body class="whitebg">
+  <div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">审议结论详情</div>
+      </div>
+       
+      <form id="id_module_form" action="${contextPath}/intopieces/intopiecesquery/updateExamination.json"/>
+      <input type="hidden" name="customerId" value="$!customerApplicationInfo.customerId"/>
+      <input type="hidden" name="id" value="$!customerApplicationInfo.id"/>
+      <input type="hidden" name="serialNumber" value="$!customerApplicationInfo.serialNumber">
+      <input type="hidden" id ="prodCreditRange" name="prodCreditRange" value="$!producAttribute.prodCreditRange"/>
+      <input type="hidden" id ="productId" name="productId" value="$!producAttribute.id"/>
+      <input type="hidden" name="auditType" id="auditType" value="5" />
+      <input type="hidden" name="custManagerId" id="custManagerId" value="$!custManagerId" />
+      <input type="hidden" id="crossExaminationInfo" name="crossExaminationInfo" value=""/>
+      <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;"></div>
+         <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">
+          <table cellpadding="0" cellspacing="0" class="table-bd" border="1" bordercolor="#cccccc" style="width: 100%;">
+            <colgroup>
+              <col width="10%" />
+              <col width="30%" />
+              <col width="10%" />
+              <col width="30%" />
+            </colgroup>
+                  <tr>
+              	<td class="titlec" colspan="4" style="text-align: center;">客户申请信息</td>
+              </tr>
+              <tr>
+                <td class="titlefc3"><label for="applyQuota">客户名称:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.name" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="applyQuota">申请额度(元):</label></td>
+	          <td><input  type="text" class="rinpsty" name="applyQuota" id="applyQuota" 
+	              value="$!customerApplicationInfo.applyQuota" disabled="disabled"/></td>
+              </tr>
+                    <tr>
+                <td class="titlefc3"><label for="applyQuota">申请期限:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.sqqx" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="applyQuota">贷款用途:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.dkyt" disabled="disabled"/></td>
+              </tr>
+            
+               <tr>
+              	<td class="titlec" colspan="4" style="text-align: center;">申请产品信息</td>
+              </tr>
+              <tr>
+              <td class="titlefc3"><span style="color:red">*</span><label for="prodName" style="color:red">产品名称:</label></td>
+	          <td><input  type="text" class="rinpsty" name="prodName" id="prodName" 
+	              value="$!producAttribute.productName" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="prodCreditRange">产品授信区间:</label></td>
+	          <td><input  type="text" class="rinpsty" name="prodCreditRange" id="prodCreditRange" 
+	              value="$!producAttribute.prodCreditRange" disabled="disabled"/></td>
+            </tr>
+              <tr>
+              <td class="titlefc3"><span style="color:red">*</span><label for="prodName" style="color:red">产品基准利率:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!producAttribute.rateRange" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="prodCreditRange">产品用途:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!producAttribute.purposeLoan" disabled="disabled"/></td>
+            </tr>
+              <tr>
+              	<td class="titlec" colspan="4" style="text-align: center;">客户经理意见信息</td>
+              </tr>
+              <tr>
+              <td class="titlefc3"><label for="prodName" >建议金额:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.jyje" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="prodCreditRange">建议期限:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.jyqx" disabled="disabled"/></td>
+            </tr>
+              <tr>
+              <td class="titlefc3"><label for="prodName" >建议产品:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.jycp" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="prodCreditRange">建议利率:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.jylv" disabled="disabled"/></td>
+            </tr>
+             <tr>
+              <td class="titlefc3"><label for="prodName" >建议担保人:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.jydbr" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="prodCreditRange">客户与担保人关系:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.gx" disabled="disabled"/></td>
+            </tr>
+                     <tr>
+              <td class="titlefc3"><label for="prodName" >建议抵押物:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.jydyw" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="prodCreditRange">抵押物物权人:</label></td>
+	          <td><input  type="text" class="rinpsty" name="" id="" 
+	              value="$!SqInfo.wqr" disabled="disabled"/></td>
+            </tr>
+          </table>
+         </div>
+         
+         #if($!appManagerAuditLog!="0")
+          <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">
+          <table cellpadding="0" cellspacing="0" class="table-bd" border="1" bordercolor="#cccccc" style="width: 100%;">
+            <colgroup>
+              <col width="10%" />
+              <col width="30%" />
+              <col width="10%" />
+              <col width="30%" />
+            </colgroup>
+              <tr><td class="titlec" colspan="4" style="text-align: center;">初审结论</td></tr>
+            <tr>
+			  <td class="titlefc3"><label for="csAmount">初审额度(元):</label></td>
+              <td><input  type="text" class="rinpsty" name="csAmount" id="csAmount" value="$!appManagerAuditLog.examineAmount" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="examineLv">利率:</label></td>
+              <td><input type="text" class="rinpsty" name="csexamineLv" id="csexamineLv" value="$!appManagerAuditLog.examineLv" disabled="disabled"/></td>
+            </tr>
+               <tr>
+			  <td class="titlefc3"><label for="csAmount">期限:</label></td>
+              <td><input  type="text" class="rinpsty" name="" id="" value="$!appManagerAuditLog.qx" disabled="disabled"/></td>
+            <td class="titlefc3"><label for="csAmount">担保方式:</label></td>
+              <td><input  type="text" class="rinpsty" name="" id="" value="$!appManagerAuditLog.dbfs" disabled="disabled"/></td>
+            </tr>
+            <tr>
+			  <td class="titlefc3"><label for="csAmount">参与审批客户经理:</label></td>
+              <td><input type="text" class="rinpsty" name="chu_cyUser1" id="chu_cyUser1" value="$!appManagerAuditLog.userId_1" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="decisionRate">参与审批客户经理：</label></td>
+              <td><input type="text" class="rinpsty" name="chu_cyUser2" id="chu_cyUser2" value="$!appManagerAuditLog.userId_2" disabled="disabled"/></td>
+            </tr>
+            <tr>
+			  <td class="titlefc3"><label for="csAmount">辅调客户经理:</label></td>
+              <td><input  type="text" class="rinpsty" name="chu_fdUser" id="chu_fdUser" value="$!appManagerAuditLog.userId_3" disabled="disabled"/></td>
+              </tr>
+          </table>
+         </div>
+           #foreach($bs in $!result)
+         <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">
+          <table cellpadding="0" cellspacing="0" class="table-bd" border="1" bordercolor="#cccccc" style="width: 100%;">
+            <colgroup>
+              <col width="10%" />
+              <col width="30%" />
+              <col width="10%" />
+              <col width="30%" />
+            </colgroup>
+              <tr><td class="titlec" colspan="4" style="text-align: center;">审贷委结论</td></tr>
+               <tr>
+			  <td class="titlefc3"><label for="csAmount">审贷结论</label></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!bs.status" /></td>
+            	<td class="titlefc3"><label for="csAmount">级别</label></td>
+            	#if($!bs.zsw==1)
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="主审" /></td>
+            #else
+            <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="副审" /></td>
+            #end
+            </tr>
+              #if($!bs.status=="通过")
+            <tr>
+			  <td class="titlefc3"><label for="csAmount">审贷额度(元):</label></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!bs.applyQuota" /></td>
+              <td class="titlefc3"><label for="examineLv">利率:</label></td>
+              <td><input type="text" class="rinpsty" name="sdexamineLv" id="sdexamineLv" value="$!bs.splv" /></td>
+            </tr>
+            <tr>
+             <td class="titlefc3"><label for="examineLv">期限:</label></td>
+              <td><input type="text" class="rinpsty" name="sdexamineLv" id="sdexamineLv" value="$!bs.spqx" /></td>
+            	<td  class="titlefc3"><label id ="sd_beizhu" for=sd_beizhu>担保方式:</label></td>
+				<td><input type="text" class="rinpsty" name="sdexamineLv" id="sdexamineLv" value="$!bs.dbfs" /></td> </tr>
+              <tr>
+            	<td class="titlefc3"><label for="csAmount">审贷委</label></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!bs.displayName" /></td>
+            <td  class="titlefc3"><label id ="sd_beizhu" for=sd_beizhu>备注:</label></td>
+				<td><textarea  style="width: 300px;" name="sd_beizhu" id="sd_beizhu">$!bs.beizhu</textarea></td>
+            </tr>
+              <tr>
+            	<td class="titlefc3"><label for="csAmount">审贷时间</label></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!bs.creatime)" /></td>
+            </tr>
+            #end
+             #if($!bs.status=="拒绝" || $!bs.status=="退回")
+               <tr>
+            	<td class="titlefc3"><label for="csAmount">审贷委</label></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!bs.displayName" /></td>
+            <td  class="titlefc3"><label id ="sd_beizhu" for=sd_beizhu>备注:</label></td>
+				<td><textarea  style="width: 300px;" name="sd_beizhu" id="sd_beizhu">$!bs.beizhu</textarea></td>
+            </tr>
+              <tr>
+              
+             <td class="titlefc3"><label for="examineLv">原因:</label></td>
+             <td><textarea  style="width: 300px;" name="sd_beizhu" id="sd_beizhu">$!bs.jjyy</textarea></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!bs.creatime)" /></td>
+            
+            </tr>
+              #end
+          </table>
+         </div>
+         #end
+           #if($!bss.status!="无数据")
+             #foreach($bss in $!bss)
+              <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">
+          <table cellpadding="0" cellspacing="0" class="table-bd" border="1" bordercolor="#cccccc" style="width: 100%;">
+            <colgroup>
+              <col width="10%" />
+              <col width="30%" />
+              <col width="10%" />
+              <col width="30%" />
+            </colgroup>
+              <tr><td class="titlec" colspan="4" style="text-align: center;">决审结论</td></tr>
+               <tr>
+			  <td class="titlefc3"><label for="csAmount">审贷结论</label></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!bss.status" /></td>
+              <td class="titlefc3"><label for="csAmount">级别</label></td>
+            	#if($!bss.zsw==1)
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="主审" /></td>
+            #else
+            <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="副审" /></td>
+            #end
+            	
+            </tr>
+              #if($!bss.status=="通过")
+            <tr>
+			  <td class="titlefc3"><label for="csAmount">审贷额度(元):</label></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!bss.applyQuota" /></td>
+              <td class="titlefc3"><label for="examineLv">利率:</label></td>
+              <td><input type="text" class="rinpsty" name="sdexamineLv" id="sdexamineLv" value="$!bss.splv" /></td>
+            </tr>
+            <tr>
+             <td class="titlefc3"><label for="examineLv">期限:</label></td>
+              <td><input type="text" class="rinpsty" name="sdexamineLv" id="sdexamineLv" value="$!bss.spqx" /></td>
+                <td class="titlefc3"><label for="examineLv">担保方式:</label></td>
+              <td><input type="text" class="rinpsty" name="sdexamineLv" id="sdexamineLv" value="$!bss.dbfs" /></td>
+            	 </tr>
+            <tr>
+            <td class="titlefc3"><label for="csAmount">决审人</label></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!bss.displayName" /></td>
+            
+           <td  class="titlefc3"><label id ="sd_beizhu" for=sd_beizhu>备注:</label></td>
+				<td><textarea  style="width: 300px;" name="sd_beizhu" id="sd_beizhu">$!bss.beizhu</textarea></td>
+            </tr>
+            <tr>
+            <td class="titlefc3"><label for="csAmount">决审时间</label></td>
+             <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!bss.creatime)" /></td>  #end
+             #if($!bss.status=="拒绝" || $!bss.status=="退回")
+            <tr>
+            <td class="titlefc3"><label for="csAmount">决审人</label></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!bss.displayName" /></td>
+            
+           <td  class="titlefc3"><label id ="sd_beizhu" for=sd_beizhu>备注:</label></td>
+				<td><textarea  style="width: 300px;" name="sd_beizhu" id="sd_beizhu">$!bss.beizhu</textarea></td>
+            </tr>
+              <tr>
+             <td class="titlefc3"><label for="examineLv">原因:</label></td>
+             <td><textarea  style="width: 300px;" name="sd_beizhu" id="sd_beizhu">$!bss.jjyy</textarea></td>
+            	<td  class="titlefc3"><label id ="sd_beizhu" for=sd_beizhu>决审时间:</label></td>
+				<td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!bss.creatime)" /></td>  #end
+             </tr>
+              #end
+          </table>
+         </div>
+         	#end 
+         	   #end
+        
+     <!--   
+         
+        
+         
+      
+         #if($!bss.status!="无数据")
+              <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">
+          <table cellpadding="0" cellspacing="0" class="table-bd" border="1" bordercolor="#cccccc" style="width: 100%;">
+            <colgroup>
+              <col width="10%" />
+              <col width="30%" />
+              <col width="10%" />
+              <col width="30%" />
+            </colgroup>
+              <tr><td class="titlec" colspan="4" style="text-align: center;">最终审批结论</td></tr>
+               <tr>
+			  <td class="titlefc3"><label for="csAmount">审贷结论</label></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!bss.status" /></td>
+            	<td class="titlefc3"><label for="csAmount">决审人</label></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!bss.displayName" /></td>
+            
+            </tr>
+              #if($!bss.status=="通过")
+            <tr>
+			  <td class="titlefc3"><label for="csAmount">审贷额度(元):</label></td>
+              <td><input  type="text" class="rinpsty" name="sdAmount" id="sdAmount" value="$!bss.applyQuota" /></td>
+              <td class="titlefc3"><label for="examineLv">利率:</label></td>
+              <td><input type="text" class="rinpsty" name="sdexamineLv" id="sdexamineLv" value="$!bss.splv" /></td>
+            </tr>
+            <tr>
+             <td class="titlefc3"><label for="examineLv">期限:</label></td>
+              <td><input type="text" class="rinpsty" name="sdexamineLv" id="sdexamineLv" value="$!bss.spqx" /></td>
+            	<td  class="titlefc3"><label id ="sd_beizhu" for=sd_beizhu>备注:</label></td>
+				<td><textarea  style="width: 300px;" name="sd_beizhu" id="sd_beizhu">$!bss.beiZhu</textarea></td>
+            </tr>
+            #end
+             #if($!bss.status=="拒绝" || $!bss.status=="退回")
+              <tr>
+             <td class="titlefc3"><label for="examineLv">原因:</label></td>
+              <td><input type="text" class="rinpsty" name="sdexamineLv" id="sdexamineLv" value="$!bss.jjyy" /></td>
+            	<td  class="titlefc3"><label id ="sd_beizhu" for=sd_beizhu>备注:</label></td>
+				<td><textarea  style="width: 300px;" name="sd_beizhu" id="sd_beizhu">$!bss.beiZhu</textarea></td>
+            </tr>
+              #end
+          </table>
+         </div>
+         	#end -->
+   
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+          #foreach($bs in $!historyForms)
+       		#if($bs.auditType==3)
+         <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">
+          <table cellpadding="0" cellspacing="0" class="table-bd" border="1" bordercolor="#cccccc" style="width: 100%;">
+            <colgroup>
+              <col width="10%" />
+              <col width="30%" />
+              <col width="10%" />
+              <col width="30%" />
+            </colgroup>
+              <tr><td class="titlec" colspan="4" style="text-align: center;">小微负责人结论</td></tr>
+            <tr>
+			  <td class="titlefc3"><label for="csAmount">小微负责人额度(元):</label></td>
+              <td><input  type="text" class="rinpsty" name="bzAmount" id="bzAmount" value="$!bs.examineAmount" /></td>
+              <td class="titlefc3"><label for="examineLv">利率:</label></td>
+              <td><input type="text" class="rinpsty" name="bzexamineLv" id="bzexamineLv" value="$!bs.examineLv" /></td>
+            </tr>
+            <tr>
+              <td class="titlefc3"><label for="decisionTerm">期限:</label></td>
+              <td><select  name="bzdecisionTerm" >
+                  	#dict("decision_term",$!bs.qx)
+                  </select>
+              </td>
+              <td  class="titlefc3"><label id ="bz_beiZhu" for="bz_beiZhu">备注:</label></td>
+			  <td><textarea  style="width: 300px;" name="bz_beiZhu" id="bz_beiZhu">$!bs.beiZhu</textarea></td>
+            </tr>
+             
+          </table>
+         </div>
+         #end
+         #end
+         
+          #foreach($bs in $!historyForms)
+       		#if($bs.auditType==4)
+         <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">
+          <table cellpadding="0" cellspacing="0" class="table-bd" border="1" bordercolor="#cccccc" style="width: 100%;">
+            <colgroup>
+              <col width="10%" />
+              <col width="30%" />
+              <col width="10%" />
+              <col width="30%" />
+            </colgroup>
+              <tr><td class="titlec" colspan="4" style="text-align: center;">总经理结论</td></tr>
+            <tr>
+			  <td class="titlefc3"><label for="csAmount">总经理额度(元):</label></td>
+              <td><input  type="text" class="rinpsty" name="zjlAmount" id="zjlAmount" value="$!bs.examineAmount" /></td>
+              <td class="titlefc3"><label for="examineLv">利率:</label></td>
+              <td><input type="text" class="rinpsty" name="zjlexamineLv" id="zjlexamineLv" value="$!bs.examineLv" /></td>
+            </tr>
+            <tr>
+              <td class="titlefc3"><label for="decisionTerm">期限:</label></td>
+              <td><select  name="zjdecisionTerm" >
+                  	#dict("decision_term",$!bs.qx)
+                  </select>
+              </td>
+              <td  class="titlefc3"><label id ="zj_beiZhu" for=beizhu>备注:</label></td>
+			  <td><textarea  style="width: 300px;" name="zj_beiZhu" id="zj_beiZhu">$!bs.beiZhu</textarea></td>
+            </tr>
+            
+          </table>
+         </div>
+          #end
+         #end
+         #foreach($bs in $!historyForms)
+       	 #if($bs.auditType==5)
+         <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">
+          <table cellpadding="0" cellspacing="0" class="table-bd" border="1" bordercolor="#cccccc" style="width: 100%;">
+            <colgroup>
+              <col width="10%" />
+              <col width="30%" />
+              <col width="10%" />
+              <col width="30%" />
+            </colgroup>
+              <tr><td class="titlec" colspan="4" style="text-align: center;">行长结论</td></tr>
+            <tr>
+			  <td class="titlefc3"><label  for="decisionAmount">行长额度(元):</label></td>
+              <td><input  type="text" class="rinpsty" name="hzdecisionAmount" id="hzdecisionAmount" value="$!bs.examineAmount" /></td>
+              <td class="titlefc3"><label  for="decisionRate">利率(%):</label></td>
+              <td><input type="text" class="rinpsty" name="hzdecisionRate" id="hzdecisionRate" value="$!bs.examineLv" /></td>
+            </tr>
+            
+            <tr>
+              <td class="titlefc3"><label  for="decisionTerm">期限:</label></td>
+              <td><select  name="hzdecisionTerm">
+                  	#dict("decision_term",$!bs.qx)
+                  </select>
+              </td>
+              <td  class="titlefc3"><label id ="beiZhu" for=beizhu>备注:</label></td>
+			  <td><textarea  style="width: 300px; height:50px" name="hzbeiZhu" id="hzbeiZhu">$!bs.beiZhu</textarea></td>
+            </tr> 
+            <tr style="display :none">
+              <td  class="titlefc3"><label id ="reason" for=reason>原因:</label></td>
+              <td><textarea name="decisionRefusereason" id="decisionRefusereason">$!bs.decisionRefusereason</textarea></td>
+            </tr>
+          </table>
+        </div>
+        #end
+         #end
+      </form>
+      <div class="submit">
+    <!--   #if(!$!lock)
+        <input id="id_save_button" type="button" value="#i18n('button.save')" class="current" />
+      #end -->
+        <input type="button" onclick="returnUrl()" value="返回" />
+      </div>
+    </div>
+  </div>
+ <script src='${contextPath}/js/maintenanceAccountManager/maintenanceAccountManager.js'></script> 
+  <script type="text/javascript">
+  	#set ($formName = "'#id_module_form'")
+	var layout = new FormsLayout("formsId");
+	window.top.currentWindow.setLayout(layout);
+	
+	
+	$(document).ready(function() {
+		$("#id_save_button").click(function() {
+			// 获取页面数据
+			var formjson = $($formName).serialize();
+	   	        var url = $($formName).attr("action");
+				$.ajax({
+					url : url,
+					type : "get",
+					data : formjson,
+					success : function(data) {
+						if (data.success) {
+							topWin.Dialog.message("保存成功!");
+		   	            	window.location.reload() ;
+						}else{
+							topWin.Dialog.message(data.message);
+					    }
+					}
+				});
+		});
+	});
+	
+	
+	function returnUrl(){
+		window.location.href="javascript:history.back();";//"${contextPath}/intopieces/intopiecesquery/browse.page";
+	}
+	
+	
+  </script>
+  
+</body>
+#parse ("common/iframe_page_footer.htm")

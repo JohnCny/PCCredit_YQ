@@ -1,0 +1,357 @@
+#parse ("common/iframe_page_header.htm")
+<script src='${contextPath}/common/js/common/jquery-1.8.3.min.js'></script>
+<script src='${contextPath}/common/js/common/highcharts.js'></script>
+<script src='${contextPath}/common/js/common/exporting.js'></script>
+
+
+
+
+<!--柱状图-->
+  <script>
+    $(function () {
+	    $('#container').highcharts({
+	        chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false
+	        },
+	        exporting: {
+	            enabled:false
+			},
+	        title: {
+	            text: '<b>当前进件状况  单位(件)</b>',
+	            style:{
+	                color:"#304568",
+	                fontFamily:"微软雅黑"
+	            }
+	        },
+	        tooltip: {
+	    	    pointFormat: '<b>{point.y}   {point.percentage:.1f}%</b>'
+	        },
+	        colors:['#51b3d5',
+					'#fb6e51',
+					'#8bc251',
+					'#b10f21',
+					'#205f68'],
+	        plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                dataLabels: {
+	                    enabled: true,
+	                    color: '#000000',
+	                    connectorColor: '#000000',
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} % <br> <b>金额(元)</b>:{point.q}'
+	                }
+	            }
+	        },
+	        series: [{
+	            type: 'pie',
+	            name: '',
+	            data: $!applicationStatusJson
+	        }]
+	    });
+});				
+  </script>
+
+  
+  
+<!--1.  -->
+ <script language="JavaScript">
+$(document).ready(function() {  
+   var chart = {
+      type: 'column'
+   };
+   var title = {
+      text: '<b>各联社已申请和通过的进件数量</b>',
+      style:{
+          color:"#304568",
+          fontFamily:"微软雅黑"
+      }
+   };
+   var xAxis = {
+      categories: ['阳泉郊区信用联社','盂县农商银行','平定信用联社'],
+      crosshair: true
+   };
+   
+   var exporting = {
+       enabled:false
+   };
+   
+   var yAxis = {
+      min: 0,
+      title: {
+         text: ''         
+      },
+	  labels: {
+	     enabled: false
+	  }
+   };
+   var tooltip = {
+      headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+         '<td style="padding:0"><b>{point.y:.1f} 件</b></td></tr>',
+      footerFormat: '</table>',
+      shared: true,
+      useHTML: true
+   };
+   var plotOptions = {
+      column: {
+         pointPadding: 0.2,
+         borderWidth: 0
+      }
+   };  
+   var credits = {
+      enabled: false
+   };
+   
+   var series= [
+        {
+        	name: '已申请进件数量',
+            data: $!organApplicationAuditNumJson,
+            color:'#51b3d5'
+        }, 
+        {
+            name: '通过进件数量',
+            data: $!organApplicationApprovedNumJson,
+            color:'#8bc251'
+        }];     
+      
+   var json = {};   
+   json.chart = chart; 
+   json.title = title;   
+   json.tooltip = tooltip;
+   json.xAxis = xAxis;
+   json.yAxis = yAxis;  
+   json.series = series;
+   json.plotOptions = plotOptions;  
+   json.credits = credits;
+   json.exporting = exporting;
+   $('#container_1').highcharts(json);
+  
+});
+</script> 
+
+
+
+<!--2.-->
+<script language="JavaScript">
+$(document).ready(function() {  
+   var chart = {
+      type: 'column'
+   };
+   var title = {
+      text: '<b>放款,逾期,不良总额度</b>',
+      style:{
+          color:"#304568",
+          fontFamily:"微软雅黑"
+      }
+   };
+   var xAxis = {
+      categories: ['放款总额度','逾期总额度','不良总额度'],
+      crosshair: true
+   };
+   var exporting = {
+	  enabled:false
+   };
+   var yAxis = {
+      min: 0,
+      title: {
+         text: ''         
+      },
+	  labels: {
+		     enabled: false
+	  }   
+   };
+   var tooltip = {
+      headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+         '<td style="padding:0"><b>{point.y:.2f} 元</b></td></tr>',
+      footerFormat: '</table>',
+      shared: true,
+      useHTML: true
+   };
+   var plotOptions = {
+      column: {
+         pointPadding: 0.42,
+         borderWidth: 0
+      }
+   };  
+   var credits = {
+      enabled: false
+   };
+   
+   var series= [
+        {
+        	name: '总额度',
+            data: $!organApplicationjineJson,
+            color:'#fa506c'
+        }];     
+      
+   var json = {};   
+   json.chart = chart; 
+   json.title = title;   
+   json.tooltip = tooltip;
+   json.xAxis = xAxis;
+   json.yAxis = yAxis;  
+   json.series = series;
+   json.plotOptions = plotOptions;  
+   json.credits = credits;
+   json.exporting = exporting;
+   $('#container_2').highcharts(json);
+  
+});
+</script>
+
+
+<!--3.  -->
+<script language="JavaScript">
+$(document).ready(function() {  
+   var chart = {
+      type: 'column'
+   };
+   var title = {
+      text: '<b>各联社放款,逾期总额度</b>',
+      style:{
+          color:"#304568",
+          fontFamily:"微软雅黑"
+      }
+   };
+   var exporting = {
+	       enabled:false
+   };
+   var xAxis = {
+		   categories: ['阳泉郊区信用联社','盂县农商银行','平定信用联社'],
+      crosshair: true
+   };
+   var yAxis = {
+      min: 0,
+      title: {
+         text: ''         
+      },
+	  labels: {
+		     enabled: false
+	  }      
+   };
+   var tooltip = {
+      headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+         '<td style="padding:0"><b>{point.y:.2f} 元</b></td></tr>',
+      footerFormat: '</table>',
+      shared: true,
+      useHTML: true
+   };
+   var plotOptions = {
+      column: {
+         pointPadding: 0.05,
+         borderWidth: 0
+      }
+   };  
+   var credits = {
+      enabled: false
+   };
+   
+   var series= [
+        {
+        	name: '放款总金额',
+            data: $!organApplicationsxJson,
+            color:'#2ec7c9'
+        },
+        {
+        	name: '逾期总金额',
+            data: $!organApplicationyqJson,
+            color:'#b6a2de'
+        },
+       /*  {
+        	name: '不良总金额',
+            data: $!organApplicationblJson,
+            color:'#fa506c'
+        } */];     
+      
+   var json = {};   
+   json.chart = chart; 
+   json.title = title;   
+   json.tooltip = tooltip;
+   json.xAxis = xAxis;
+   json.yAxis = yAxis;  
+   json.series = series;
+   json.plotOptions = plotOptions;  
+   json.credits = credits;
+   json.exporting = exporting;
+   $('#container_3').highcharts(json);
+  
+});
+</script>
+	<style type="text/css">	
+		*{margin:0;padding:0;font-family:微软雅黑;}
+	    .mytable table{margin-left:1%;width:100%;border-radius: 0 0 5px 5px;border-collapse:collapse;border:1px solid #dedede;}
+	    .mytable table th{color:#fff;text-align:center;padding:10px 0;}
+	    .mytable table th span{display:inline-block;width:100%;line-height:18px;border-right:1px solid #fff;}
+	    .mytable table td{text-align: center;line-height: 35px;font-size:12px;border-bottom:1px solid #ddd;}
+	    .mytable table tr:nth-child(2n+1){background:#f7f7f7;}
+	</style>
+
+</head>
+
+<body><!-- style ="background-color:#dedede" -->
+	<!-- 放款排名 
+	<div id="fkranking" style="width:500px;height:300px;float:left; margin-right:20px;">
+	 <table bordercolor=#ffaa00 border-style="dashed" border="1" style="width:400px;height:300px;">
+	 		<tr>
+	 		<td colspan="4" style="text-align:center; ">
+	 		<font face="楷体" size="4px" style="color:#d8282b" >放款排名</font></td></tr>
+            <tr class="title" color="#d8282b">
+              <th nowrap="nowrap">排名</th>
+              <th nowrap="nowrap">客户经理</th>
+              <th nowrap="nowrap">放款总金额(元)</th>
+              <th nowrap="nowrap">所属部门</th>
+            </tr>
+             #foreach ($fks in $fk)
+            <tr class="title" style="text-align:center;">
+              <td nowrap="nowrap" >$!fks.rankingnum</td>
+              <td nowrap="nowrap" >$!fks.customermanager</td>
+              <td nowrap="nowrap" >$!fks.fkmoney</td>
+              <td nowrap="nowrap" >$!fks.organization</td>
+            </tr>
+            #end
+          </table>
+        </div>-->
+
+	<div style="display:block; width:1200px; height:400px;padding:15px;">
+   		<div id="container" style="min-width:400px;height:300px;float:left;border:1px solid #dedede; margin-right:10px;"></div>
+   		<div id="container_1" style="min-width:400px;height:300px;float:left;border:1px solid #dedede;"></div>
+	</div> 
+	
+	<div style="display:block; width:1200px; height:400px;margin-top:-118px;padding:15px;">
+   		<div id="container_2" style="min-width:400px;height:300px;float:left;border:1px solid #dedede; margin-right:10px;"></div>
+   		<div id="container_3" style="min-width:400px;height:300px;float:left;border:1px solid #dedede;"></div>
+	</div>
+	<div class="mytable" style="position:absolute;width:280px;top:15px;left:840px;">
+		<table>
+			<colgroup>
+              <col width="15%" />
+              <col width="25%" />
+              <col width="35%" />
+              <col width="25%" />
+            </colgroup>
+			<tr>
+				<th><span>排名</span></th>
+				<th><span>客户经理</span></th>
+				<th><span>放款总金额</span></th>
+				<th><span style="border-right:0;">所属部门</span></th>
+			</tr>
+			#foreach ($fks in $fk)
+            <tr>
+              <td nowrap="nowrap" >$!fks.rankingnum</td>
+              <td nowrap="nowrap" >$!fks.customermanager</td>
+              <td nowrap="nowrap" >$!fks.fkmoney</td>
+              <td nowrap="nowrap" >$!fks.organization</td>
+            </tr>
+            #end
+		</table>
+		
+	
+	</div>
+	
+</body>
+</html>
