@@ -20,10 +20,14 @@ import com.cardpay.pccredit.postLoan.filter.FcloaninfoFilter;
 import com.cardpay.pccredit.postLoan.filter.PostLoanFilter;
 import com.cardpay.pccredit.postLoan.model.BadLoansResultForm;
 import com.cardpay.pccredit.postLoan.model.BadloansManagerForm;
+import com.cardpay.pccredit.postLoan.model.CreditProcess;
 import com.cardpay.pccredit.postLoan.model.Fcloaninfo;
 import com.cardpay.pccredit.postLoan.model.MibusidataForm;
+import com.cardpay.pccredit.postLoan.model.MibusidateView;
 import com.cardpay.pccredit.postLoan.model.Rarepaylist;
 import com.cardpay.pccredit.postLoan.model.RarepaylistForm;
+import com.cardpay.pccredit.postLoan.model.RefuseMibusidata;
+import com.cardpay.pccredit.postLoan.model.TyRarepaylistForm;
 import com.wicresoft.util.annotation.Mapper;
 
 /**
@@ -56,7 +60,7 @@ public interface PostLoanDao {
 	 * @param filter
 	 * @return
 	 */
-	List<Fcloaninfo> findJJJnListByFilter(PostLoanFilter filter);
+	List<TyRepayTkmxForm> findJJJnListByFilter(PostLoanFilter filter);
 	int findJJJnListCountByFilter(PostLoanFilter filter);
 	
 	/**
@@ -75,7 +79,7 @@ public interface PostLoanDao {
 	 * @param filter
 	 * @return
 	 */
-	List<MibusidataForm> findTzJnListByFilter(PostLoanFilter filter);
+	List<MibusidateView> findTzJnListByFilter(PostLoanFilter filter);
 	int findTzJnListCountByFilter(PostLoanFilter filter);
 	
 	/**
@@ -86,7 +90,7 @@ public interface PostLoanDao {
 	Fcloaninfo findObjectsByBusicode(@Param("busicode") String busicode);
 	
 	
-	List<RarepaylistForm> selectRarepaylistfoInfoByBusicode(FcloaninfoFilter filter);
+	List<TyRarepaylistForm> selectRarepaylistfoInfoByBusicode(FcloaninfoFilter filter);
 	
 	
 	List<REIMBURSEMENT> findReimbListByFilter(PostLoanFilter filter);
@@ -97,4 +101,12 @@ public interface PostLoanDao {
 	int findBadloansManagerInfoSize(BloansManagerFilter filter);
 	
 	BadLoansResultForm findresultById(@Param("id")String id);
+	List<TyRepayTkmxForm> findJJJnListByFilters(PostLoanFilter filter);
+	List<RefuseMibusidata> findrefusedMibusidata(PostLoanFilter filter);
+	int findrefusedMibusidatasize(PostLoanFilter filter);
+	List<CreditProcess> queryCreditProcess(CreditProcess filter);
+	int querySize(CreditProcess filter);
+	List<CreditProcess> queryAll(String id);
+	List<CreditProcess> creditProcessExportQueryAll(CreditProcess filter);
+	List<CreditProcess> queryByCardId(String cardId);
 }

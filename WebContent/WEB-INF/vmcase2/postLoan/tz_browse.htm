@@ -37,7 +37,6 @@
               <col />
               <col />
               <col />
-              <col />
             </colgroup>
             <tr class="title">
               <th nowrap="nowrap"></th>
@@ -48,16 +47,15 @@
               <th nowrap="nowrap">发放日期(核心)</th>
               <th nowrap="nowrap">发放金额(核心)</th>
               <th nowrap="nowrap">贷款余额(核心)</th>
-              <th nowrap="nowrap">账户状态(核心)</th>
+            <!--   <th nowrap="nowrap">账户状态(核心)</th> -->
             </tr>
           </table>
         </div>
         <div id="downDiv" class="inquiry_list inquiry_down">
           <table>
             <colgroup>
-              <col width="5%" />
+             <col width="5%" />
               <col width="10%" />
-              <col />
               <col />
               <col />
               <col />
@@ -67,15 +65,15 @@
             </colgroup>
             #foreach ($obj in $result.items)
             <tr>
-              <td class="checkbox"><input type="radio" name="checkbox" value="$!obj.busicode"/></td>
-              <td nowrap="nowrap">$!obj.busicode</td>
-              <td nowrap="nowrap">$!obj.cname</td>
-              <td nowrap="nowrap">$!obj.custidno</td>
-              <td nowrap="nowrap">$!obj.reqlmt</td>
-              <td nowrap="nowrap">$!obj.loandate</td>
-              <td nowrap="nowrap">$!obj.money</td>
-              <td nowrap="nowrap">$!obj.balamt</td>
-              <td nowrap="nowrap">#dictVal("ACCOUNTSTATE", $!obj.accountstate)</td>
+              <td class="checkbox"><input type="radio" name="checkbox" value="$!obj.YWBH"/></td>
+              <td nowrap="nowrap">$!obj.YWBH</td>
+              <td nowrap="nowrap">$!obj.KHMC</td>
+              <td nowrap="nowrap">$!obj.ZJHM</td>
+              <td nowrap="nowrap">$!obj.REQLMT</td>
+              <td nowrap="nowrap">$!obj.LOANDATE</td>
+              <td nowrap="nowrap">$!obj.REQLMT</td>
+              <td nowrap="nowrap">$!obj.YE</td>
+             <!--  <td nowrap="nowrap">#dictVal("ACCOUNTSTATE", $!obj.accountstate)</td> -->
             </tr>
             #end
           </table>
@@ -83,7 +81,11 @@
       </div>
       <div class="pagebar">
        <div class="controlbtn">
-          <a id="id_infor_button" class="btn_g" href="javascript:void(0);" title="查看详细信息">查看详情</a>
+          <a id="id_infor_button" class="btn_g" href="javascript:void(0);" title="查看详细信息">查看详细信息</a>
+          
+          <a id="id_refuse_button" class="btn_g" href="javascript:void(0);" title="被拒绝台帐">被拒绝台帐</a>
+          
+       <!--    <a id="id_export_button" class="btn_g" href="javascript:void(0);" title="导出Excel">导出Excel</a> -->
         </div>
         <div class="controlbtn">
         </div>
@@ -115,6 +117,19 @@
 				Dialog.message("请选择记录!");
 			}
 	    });
+		
+		$("#id_refuse_button").click(function() {
+				var url = "${modulePath}"+"refuse.page";
+				window.location.href = url;
+				
+	    });
+	    $("#id_export_button").click(function() {
+               // $("#export").unbind();
+                var busicode = $($(".checkbox :checked")[0]).attr("value");
+                var url = "${modulePath}/tzexport.json"+ "?id=" + busicode;
+				window.location.href = url;
+          
+        });
 	});
 </script>
 #parse ("common/iframe_page_footer.htm")
