@@ -403,7 +403,7 @@
          <!-- <property name="startDelay" value="0"/>
         <property name="repeatInterval" value="60000" /> -->
          <property name="cronExpression">
-            <value>0 13 11 * * ?</value>
+            <value>0 33 11 * * ?</value>
         </property> 
     </bean>
     <!-- 每日加载tymibusidata数据end-->

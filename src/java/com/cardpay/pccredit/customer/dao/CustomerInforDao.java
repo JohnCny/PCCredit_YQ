@@ -16,6 +16,7 @@ import com.cardpay.pccredit.customer.model.CustomerInforWeb;
 import com.cardpay.pccredit.customer.model.MaintenanceLog;
 import com.cardpay.pccredit.customer.model.TyMibusidataForm;
 import com.cardpay.pccredit.customer.model.TyRepayLsz;
+import com.cardpay.pccredit.customer.model.TyRepayTkmxForm;
 import com.cardpay.pccredit.customer.model.TyRepayYehz;
 import com.cardpay.pccredit.customer.model.TyRepayYehzVo;
 import com.cardpay.pccredit.intopieces.filter.IntoPiecesFilter;
@@ -325,4 +326,7 @@ public interface CustomerInforDao {
 	public void truncateLshtylist();
 	public List<TyRarepaylistForm> findLshJnListByFilter();
 	public void insertLshtylist(TyRarepaylistForm tyRarepaylistForm);
+	public void truncateTkmxtylist();
+	public List<TyRepayTkmxForm> findtkmxJnListByFilter();
+	public void insertTkmxtylist(TyRepayTkmxForm tyRepayTkmxForm);
 }

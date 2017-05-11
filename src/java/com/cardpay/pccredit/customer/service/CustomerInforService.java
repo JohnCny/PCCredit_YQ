@@ -73,6 +73,7 @@ import com.cardpay.pccredit.customer.model.SxOutputData;
 import com.cardpay.pccredit.customer.model.TyMibusidataForm;
 import com.cardpay.pccredit.customer.model.TyProductType;
 import com.cardpay.pccredit.customer.model.TyRepayLsz;
+import com.cardpay.pccredit.customer.model.TyRepayTkmxForm;
 import com.cardpay.pccredit.customer.model.TyRepayYehzVo;
 import com.cardpay.pccredit.datapri.service.DataAccessSqlService;
 import com.cardpay.pccredit.intopieces.constant.Constant;
@@ -4847,5 +4848,12 @@ public class CustomerInforService {
 			customerInforDao.insertLshtylist(tyRarepaylistForm);
 		}
 		log.info("addlshtylist success!");
+		//添加TKMXTYLIS表
+		customerInforDao.truncateTkmxtylist();
+		List<TyRepayTkmxForm>Tklists=customerInforDao.findtkmxJnListByFilter();
+		for (TyRepayTkmxForm tyRepayTkmxForm : Tklists) {
+			customerInforDao.insertTkmxtylist(tyRepayTkmxForm);
+		}
+		log.info("addtkmxtylist success!");
 	}
 }

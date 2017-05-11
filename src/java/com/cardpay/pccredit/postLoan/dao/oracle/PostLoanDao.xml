@@ -325,64 +325,17 @@
 					SELECT * FROM
 			(SELECT ROW_.*,ROWNUM ROWNUM_
 				FROM (
-				 select distinct tkmx.ywbh as ywbh,
-			        base.khmc as cname,
-			        base.zjhm as zjhm,
-			        tkmx.jkrq,
-			        tkmx.ffje as ffje,
-			        yehz.DKYE as balamt,
-			        yehz.bnqx+yehz.bwqx as debtinterest,
-			        tkmx.ffje as reqlmt,
-			        (case when(to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) > 0 then (to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) else 0  end ) as DELAYINTERESTDAYS,
-           			(case when(to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) > 0 then (to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) else 0  end )as DELAYAMTDAYS
-			          from
-           (select  tkmx.ywbh as ywbh,
-                      max(to_number(jh.qs)) as qs
-          from
-                      TY_REPAY_TKMX tkmx,
-                      TY_CUSTOMER_BASE  b,
-                      TY_REPAY_YEHZ yehz,
-                      ty_kdk_jh jh,
-                      ty_customer_rygl rygl,
-                      sys_user sysuser
-                      where 1=1 and
-                      b.khnm=tkmx.khh and
-                      yehz.JJH = tkmx.JJH and
-                      jh.ywbh=tkmx.ywbh||'HT' and
-                      b.khjl=rygl.dm and
-                      rygl.ddrq=sysuser.external_id
-                   group by tkmx.ywbh)  maxqs,
-                    ty_customer_rygl rygl,
-                    ty_customer_base base,
-                     ty_product_type protype,
-                    ty_repay_tkmx tkmx,
-                    SYS_USER sysuser  ,
-                    ty_repay_yehz yehz,
-                    ty_kdk_jh jh,
-                    ty_repay_lsz lsz
-                    WHERE 
-                    base.khjl=rygl.dm
-                    and rygl.ddrq=sysuser.external_id
-                    and base.khnm=tkmx.khh
-                    and tkmx.JJH=yehz.JJH
-                    and protype.product_code=tkmx.cpmc
-                    and jh.ywbh=tkmx.ywbh||'HT' 
-                    and lsz.jjh=tkmx.jjh
-                    and maxqs.ywbh=tkmx.ywbh
-                    and maxqs.qs=jh.qs
+				select * from tkmxtylist where 1=1
                      <if test="userId != null and userId != '' and userId!='000001'">
-						AND sysuser.id=#{userId}
+						AND USERID=#{userId}
 					   </if>
 					   <if test="busiCode != null and busiCode != '' ">
-						AND trim(tkmx.ywbh)=#{busiCode}
+						AND trim(ywbh)=#{busiCode}
 					   </if>
 					  <if test="cardNum != null and cardNum != '' ">
-							AND trim(base.zjhm)=#{cardNum}
+							AND trim(zjhm)=#{cardNum}
 					  </if>
-					    group by tkmx.ywbh, base.khmc,base.zjhm,tkmx.jkrq,
-              tkmx.ffje,yehz.DKYE,yehz.bnqx,yehz.bwqx,tkmx.dqrq
-					  order  by tkmx.jkrq
-					  
+					    
 		 <![CDATA[		
 							) ROW_
 						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
@@ -391,124 +344,38 @@
 	</select>
 	
 	<select id="findJJJnListCountByFilter" resultType="int" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
-	  	select count(distinct tkmx.ywbh)    from
-           (select  tkmx.ywbh as ywbh,
-                      max(to_number(jh.qs)) as qs
-          from
-                      TY_REPAY_TKMX tkmx,
-                      TY_CUSTOMER_BASE  b,
-                      TY_REPAY_YEHZ yehz,
-                      ty_kdk_jh jh,
-                      ty_customer_rygl rygl,
-                      sys_user sysuser
-                      where 1=1 and
-                      b.khnm=tkmx.khh and
-                      yehz.JJH = tkmx.JJH and
-                      jh.ywbh=tkmx.ywbh||'HT' and
-                      b.khjl=rygl.dm and
-                      rygl.ddrq=sysuser.external_id
-                   group by tkmx.ywbh)  maxqs,
-                    ty_customer_rygl rygl,
-                    ty_customer_base base,
-                     ty_product_type protype,
-                    ty_repay_tkmx tkmx,
-                    SYS_USER sysuser  ,
-                    ty_repay_yehz yehz,
-                    ty_kdk_jh jh,
-                    ty_repay_lsz lsz
-                    WHERE 
-                    base.khjl=rygl.dm
-                    and rygl.ddrq=sysuser.external_id
-                    and base.khnm=tkmx.khh
-                    and tkmx.JJH=yehz.JJH
-                    and protype.product_code=tkmx.cpmc
-                    and jh.ywbh=tkmx.ywbh||'HT' 
-                    and lsz.jjh=tkmx.jjh
-                    and maxqs.ywbh=tkmx.ywbh
-                    and maxqs.qs=jh.qs
+	  	select count(distinct ywbh)    from tkmxtylist where 1=1
+           
                    <if test="userId != null and userId != '' and userId!='000001'">
-						AND sysuser.id=#{userId}
+						AND USERID=#{userId}
 					   </if>
 					   <if test="busiCode != null and busiCode != '' ">
-						AND trim(tkmx.ywbh)=#{busiCode}
+						AND trim(ywbh)=#{busiCode}
 					   </if>
 					  <if test="cardNum != null and cardNum != '' ">
-							AND trim(base.zjhm)=#{cardNum}
+							AND trim(zjhm)=#{cardNum}
 					  </if>
-	    order  by tkmx.jkrq
 	</select>
 	
 	<select id="findJJJnListByFilters" resultMap="BaseResultMap" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
-			 select distinct tkmx.ywbh as ywbh,
-              base.khh as khh,
-              base.khmc as cname,
-              base.Khlx as khlx,
-              base.Zjlx as zjlx,
-              base.zjhm as zjhm,
-              tkmx.jkrq,
-              tkmx.ffje as ffje,
-              yehz.DKYE as balamt,
-              tkmx.jkrq as jkrq,
-              tkmx.dqrq as dqrq,
-              yehz.bnqx+yehz.bwqx as debtinterest,
-              tkmx.ffje as reqlmt,
-              (case when(to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) > 0 then (to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) else 0  end ) as DELAYINTERESTDAYS,
-           	(case when(to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) > 0 then (to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) else 0  end )as DELAYAMTDAYS
-                from
-           (select  tkmx.ywbh as ywbh,
-                      max(to_number(jh.qs)) as qs
-          from
-                      TY_REPAY_TKMX tkmx,
-                      TY_CUSTOMER_BASE  b,
-                      TY_REPAY_YEHZ yehz,
-                      ty_kdk_jh jh,
-                      ty_customer_rygl rygl,
-                      sys_user sysuser
-                      where 1=1 and
-                      b.khnm=tkmx.khh and
-                      yehz.JJH = tkmx.JJH and
-                      jh.ywbh=tkmx.ywbh||'HT' and
-                      b.khjl=rygl.dm and
-                      rygl.ddrq=sysuser.external_id
-                   group by tkmx.ywbh)  maxqs,
-                   
-                    ty_customer_rygl rygl,
-                    ty_customer_base base,
-                     ty_product_type protype,
-                    ty_repay_tkmx tkmx,
-                    SYS_USER sysuser  ,
-                    ty_repay_yehz yehz,
-                    ty_kdk_jh jh,
-                    ty_repay_lsz lsz
-                    WHERE 
-                    base.khjl=rygl.dm
-                    and rygl.ddrq=sysuser.external_id
-                    and base.khnm=tkmx.khh
-                    and tkmx.JJH=yehz.JJH
-                    and protype.product_code=tkmx.cpmc
-                    and jh.ywbh=tkmx.ywbh||'HT' 
-                    and lsz.jjh=tkmx.jjh
-                    and maxqs.ywbh=tkmx.ywbh
-                    and maxqs.qs=jh.qs
+			 select * from tkmxtylist where 1=1
                      <if test="userId != null and userId != '' and userId!='000001'">
-						AND sysuser.id=#{userId}
+						AND USERID=#{userId}
 					   </if>
 					   <if test="busiCode != null and busiCode != '' ">
-						AND trim(tkmx.ywbh)=#{busiCode}
+						AND trim(ywbh)=#{busiCode}
 					   </if>
 					  <if test="cardNum != null and cardNum != '' ">
-							AND trim(base.zjhm)=#{cardNum}
+							AND trim(zjhm)=#{cardNum}
 					  </if>
-					   group by tkmx.ywbh,base.khh, base.khmc,base.zjhm,tkmx.jkrq,
-              tkmx.ffje,yehz.DKYE,yehz.bnqx,yehz.bwqx,tkmx.dqrq,base.Khlx,base.Zjlx
-                    order  by tkmx.jkrq
+					  
 	</select>
 	
 	<select id="findLshJnListByFilter" resultMap="lszform" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
 					SELECT * FROM
 			(SELECT ROW_.*,ROWNUM ROWNUM_
 				FROM (
-			 select  * from LSHTYLIST
+			 select  * from LSHTYLIST where 1=1 
 			               <if test="busiCode != null and busiCode != '' ">
 								AND trim(ywbh)=#{busiCode}
 						</if>
@@ -543,7 +410,7 @@
 	</select>
 	
 <select id="findLshJnListCountByFilter" resultType="int" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
-	  	select count(ywbh)  from LSHTYLIST
+	  	select count(ywbh)  from LSHTYLIST where 1=1
                <if test="busiCode != null and busiCode != '' ">
 					AND trim(ywbh)=#{busiCode}
 			</if>
