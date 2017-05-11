@@ -26,16 +26,15 @@
             <colgroup>
               <col width="5%" />
               <col width="11%" />
-              <col width="6%" />
+              <col width="9%" />
               <col width="15%" />
-              <col width="6%" />
-              <col width="6%" />
-              <col width="6%" />
-              <col width="6%" />       
-              <col width="6%" />
-              <col width="7%" />
-              <col width="7%" />
-              <col width="10%" />
+              <col width="9%" />
+              <col width="9%" />
+              <col width="9%" />
+              <col width="9%" />       
+              <col width="9%" />
+              <col width="9%" />
+              <col width="9%" />
             </colgroup>
             <tr class="title">
               <th nowrap="nowrap"></th>
@@ -49,7 +48,7 @@
               <th nowrap="nowrap">逾期次数</th>
               <th nowrap="nowrap">本金逾期天数</th>
               <th nowrap="nowrap">利息逾期天数</th>
-              <th nowrap="nowrap">状态</th>
+              
             </tr>
           </table>
         </div>
@@ -58,32 +57,31 @@
             <colgroup>
               <col width="5%" />
               <col width="11%" />
-              <col width="6%" />
+              <col width="9%" />
               <col width="15%" />
-              <col width="6%" />
-              <col width="6%" />
-              <col width="6%" />
-              <col width="6%" />       
-              <col width="6%" />
-              <col width="7%" />
-              <col width="7%" />
-              <col width="10%" />
+              <col width="9%" />
+              <col width="9%" />
+              <col width="9%" />
+              <col width="9%" />       
+              <col width="9%" />
+              <col width="9%" />
+              <col width="9%" />
             </colgroup>
             #foreach ($obj in $result.items)
             <tr>
-              <td class="checkbox"><input type="radio" name="checkbox" value="$!obj.busicode@$!obj.cname@$!obj.cardnum"
+              <td class="checkbox"><input type="radio" name="checkbox" value="$!obj.ywbh@$!obj.cname@$!obj.cardnum"
                    /></td>
-              <td nowrap="nowrap">$!obj.busicode</td>
+              <td nowrap="nowrap">$!obj.ywbh</td>
               <td nowrap="nowrap">$!obj.cname</td>
-              <td nowrap="nowrap">$!obj.cardnum</td>
-              <td nowrap="nowrap">$!obj.money</td>
+              <td nowrap="nowrap">$!obj.zjhm</td>
+              <td nowrap="nowrap">$!obj.ffje</td>
               <td nowrap="nowrap">$!obj.balamt</td>
               <td nowrap="nowrap">$!obj.debtinterest</td>
               <td nowrap="nowrap">$!obj.reqlmt</td>
               <td nowrap="nowrap">$!obj.overtimes</td>
               <td nowrap="nowrap">$!obj.delayamtdays</td>
               <td nowrap="nowrap">$!obj.delayinterestdays</td>
-              <td nowrap="nowrap">#dictVal("STATE", $!obj.state)</td>
+              
             </tr>
             #end
           </table>
@@ -91,7 +89,7 @@
       </div>
       <div class="pagebar">
       <div class="controlbtn">
-          <a id="id_infor_button" class="btn_g" href="javascript:void(0);" title="查看详细信息">查看详情</a>
+          <a id="id_infor_button" class="btn_g" href="javascript:void(0);" title="查看详细信息">查看详细信息</a>
         </div>
         <div class="controlbtn">
         </div>

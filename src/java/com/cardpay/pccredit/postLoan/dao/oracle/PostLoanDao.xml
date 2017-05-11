@@ -1,8 +1,94 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cardpay.pccredit.postLoan.dao.PostLoanDao">
-
-
+	<resultMap id="refusemibusidata" type="com.cardpay.pccredit.postLoan.model.RefuseMibusidata" >
+ 	      <result column="ywbh"        property="ywbh"    jdbcType="VARCHAR" /> 
+   		<result column="CHINESE_NAME"        property="CHINESE_NAME"    jdbcType="VARCHAR" />  
+   		<result column="CARD_ID"        property="CARD_ID"    jdbcType="VARCHAR" /> 
+   		<result column="TELEPHONE"        property="TELEPHONE"    jdbcType="VARCHAR" /> 
+   		<result column="industry"        property="industry"    jdbcType="VARCHAR" />
+   		<result column="spmc"        property="spmc"    jdbcType="VARCHAR" /> 
+   		<result column="RESIDENTIAL_ADDRESS"        property="RESIDENTIAL_ADDRESS"    jdbcType="VARCHAR" /> 
+   		<result column="JKJE"        property="JKJE"    jdbcType="VARCHAR" /> 
+   		<result column="JKRQ"        property="JKRQ"    jdbcType="VARCHAR" /> 
+   		<result column="AUDIT_TIME"        property="AUDIT_TIME"    jdbcType="VARCHAR" /> 
+   		<result column="REFUSAL_REASON"        property="REFUSAL_REASON"    jdbcType="VARCHAR" /> 
+   		<result column="DISPLAY_NAME"        property="DISPLAY_NAME"    jdbcType="VARCHAR" /> 
+   		<result column="PROCESS_OP_STATUS"        property="PROCESS_OP_STATUS"    jdbcType="VARCHAR" /> 
+ 	 </resultMap>
+ 	 
+ 	  <resultMap id="CreditProcess" type="com.cardpay.pccredit.postLoan.model.CreditProcess" >
+   		<result column="spmc" 		property="spmc"  />
+		<result column="chinese_name" 	property="customername" />
+		<result column="teamname" 	property="teamname" />
+		<result column="bljg" 		property="bljg" />
+		<result column="dklx" 		property="dklx" />
+		<result column="assure_means"	property="mainassure"/>
+		<result column="hyfl" 	property="industry" />
+		<result column="display_name" 	property="mananger"/>
+		<result column="created_time" property="applytime"/>
+		<result column="apply_quota" 	property="applymoney"/>
+		<result column="start_examine_time" 		property="willtime" />
+		<result column="examine_result" 	property="auditopinion" />
+		<result column="examine_amount" 	property="examineamount" />
+		<result column="jkrq" 	property="audittime" />
+		<result column="zjts" 	property="zjdays" />
+		<result column="examine_lv"	    property="examine" 	 />
+		<result column="status" 		property="status" />
+		<result column="id" 		property="id" />
+		<result column="CARD_ID" 		property="cardId" />
+		<result column="carId" 		property="zjmh" />
+ 	 </resultMap>
+	
+	 <resultMap id="MibusidateView" type="com.cardpay.pccredit.postLoan.model.MibusidateView" >
+	<result column="YWBH" property="YWBH" jdbcType="VARCHAR" />
+	<result column="id" property="id" jdbcType="VARCHAR" />
+	<result column="KHH" property="KHH" jdbcType="VARCHAR" />
+	<result column="KHMC" property="KHMC" jdbcType="VARCHAR" />
+	<result column="ZJHM" property="ZJHM" jdbcType="VARCHAR" />
+	<result column="SSBM" property="SSBM" jdbcType="VARCHAR" />
+	<result column="SJ" property="SJ" jdbcType="VARCHAR" />
+	<result column="SXED" property="SXED" jdbcType="VARCHAR" />
+	<result column="GHJL" property="GHJL" jdbcType="VARCHAR" />
+	<result column="LOANDATE" property="LOANDATE" jdbcType="VARCHAR" />
+	<result column="DQRQ" property="DQRQ" jdbcType="VARCHAR" />
+	<result column="DKQX" property="DKQX" jdbcType="VARCHAR" />
+	<result column="JZLL" property="JZLL" jdbcType="VARCHAR" />
+	<result column="REQLMT" property="REQLMT" jdbcType="VARCHAR" />
+	<result column="DELAYINTERESTDAYS" property="DELAYINTERESTDAYS" jdbcType="VARCHAR" />
+	<result column="DELAYAMTDAYS" property="DELAYAMTDAYS" jdbcType="VARCHAR" />
+	<result column="qs" property="qs" jdbcType="VARCHAR" />
+	<result column="DLAYDT" property="DLAYDT" jdbcType="VARCHAR" />
+	<result column="DF" property="DF" jdbcType="VARCHAR" />
+	<result column="YE" property="YE" jdbcType="VARCHAR" />
+	<result column="SHBJ" property="SHBJ" jdbcType="VARCHAR" />
+	<result column="JKJE" property="JKJE" jdbcType="VARCHAR" />
+	<result column="KSQXRQ" property="KSQXRQ" jdbcType="VARCHAR" />
+	<result column="SHLX" property="SHLX" jdbcType="VARCHAR" />
+	<result column="DKYE" property="DKYE" jdbcType="VARCHAR" />
+	<result column="BNQX" property="BNQX" jdbcType="VARCHAR" />
+	<result column="BWQX" property="BWQX" jdbcType="VARCHAR" />
+	<result column="BALAMT" property="BALAMT" jdbcType="VARCHAR" />
+	<result column="yxye" property="yxye" jdbcType="VARCHAR" /> 
+	<result column="HKFS" property="HKFS" jdbcType="VARCHAR" />  
+	<result column="je" property="je" jdbcType="VARCHAR" />  
+	<result column="CREATE_TIME" property="CREATE_TIME" jdbcType="VARCHAR" /> 
+	<result column="dlayamtsum" property="dlayamtsum" jdbcType="VARCHAR" /> 
+ 	 </resultMap>
+	 <resultMap id="lszform" type="com.cardpay.pccredit.postLoan.model.TyRarepaylistForm" >
+ 	      	<result column="ywbh" 		property="ywbh" 			jdbcType="VARCHAR" />
+ 	      	<result column="khmc" 		property="khmc" 			jdbcType="VARCHAR" />
+ 	      	<result column="jkrq" 		property="jkrq" 			jdbcType="VARCHAR" />
+ 	      	<result column="bj" 		property="bj" 			jdbcType="VARCHAR" />
+ 	      	<result column="lx" 		property="lx" 			jdbcType="VARCHAR" />
+ 	      	<result column="jxfs" 		property="jxfs" 			jdbcType="VARCHAR" />
+ 	      	<result column="jzrq" 		property="jzrq" 			jdbcType="VARCHAR" />
+ 	      	<result column="display_name" 		property="display_name" 			jdbcType="VARCHAR" />
+ 	      	<result column="create_time" 		property="create_time" 			jdbcType="VARCHAR" />
+ 	 </resultMap>
+	  <resultMap id="BaseResultMap" type="com.cardpay.pccredit.customer.model.TyRepayTkmxForm" >
+   		<result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+ 	  </resultMap>
 	 <resultMap id="BaseResultMap1" type="com.cardpay.pccredit.postLoan.model.Fcloaninfo" >
    			  <result column="KEYCODE" 		property="keycode" jdbcType="VARCHAR" /> 
 			  <result column="YEAR" 		property="year" jdbcType="VARCHAR" /> 
@@ -235,17 +321,21 @@
 	</select>  -->
 	
 	
-	<select id="findJJJnListByFilter" resultMap="BaseResultMap1" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
+	<select id="findJJJnListByFilter" resultMap="BaseResultMap" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
 					SELECT * FROM
 			(SELECT ROW_.*,ROWNUM ROWNUM_
 				FROM (
-					  select *  from t_fcloaninfo a WHERE 1=1 
+				select * from tkmxtylist where 1=1
+                     <if test="userId != null and userId != '' and userId!='000001'">
+						AND USERID=#{userId}
+					   </if>
 					   <if test="busiCode != null and busiCode != '' ">
-						AND trim(a.BUSICODE)=#{busiCode}
+						AND trim(ywbh)=#{busiCode}
 					   </if>
 					  <if test="cardNum != null and cardNum != '' ">
-							AND trim(a.CARDNUM)=#{cardNum}
+							AND trim(zjhm)=#{cardNum}
 					  </if>
+					    
 		 <![CDATA[		
 							) ROW_
 						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
@@ -254,25 +344,45 @@
 	</select>
 	
 	<select id="findJJJnListCountByFilter" resultType="int" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
-	  	select count(*)  from t_fcloaninfo a  WHERE 1=1 
-	  	<if test="busiCode != null and busiCode != '' ">
-			AND trim(a.BUSICODE)=#{busiCode}
-		</if>
-		<if test="cardNum != null and cardNum != '' ">
-			AND trim(a.CARDNUM)=#{cardNum}
-	   </if>
+	  	select count(distinct ywbh)    from tkmxtylist where 1=1
+           
+                   <if test="userId != null and userId != '' and userId!='000001'">
+						AND USERID=#{userId}
+					   </if>
+					   <if test="busiCode != null and busiCode != '' ">
+						AND trim(ywbh)=#{busiCode}
+					   </if>
+					  <if test="cardNum != null and cardNum != '' ">
+							AND trim(zjhm)=#{cardNum}
+					  </if>
 	</select>
 	
+	<select id="findJJJnListByFilters" resultMap="BaseResultMap" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
+			 select * from tkmxtylist where 1=1
+                     <if test="userId != null and userId != '' and userId!='000001'">
+						AND USERID=#{userId}
+					   </if>
+					   <if test="busiCode != null and busiCode != '' ">
+						AND trim(ywbh)=#{busiCode}
+					   </if>
+					  <if test="cardNum != null and cardNum != '' ">
+							AND trim(zjhm)=#{cardNum}
+					  </if>
+					  
+	</select>
 	
-	
-	<select id="findLshJnListByFilter" resultMap="BaseResultMap2" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
+	<select id="findLshJnListByFilter" resultMap="lszform" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
 					SELECT * FROM
 			(SELECT ROW_.*,ROWNUM ROWNUM_
 				FROM (
-					  select a.*,trim(a.squaremodel) as param1 from T_RAREPAYLIST a WHERE 1=1 
-					  <if test="busiCode != null and busiCode != '' ">
-						AND trim(a.BUSICODE)=#{busiCode}
-					   </if>
+			 select  * from LSHTYLIST where 1=1 
+			               <if test="busiCode != null and busiCode != '' ">
+								AND trim(ywbh)=#{busiCode}
+						</if>
+						<!--  <if test="busiCode != null and busiCode != '' ">
+								AND trim(tkmx.ywbh)=#{busiCode}
+						</if> -->
+			                 order by jkrq
 		 <![CDATA[		
 							) ROW_
 						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
@@ -280,23 +390,35 @@
 					]]>
 	</select>
 	
-	<select id="selectRarepaylistfoInfoByBusicode" resultMap="BaseResultMap2" parameterType="com.cardpay.pccredit.postLoan.filter.FcloaninfoFilter">
+	<select id="selectRarepaylistfoInfoByBusicode" resultMap="lszform" parameterType="com.cardpay.pccredit.postLoan.filter.FcloaninfoFilter">
 
-	    		select a.* from T_RAREPAYLIST a WHERE 1=1 
-						AND a.BUSICODE=#{busiCode}
-		<if test="rapayinterest != null and rapayinterest != '' ">
+	    		select * from LSHTYLIST where 1=1
+               <if test="busiCode != null and busiCode != '' ">
+					AND trim(ywbh)=#{busiCode}
+			</if>
+			<!--  <if test="busiCode != null and busiCode != '' ">
+					AND trim(tkmx.ywbh)=#{busiCode}
+			</if> -->
+                 order by jkrq
+					
+	<!-- 	<if test="rapayinterest != null and rapayinterest != '' ">
 		   				AND a.rapayinterest=#{rapayinterest}
 		   				</if>
 		<if test="repayamt != null and repayamt != '' ">
 		   				AND a.repayamt=#{repayamt}
-		   				</if>
+		   				</if> -->
 	</select>
 	
-	<select id="findLshJnListCountByFilter" resultType="int" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
-	  	select count(*)  from T_RAREPAYLIST a  WHERE 1=1 
-	  	<if test="busiCode != null and busiCode != '' ">
-			AND trim(a.BUSICODE)=#{busiCode}
-		</if>
+<select id="findLshJnListCountByFilter" resultType="int" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
+	  	select count(ywbh)  from LSHTYLIST where 1=1
+               <if test="busiCode != null and busiCode != '' ">
+					AND trim(ywbh)=#{busiCode}
+			</if>
+			<!--  <if test="busiCode != null and busiCode != '' ">
+					AND trim(tkmx.ywbh)=#{busiCode}
+			</if> -->
+                 
+	  
 	</select>
 	
 	<select id="findObjectsByBusicode" resultMap="BaseResultMap1">
@@ -307,18 +429,88 @@
 	
 	
 	
-	<select id="findTzJnListByFilter" resultMap="BaseResultMap3" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
+		<select id="findTzJnListByFilter" resultMap="MibusidateView" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
 					SELECT * FROM
 			(SELECT ROW_.*,ROWNUM ROWNUM_
 				FROM (
-					  select a.*,trim(a.ACCOUNTSTATE) as STATE from t_mibusidata_view a where 1=1
-					 <if test="busiCode != null and busiCode != '' ">
-						AND trim(a.BUSICODE)=#{busiCode}
-					 </if>
-					 
-					 <if test="customerName != null and customerName != '' ">
-						AND cname =#{customerName}
-					 </if>
+				select distinct tym.YWBH,tym.ID,tym.KHH,tym.KHMC,tym.ZJHM,tym.SSBM,tym.SJ,tym.SXED,tym.GHJL,tym.LOANDATE, tym.DQRQ,tym.DKQX,
+tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0) as DELAYINTERESTDAYS ,  nvl(tym.DELAYAMTDAYS,0) as DELAYAMTDAYS,
+        tym.DLAYDT,tym.SHBJ,tym.JKJE,tym.KSQXRQ,nvl(sum(lsz.df)-tkmx.ffje,0) as PAYDEBT,DKYE as YE ,tym.BNQX,tym.BWQX,sum(tym.DKYE+tym.BNQX+tym.BWQX) as dlayamtsum,tym.BALAMT ,tym.YXYE,tym.USERID as  userid,tym.DISPLAY_NAME as display_name
+                 from ty_mibusidata tym,
+                 ty_repay_tkmx tkmx,
+                 ty_repay_lsz lsz 
+                 where 1=1  and
+                 tym.ywbh=tkmx.ywbh and
+                 tkmx.jjh=lsz.jjh 
+			           <if test="userId != null and userId != '' and userId !='000001'">
+			             and tym.USERID  =#{userId}
+				         </if>
+				         <if test="busiCode != null and busiCode != '' ">
+							AND trim(tym.YWBH)=#{busiCode}
+						</if>
+						<if test="customerName != null and customerName != '' ">
+							AND tym.KHMC=#{customerName}
+						</if>
+						  group by tym.YWBH,tym.ID,tym.KHH,tym.KHMC,tym.ZJHM,tym.SSBM,tym.SJ,tym.SXED,tym.GHJL,tym.LOANDATE, tym.DQRQ,tym.DKQX,
+tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),tkmx.ffje,
+        tym.DLAYDT,tym.SHBJ,tym.JKJE,tym.KSQXRQ,tym.PAYDEBT,DKYE ,tym.BNQX,tym.BWQX ,tym.BALAMT ,tym.YXYE,tym.USERID ,tym.DISPLAY_NAME
+         order by tym.LOANDATE
+					<!--   select
+			        distinct
+			          tkmx.YWBH ,
+			          b.id as id ,
+			          b.KHH,
+			          b.KHMC,
+			          b.ZJHM,
+			          rygl.SSBM,
+			          b.SJ,
+			          b.SXED,
+			          b.GHJL,
+			          tkmx.JKRQ as LOANDATE, 
+			          tkmx.DQRQ,
+			          tkmx.DKQX,
+			          tkmx.JZLL,
+			          tkmx.FFJE   as REQLMT,
+			           (case when(to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) > 0 then (to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) else null  end ) as DELAYINTERESTDAYS,  
+			           (case when(to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) > 0 then (to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) else null  end )as DELAYAMTDAYS, 
+			           max(lsz.jzrq) as DLAYDT,
+			          yehz.SHBJ,
+			          yehz.JKJE,
+			          yehz.KSQXRQ,
+			          yehz.SHLX as PAYDEBT,  
+			          yehz.DKYE as YE ,
+			          yehz.BNQX,
+			          yehz.BWQX,
+			          yehz.DKYE as BALAMT  ,
+			          yehz.dkye as yxye,
+			          sysuser.id userid,
+			          sysuser.display_name
+			       from
+			              ty_repay_tkmx tkmx,
+			              ty_customer_base b,
+			              ty_customer_rygl rygl,
+			              sys_user sysuser,
+			              ty_kdk_jh jh,
+			              ty_repay_yehz yehz,
+			              ty_repay_lsz lsz
+			              where b.khjl=rygl.dm and
+			              rygl.ddrq=sysuser.external_id and
+			              b.khnm=tkmx.khh and
+			              jh.ywbh=tkmx.ywbh||'HT' and
+			              yehz.jjh=tkmx.jjh and
+			              tkmx.jjh =lsz.jjh
+			            <if test="userId != null and userId != '' and userId !='000001'">
+			             and sysuser.id  =#{userId}
+				         </if>
+				         <if test="busiCode != null and busiCode != '' ">
+							AND trim(tkmx.ywbh)=#{busiCode}
+						</if>
+						<if test="customerName != null and customerName != '' ">
+							AND b.khmc=#{customerName}
+						</if>
+			              group by tkmx.YWBH ,b.id ,b.KHH,b.KHMC, b.ZJHM,rygl.SSBM, b.SJ, b.SXED, b.GHJL,tkmx.JKRQ , tkmx.DQRQ, tkmx.DKQX,tkmx.JZLL, tkmx.FFJE  ,
+			                 yehz.SHBJ,yehz.JKJE, yehz.KSQXRQ,yehz.SHLX, yehz.DKYE,yehz.BNQX, yehz.BWQX,yehz.DKYE  , yehz.dkye  , sysuser.display_name, sysuser.id  
+			              order by tkmx.jkrq-->
 		 <![CDATA[		
 							) ROW_
 						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
@@ -419,5 +611,316 @@
 	    SELECT b.id,b.deal_result,b.deal_date,s.DISPLAY_NAME as dealby FROM Badloans_dealresult b
 		INNER JOIN SYS_USER s ON s.ID= b.create_by
 		WHERE b.customer_id =#{id}
+	</select>
+	
+		<select id="findrefusedMibusidata" resultMap="refusemibusidata" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
+					SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+				FROM (
+				  <!--  select tkmx.ywbh,basic.CHINESE_NAME,basic.CARD_ID,b.SJ as TELEPHONE,b.Cshy as industry,b.GTSPMC as spmc,b.YYDZ as RESIDENTIAL_ADDRESS,
+                      yehz.JKJE,tkmx.JKRQ,pro.AUDIT_TIME,pro.REFUSAL_REASON,sysuser.DISPLAY_NAME, pro.PROCESS_OP_STATUS
+                      from basic_customer_information basic,
+                      ty_customer_base b,
+                      ty_repay_tkmx tkmx,
+                      ty_repay_yehz yehz,
+                      customer_application_info app,
+                      customer_application_process pro,
+                      sys_user sysuser
+                      where b.id=basic.ty_customer_id and
+                            b.khnm=tkmx.khh and
+                            tkmx.jjh=yehz.jjh and
+                            app.customer_id=basic.id and 
+                            app.id=pro.application_id and
+                            sysuser.id=basic.user_id
+                             and pro.PROCESS_OP_STATUS ='REJECTAPPROVE' -->
+					    select app.ID as ywbh,basic.CHINESE_NAME as CHINESE_NAME,basic.CARD_ID as CARD_ID,''as TELEPHONE,'' as industry,'' as spmc,'' as RESIDENTIAL_ADDRESS,
+  				app.APPLY_QUOTA as JKJE,app.created_time as JKRQ,
+                     pro.AUDIT_TIME as AUDIT_TIME,pro.REFUSAL_REASON as REFUSAL_REASON,sysuser.DISPLAY_NAME DISPLAY_NAME, pro.PROCESS_OP_STATUS
+                      from basic_customer_information basic,
+                      customer_application_info app,
+                      customer_application_process pro,
+                      sys_user sysuser
+                      where 
+                            app.customer_id=basic.id and 
+                            app.id=pro.application_id and
+                            sysuser.id=basic.user_id
+                             and pro.PROCESS_OP_STATUS ='REJECTAPPROVE'
+					 <if test="busiCode != null and busiCode != '' ">
+						AND trim(app.ID)=#{busiCode}
+					 </if>
+					 
+					 <if test="customerName != null and customerName != '' ">
+						AND basic.CHINESE_NAME =#{customerName}
+					 </if>
+		 <![CDATA[		
+							) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+	</select>
+	
+	<select id="findrefusedMibusidatasize" resultType="int" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
+	  	select count(*) from (select app.ID as ywbh,basic.CHINESE_NAME as CHINESE_NAME,basic.CARD_ID as CARD_ID,''as TELEPHONE,'' as industry,'' as spmc,'' as RESIDENTIAL_ADDRESS,
+  				app.APPLY_QUOTA as JKJE,app.created_time as JKRQ,
+                     pro.AUDIT_TIME as AUDIT_TIME,pro.REFUSAL_REASON as REFUSAL_REASON,sysuser.DISPLAY_NAME DISPLAY_NAME, pro.PROCESS_OP_STATUS
+                      from basic_customer_information basic,
+                      customer_application_info app,
+                      customer_application_process pro,
+                      sys_user sysuser
+                      where 
+                            app.customer_id=basic.id and 
+                            app.id=pro.application_id and
+                            sysuser.id=basic.user_id
+                             and pro.PROCESS_OP_STATUS ='REJECTAPPROVE'
+					 <if test="busiCode != null and busiCode != '' ">
+						AND trim(app.ID)=#{busiCode}
+					 </if>
+					 
+					 <if test="customerName != null and customerName != '' ">
+						AND basic.CHINESE_NAME =#{customerName}
+					 </if>)
+	</select>
+	
+	<!-- 信贷流程跟踪表 -->
+	<select id="queryCreditProcess" resultMap="CreditProcess">
+		  SELECT *from 
+		  (SELECT ROW_.*,ROWNUM ROWNUM_
+				FROM (
+					  select 
+            bai.spmc,
+            bai.chinese_name,
+            (select t.name from sys_department t where t.id in 
+             (select tt.dept_id from sys_dept_user tt where tt.user_id = su.id)) as teamname,
+             (SELECT  A.TYPE_NAME  FROM DICT A ,PRODUCT_ATTRIBUTE p 
+             WHERE A .DICT_TYPE = 'CMMSCLNM-贷款担保方式' and A.TYPE_CODE=p.assure_means and p.id=cai.product_id) as assure_means,
+             su.display_name,
+            cai.created_time,
+            cai.apply_quota,
+            (case 
+	        when cai.status ='audit'and tlog.examine_amount is null and sdh.sdtime is null then
+	          '已申请'
+	         when cai.status ='refuse' and cai.id not in (select capid from CUSTOMER_APPLICATION_SDH) then
+	          '被拒绝'
+	         when cai.status ='returnedToFirst' and cai.id not in (select capid from CUSTOMER_APPLICATION_SDH) then
+	          '退回至客户经理'
+	         when cai.status ='end' then
+	          '放款成功'
+	         when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) 
+             and cai.status ='audit' and sdh.sdtime is null and cai.id not in (select capid from customer_sp) then
+             '进件初审'
+	         when cai.id not in (select capid from CUSTOMER_APPLICATION_SDH) 
+           	 and  cai.id in (select capid from customer_sp) then
+             '审贷决议'
+             when cai.id in (select capid from CUSTOMER_APPLICATION_SDH) then
+             '审批结束' 
+             else
+	          ''  end) as status,
+             cai.id
+              from customer_application_info cai  
+				  	  left join customer_application_process aa on cai.id=aa.application_id
+			          left join basic_customer_information bai on cai.customer_id=bai.id
+		              left join sys_user su on su.id=bai.user_id
+		              left join ty_customer_base base on bai.ty_customer_id=base.id
+		              left join PRODUCT_ATTRIBUTE p on p.id=cai.product_id
+		              left join  wf_process_record pr on pr.id = aa.serial_number
+		              left join wf_status_queue_record t on t.current_process = pr.id 
+		              left join wf_status_info s on t.current_status = s.id 
+		              left join T_APP_MANAGER_AUDIT_LOG tlog on tlog.application_id =cai.id
+                  	  left join CUSTOMER_APPLICATION_SDH sdh on sdh.capid=cai.id
+		              where 1=1
+					<if test="customername!=null and customername!='' ">
+						    and bai.chinese_name like  '%'||#{customername}||'%'
+					</if>
+					 order by cai.created_time desc
+                   <![CDATA[		
+							) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+	</select>
+	
+	<!-- 统计行数 -->
+	<select id="querySize" resultType="int" parameterType="com.cardpay.pccredit.postLoan.model.CreditProcess">
+		  select count(*)
+			  			from customer_application_info cai  
+				  	  left join customer_application_process aa on cai.id=aa.application_id
+			          left join basic_customer_information bai on cai.customer_id=bai.id
+		              left join sys_user su on su.id=bai.user_id
+		              left join ty_customer_base base on bai.ty_customer_id=base.id
+		              left join PRODUCT_ATTRIBUTE p on p.id=cai.product_id
+		              left join  wf_process_record pr on pr.id = aa.serial_number
+		              left join wf_status_queue_record t on t.current_process = pr.id 
+		              left join wf_status_info s on t.current_status = s.id 
+		              left join T_APP_MANAGER_AUDIT_LOG tlog on tlog.application_id =cai.id
+                  	  left join CUSTOMER_APPLICATION_SDH sdh on sdh.capid=cai.id
+		               where 1=1
+			        <if test="customername!=null and customername!='' ">
+						    and bai.chinese_name like  '%'||#{customername}||'%'
+					</if>
+	</select>
+	
+	<!-- 显示详情 -->
+	<select id="queryAll" resultMap="CreditProcess" parameterType="String">
+		     select  bai.spmc, bai.chinese_name,
+             (select t.name from sys_department t where t.id in 
+             (select tt.dept_id from sys_dept_user tt where tt.user_id = su.id)) as teamname,
+             (select org.name from sys_organization org where id in(select t.org_id from sys_department t where t.id in 
+             (select tt.dept_id from sys_dept_user tt where tt.user_id = su.id)))as bljg ,
+             ''as dklx,
+             (SELECT  A.TYPE_NAME  FROM DICT A ,PRODUCT_ATTRIBUTE p 
+             WHERE A .DICT_TYPE = 'CMMSCLNM-贷款担保方式' and A.TYPE_CODE=p.assure_means and p.id=cai.product_id) as assure_means,
+             '' as hyfl,
+             su.display_name,
+             cai.created_time,
+             cai.apply_quota,
+             (case
+             when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) 
+            and sdh.sdtime is null then
+             t.start_examine_time
+             when cai.status ='approved' or cai.status ='end' then
+             sdh.sdtime
+             when cai.status ='refuse' or cai.status ='returnedToFirst' then
+             cai.modified_time
+             end) as start_examine_time ,
+           (case 
+           when cai.status ='refuse' then
+           '审核拒绝'
+           when cai.status ='returnedToFirst' then
+           '审核退回'
+           when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) 
+            and sdh.sdtime is null then
+           '初审通过'
+           when cai.status ='approved' or cai.status ='end' then
+           '决议通过'
+           else '' end) as examine_result，
+           (case 
+           when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) 
+            and sdh.sdtime is null then
+           tlog.examine_amount
+           when cai.status ='approved' or cai.status ='end' then
+           sdh.sdje
+           else  '' end) as examine_amount,to_date(cai.jkrq,'yyyy-mm-dd') as jkrq,
+             (case 
+           when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) 
+            and sdh.sdtime is null then
+           tlog.examine_lv
+           when cai.status ='approved' or cai.status ='end' then
+           sdh.lv else '' end) as examine_lv,
+             (case 
+           when cai.status ='audit' and tlog.examine_amount is null and sdh.sdtime is null then
+            '已申请'
+           when cai.status ='refuse' and cai.id not in (select capid from CUSTOMER_APPLICATION_SDH) then
+            '被拒绝'
+           when cai.status ='returnedToFirst' and cai.id not in (select capid from CUSTOMER_APPLICATION_SDH) then
+            '退回至客户经理'
+           when cai.status ='end' then
+            '放款成功'
+           when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) and cai.status ='audit'
+            and sdh.sdtime is null and cai.id not in (select capid from customer_sp) then
+            '进件初审'
+           when cai.id not in (select capid from CUSTOMER_APPLICATION_SDH) 
+           and  cai.id in (select capid from customer_sp) then
+            '审贷决议'
+           when cai.id in (select capid from CUSTOMER_APPLICATION_SDH) then
+            '审批结束' 
+            else
+            ''  end) as status
+             from customer_application_info cai  
+                  left join customer_application_process aa on cai.id=aa.application_id
+                  left join basic_customer_information bai on cai.customer_id=bai.id
+                  left join sys_user su on su.id=bai.user_id
+                  left join ty_customer_base base on bai.ty_customer_id=base.id
+                  left join PRODUCT_ATTRIBUTE p on p.id=cai.product_id
+                  left join  wf_process_record pr on pr.id = aa.serial_number
+                  left join wf_status_queue_record t on t.current_process = pr.id 
+                  left join wf_status_info s on t.current_status = s.id 
+                  left join T_APP_MANAGER_AUDIT_LOG tlog on tlog.application_id =cai.id
+                  left join CUSTOMER_APPLICATION_SDH sdh on sdh.capid=cai.id
+                  where 1=1 and cai.id=#{id}
+              
+	</select>
+	
+	<!-- 导出-->
+	<select id="creditProcessExportQueryAll" resultMap="CreditProcess" parameterType="com.cardpay.pccredit.postLoan.model.CreditProcess">
+		       select  bai.spmc, bai.chinese_name,
+             (select t.name from sys_department t where t.id in 
+             (select tt.dept_id from sys_dept_user tt where tt.user_id = su.id)) as teamname,
+             (select org.name from sys_organization org where id in(select t.org_id from sys_department t where t.id in 
+             (select tt.dept_id from sys_dept_user tt where tt.user_id = su.id)))as bljg ,
+             ''as dklx,
+             (SELECT  A.TYPE_NAME  FROM DICT A ,PRODUCT_ATTRIBUTE p 
+             WHERE A .DICT_TYPE = 'CMMSCLNM-贷款担保方式' and A.TYPE_CODE=p.assure_means and p.id=cai.product_id) as assure_means,
+             '' as hyfl,
+             su.display_name,
+             cai.created_time,
+             cai.apply_quota,
+             (case
+             when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) 
+            and sdh.sdtime is null then
+             t.start_examine_time
+             when cai.status ='approved' or cai.status ='end' then
+             sdh.sdtime
+             when cai.status ='refuse' or cai.status ='returnedToFirst' then
+             cai.modified_time
+             end) as start_examine_time ,
+           (case 
+           when cai.status ='refuse' then
+           '审核拒绝'
+           when cai.status ='returnedToFirst' then
+           '审核退回'
+           when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) 
+            and sdh.sdtime is null then
+           '初审通过'
+           when cai.status ='approved' or cai.status ='end' then
+           '决议通过'
+           else '' end) as examine_result，
+           (case 
+           when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) 
+            and sdh.sdtime is null then
+           tlog.examine_amount
+           when cai.status ='approved' or cai.status ='end' then
+           sdh.sdje
+           else  '' end) as examine_amount,to_date(cai.jkrq,'yyyy-mm-dd') as jkrq,
+             (case 
+           when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) 
+            and sdh.sdtime is null then
+           tlog.examine_lv
+           when cai.status ='approved' or cai.status ='end' then
+           sdh.lv else '' end) as examine_lv,
+             (case 
+           when cai.status ='audit'and tlog.examine_amount is null and sdh.sdtime is null then
+            '已申请'
+           when cai.status ='refuse' and  cai.id not in (select capid from CUSTOMER_APPLICATION_SDH) then
+            '被拒绝'
+           when cai.status ='returnedToFirst' and cai.id not in (select capid from CUSTOMER_APPLICATION_SDH) then
+            '退回至客户经理'
+           when cai.status ='end' then
+            '放款成功'
+           when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) and cai.status ='audit'
+           and sdh.sdtime is null and cai.id not in (select capid from customer_sp)then
+            '进件初审'
+           when cai.id not in (select capid from CUSTOMER_APPLICATION_SDH) 
+           and  cai.id in (select capid from customer_sp) then
+            '审贷决议'
+           when cai.id in (select capid from CUSTOMER_APPLICATION_SDH) then
+            '审批结束' 
+            else
+            ''  end) as status, bai.CARD_ID
+             from customer_application_info cai  
+                  left join customer_application_process aa on cai.id=aa.application_id
+                  left join basic_customer_information bai on cai.customer_id=bai.id
+                  left join sys_user su on su.id=bai.user_id
+                  left join ty_customer_base base on bai.ty_customer_id=base.id
+                  left join PRODUCT_ATTRIBUTE p on p.id=cai.product_id
+                  left join  wf_process_record pr on pr.id = aa.serial_number
+                  left join wf_status_queue_record t on t.current_process = pr.id 
+                  left join wf_status_info s on t.current_status = s.id 
+                  left join T_APP_MANAGER_AUDIT_LOG tlog on tlog.application_id =cai.id
+                  left join CUSTOMER_APPLICATION_SDH sdh on sdh.capid=cai.id
+	</select>
+	
+	<!-- 根据身份证号查询是否转贷 -->
+	<select id="queryByCardId" resultMap="CreditProcess" parameterType="String">
+		     select zjhm from  ty_customer_base base where base.zjhm=#{cardId} or base.posfzh=#{cardId}
 	</select>
 </mapper>
