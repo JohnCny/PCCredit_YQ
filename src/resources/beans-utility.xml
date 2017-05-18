@@ -378,37 +378,36 @@
         </property>
         <!-- cron表达式 -->
         <property name="cronExpression">
-            <value>0 08 17 ? * *</value>
+            <value>0 08 23 ? * *</value>
         </property>
     </bean>
     <!-- 客户经理业绩信息更新  end -->
     
     
-     <!-- 每日加载tymibusidata数据 start-->
-       <bean id="addtymibusidataJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    
+    
+              <!-- 11.客户经理贷款信息更新-->
+    <bean id="readNewMonthly" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <!-- 调用的类 -->
         <property name="targetObject">
             <ref bean="customerInforService"/>
         </property>
         <!-- 调用类中的方法 -->
         <property name="targetMethod">
-            <value>addmibusidata</value>
+            <value>inserNewMonthlyStatistics</value>
         </property>
     </bean>
-     <bean id="dailyaddtymibusidataTigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <!-- 定义触发时间 -->
+    <bean id="readNewMonthlyStatisticsTigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
         <property name="jobDetail">
-            <ref bean="addtymibusidataJob"/>
+            <ref bean="readNewMonthly"/>
         </property>
-        <!-- cron表达式 每月1号1点执行 0 0 1 1 * ? -->
-         <!-- <property name="startDelay" value="0"/>
-        <property name="repeatInterval" value="60000" /> -->
-         <property name="cronExpression">
-            <value>0 33 11 * * ?</value>
-        </property> 
+        <!-- cron表达式 -->
+        <property name="cronExpression">
+            <value>0 26 10 ? * *</value>
+        </property>
     </bean>
-    <!-- 每日加载tymibusidata数据end-->
-    
-    
+    <!-- 客户经理贷款信息更新  end -->
     
     
     
@@ -430,9 +429,9 @@
                  <ref bean="runBatchGeneratePerformancePayTigger"/>
                  <ref bean="fkRankingTigger"/>
                     <ref bean="readManagerTigger"/>
+                      <ref bean="readNewMonthlyStatisticsTigger"/>
                    <ref bean="addRepayTigger"/>
                    <ref bean="addBaseTigger"/>
-                   <ref bean="dailyaddtymibusidataTigger"/>   <!-- 添加mibusidata任务-->
             </list>
         </property>
     </bean>

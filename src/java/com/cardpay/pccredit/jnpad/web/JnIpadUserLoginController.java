@@ -94,8 +94,13 @@ public class JnIpadUserLoginController {
 			map.put("login",login);
 			loginLogManager.addSignInLog(login, LoginManager.LOCAL, ipAddress, signInMsg);
 		}
-		JSONObject json = JSONObject.fromObject(map);
-		return String.valueOf(json);
+		/*JSONObject json = JSONObject.fromObject(map);
+		return String.valueOf(json);*/
+		
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
+		JSONObject json = JSONObject.fromObject(map, jsonConfig);
+		return json.toString();
 	}
 	
 	@ResponseBody

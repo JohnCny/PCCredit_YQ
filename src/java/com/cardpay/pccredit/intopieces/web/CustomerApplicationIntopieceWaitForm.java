@@ -68,10 +68,18 @@ public class CustomerApplicationIntopieceWaitForm extends BaseForm {
 	private String productName;
 	
 	private String displayName;
+	private String zsw;
 	
 	
 	
 	
+	public String getZsw() {
+		return zsw;
+	}
+
+	public void setZsw(String zsw) {
+		this.zsw = zsw;
+	}
 	public String getDisplayName() {
 		return displayName;
 	}

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cardpay.pccredit.ipad.util.JsonDateValueProcessor;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.manager.form.BankListForm;
 import com.cardpay.pccredit.manager.form.DeptMemberForm;
 import com.cardpay.pccredit.manager.form.ManagerPerformmanceForm;
@@ -41,7 +43,8 @@ public class JnpadManagerPerformmanceController {
 	
 	@Autowired
 	private ManagerPerformmanceService managerPerformmanceService;
-	
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	
 	//录入前查询
 	@ResponseBody
@@ -81,34 +84,38 @@ public class JnpadManagerPerformmanceController {
 	public String update(@ModelAttribute ManagerPerformmance managerPerformmance,HttpServletRequest request) {        
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		String userId = request.getParameter("userId");
-		try {
-
-		
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date=new Date();
+		String time2=sdf.format(date);
+		time2=time2.substring(0, 10);
 			managerPerformmance.setManager_id(userId);
-			ManagerPerformmance managerPerformmanceold = managerPerformmanceService.finManagerPerformmanceById(userId);
-			if(managerPerformmanceold!=null){
-//			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//			String date1=format.format(managerPerformmanceold.getCrateday());
-//			String date2=format.format(new Date());
-//			if(date1.equals(date2)){
-				map.put(JRadConstants.SUCCESS, false);
-				map.put("mess", "当天已经提交过，不能重复提交");
-				JsonConfig jsonConfig = new JsonConfig();
-				jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
-				JSONObject json = JSONObject.fromObject(map, jsonConfig);
-				return json.toString();
-//			}
+			List<ManagerPerformmance>  managerPerformmanceold = managerPerformmanceService.finManagerPerformmanceById(userId);
+			if(managerPerformmanceold.size()>0){
+				String time1=managerPerformmanceold.get(0).getCrateday();
+				if(time1.equals(time2)){
+					map.put("message", "当天已经提交过，不能重复提交");
+				}else{
+					String id = IDGenerator.generateID();
+					managerPerformmance.setId(id);
+					 Date d = new Date();  
+				      SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");  
+				      String dateNowStr = sdf1.format(d);  
+					managerPerformmance.setCrateday(dateNowStr);
+					managerPerformmanceService.insertManager(managerPerformmance); 
+					managerPerformmanceService.updateManagerDateByUser(managerPerformmance);
+					map.put("message", "提交成功");
+				}
+			}else{
+				String id = IDGenerator.generateID();
+				managerPerformmance.setId(id);
+				 Date d = new Date();  
+			      SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");  
+			      String dateNowStr = sdf1.format(d);  
+				managerPerformmance.setCrateday(dateNowStr);
+				managerPerformmanceService.insertManager(managerPerformmance);
+				managerPerformmanceService.updateManagerDateByUser(managerPerformmance);
+				map.put("message", "提交成功");
 			}
-			String id = IDGenerator.generateID();
-			managerPerformmance.setId(id);
-			managerPerformmance.setCrateday(new Date());
-			managerPerformmanceService.insertmanagerPerformmance(managerPerformmance); 
-			map.put("mess", "提交成功");
-		} catch (Exception e) {
-			map.put(JRadConstants.SUCCESS, false);
-			map.put("mess", "提交失败");
-		}
-
 		
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
@@ -116,12 +123,233 @@ public class JnpadManagerPerformmanceController {
 		return json.toString();
 	}
 	
+	/**
+	 * 查询当前客户经理的业绩信息（选择客户经理亦用此方法）
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ipad/performmance/selectManagerTeam.json")
+	public String selectManagerTeam(HttpServletRequest request) {
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		String userId=request.getParameter("userId");
+		  List<MonthlyStatisticsModel> resultModel=null;
+		  List<ManagerPerformmanceForm>list=new ArrayList<ManagerPerformmanceForm>();
+		List<ManagerPerformmanceForm>user=managerPerformmanceService.selectManagerTeam(userId);
+		 Date d = new Date();  
+	      SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");  
+	      String dateNowStr = sdf1.format(d);
+	      ManagerPerformmanceForm from=new ManagerPerformmanceForm();
+	      from.setCrateday(dateNowStr);
+	      from.setTeam(user.get(0).getTeam());
+	      from.setOrdteam(user.get(0).getOrdteam());
+	      resultModel=StatisticsService.findxzz(userId);
+	      map.put("resultModel", resultModel);
+	      map.put("size", resultModel.size());
+	      //如果该客户经理是组长则查询团队业绩
+	      if(resultModel!=null && resultModel.size()!=0){
+	    	  for(int i=0;i<resultModel.size();i++){
+	    		  from.setManager_id(resultModel.get(i).getUserId());
+	    		  List<ManagerPerformmanceForm> PerformmanceForm=managerPerformmanceService.selectAllManegerYj(from);
+	    		  list.add(i, PerformmanceForm.get(0));
+	    		  from.setManager_id("");
+	    	  }
+	    	  from.setOrdteam("");
+	    	  ManagerPerformmanceForm form1=managerPerformmanceService.selectAllTeamYj(from);
+	    	  form1.setOrdteam("总计");
+	    	  form1.setTeam(from.getTeam());
+	    	  form1.setName(from.getTeam());
+	    	  list.add(resultModel.size(), form1);
+	    	  map.put("form", list);
+	    	  map.put("formsize", list.size());
+	      }else{
+	    	  from.setManager_id(userId);
+	    	  List<ManagerPerformmanceForm> PerformmanceForm=managerPerformmanceService.selectAllManegerYj(from);
+		      map.put("form", PerformmanceForm);
+		      map.put("formsize", PerformmanceForm.size());
+	      }
+	      JsonConfig jsonConfig = new JsonConfig();
+			jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
+			JSONObject json = JSONObject.fromObject(map, jsonConfig);
+			return json.toString();
+		
+	}
+	
+/**
+ * 管理员查询全部的业绩进度
+ * @param request
+ * @return
+ */
+	@ResponseBody
+	@RequestMapping(value = "/ipad/performmance/selectAllManegerYj.page")
+	public String selectAllManegerYj(HttpServletRequest request) {
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		Integer count=0;
+		 Date d = new Date();  
+	      SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");  
+	      String dateNowStr = sdf1.format(d);  
+	List<ManagerPerformmanceForm> gxperformList=new ArrayList<ManagerPerformmanceForm>();
+	List<ManagerPerformmanceForm>result=managerPerformmanceService.selectAllManegerTeam();
+	for(int c=result.size()-1;c>=0;c--){
+		result.get(c).setCrateday(dateNowStr);
+		if(result.get(c).getTeam().equals("管理团队")){
+			result.remove(c);			}
+	}
+	map.put("resultModel", result);
+	map.put("size", result.size());
+	for(int i=0;i<result.size();i++){
+		List<ManagerPerformmanceForm> form=managerPerformmanceService.selectAllManegerYj(result.get(i));
+		for(int a=0;a<form.size();a++){
+			gxperformList.add(count+a, form.get(a));
+		}
+		ManagerPerformmanceForm Form =new ManagerPerformmanceForm();
+		Form.setTeam(result.get(i).getTeam());
+		Form.setCrateday(dateNowStr);
+		ManagerPerformmanceForm form1=managerPerformmanceService.selectAllTeamYj(Form);
+		form1.setOrdteam("总计");
+		form1.setTeam(result.get(i).getTeam());
+		form1.setName(result.get(i).getTeam());
+		gxperformList.add(count+form.size(), form1);
+		count+=form.size()+1;
+	}
+	for(int b=0;b<result.size();b++){
+		ManagerPerformmanceForm Form1 =new ManagerPerformmanceForm();
+		Form1.setOrdteam(result.get(b).getOrdteam());
+		Form1.setCrateday(dateNowStr);
+		ManagerPerformmanceForm form1=managerPerformmanceService.selectAllTeamYj(Form1);
+		form1.setOrdteam("汇总");
+		form1.setTeam(result.get(b).getOrdteam());
+		form1.setName(result.get(b).getOrdteam());
+		gxperformList.add(count, form1);
+		count+=1;
+	}
+		map.put("form", gxperformList);
+		map.put("formsize", gxperformList.size());
+		 JsonConfig jsonConfig = new JsonConfig();
+			jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
+			JSONObject json = JSONObject.fromObject(map, jsonConfig);
+			return json.toString();
+	}	
+	
+	
+	/**
+	 * 管理员查询指定区域/团队的业绩
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ipad/performmance/selectAllManagerByOrgTeam.page")
+	public String selectAllManagerByOrgTeam(HttpServletRequest request) {
+		 Date d = new Date();  
+	      SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");  
+	      String dateNowStr = sdf1.format(d);  
+		Integer count=0;
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+	List<BankListForm> bankListForm = managerPerformmanceService.findALlbank();
+		List<ManagerPerformmanceForm> gxperformList=new ArrayList<ManagerPerformmanceForm>();
+		String team=request.getParameter("team");
+		String orgteam=request.getParameter("orgteam");
+		ManagerPerformmanceForm from=new ManagerPerformmanceForm();
+		//如果传过来的有团队名称
+		if(!team.equals("0")){
+			if(!orgteam.equals("0")){
+				from.setOrdteam(orgteam);
+			}
+			from.setTeam(team);
+			from.setCrateday(dateNowStr);
+			List<ManagerPerformmanceForm> result=managerPerformmanceService.selectAllManegerYj(from);
+			if(result.size()>0){
+				for(int i=0;i<result.size();i++){
+					gxperformList.add(i, result.get(i));
+				}
+				ManagerPerformmanceForm result1= managerPerformmanceService.selectAllTeamYj(from);
+				if(result1!=null){
+					result1.setOrdteam("总计");
+					result1.setTeam(team);
+					result1.setName(team);
+					gxperformList.add(result.size(), result1);
+				}
+			}
+		}else{
+			ManagerPerformmanceForm from1=new ManagerPerformmanceForm();
+			from.setOrdteam(orgteam);
+			from.setCrateday(dateNowStr);
+			List<ManagerPerformmanceForm> result=managerPerformmanceService.selectAllManagerByOrgTeam(from);
+			if(result.size()>0){
+			for(int i=0;i<result.size();i++){
+				from1.setTeam(result.get(i).getTeam());
+				from1.setCrateday(dateNowStr);
+				List<ManagerPerformmanceForm> result1=managerPerformmanceService.selectAllManegerYj(from1);
+				if(result1.size()>0){
+					for(int a=0;a<result1.size();a++){
+						gxperformList.add(count+a, result1.get(a));	
+					}
+					ManagerPerformmanceForm result2= managerPerformmanceService.selectAllTeamYj(from1);
+					if(result2!=null){
+						result2.setOrdteam("总计");
+						result2.setTeam(result.get(i).getTeam());
+						result2.setName(result.get(i).getTeam());
+						gxperformList.add(count+result1.size(), result2);
+						count+=result1.size()+1;
+					}
+				}
+			}
+			ManagerPerformmanceForm result3= managerPerformmanceService.selectAllTeamYj(from);
+			if(result3!=null){
+				result3.setOrdteam("汇总");
+				result3.setTeam(orgteam);
+				result3.setName(orgteam);
+				gxperformList.add(count, result3);
+			}
+			}
+		}
+		map.put("form", gxperformList);
+		map.put("formsize", gxperformList.size());
+		 JsonConfig jsonConfig = new JsonConfig();
+			jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
+			JSONObject json = JSONObject.fromObject(map, jsonConfig);
+			return json.toString();
+	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * 客户经理业绩进度查询
 	 * @param request
 	 * @return
-	 */
+	 *//*
 	@ResponseBody
 	@RequestMapping(value = "/ipad/performmance/browse.page")
 	@JRadOperation(JRadOperation.BROWSE)
@@ -277,5 +505,5 @@ public class JnpadManagerPerformmanceController {
 				JSONObject json = JSONObject.fromObject(managerperformmance, jsonConfig);
 				return json.toString();
 			}
-
+*/
 }

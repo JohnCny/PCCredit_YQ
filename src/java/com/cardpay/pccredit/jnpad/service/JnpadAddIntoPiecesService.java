@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -25,15 +26,18 @@ import com.cardpay.pccredit.common.SFTPUtil;
 import com.cardpay.pccredit.common.UploadFileTool;
 import com.cardpay.pccredit.customer.constant.WfProcessInfoType;
 import com.cardpay.pccredit.customer.dao.CustomerInforDao;
+import com.cardpay.pccredit.customer.model.CUSTORMERINFOUPDATE;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.customer.service.CustomerInforService;
 import com.cardpay.pccredit.intopieces.constant.Constant;
+import com.cardpay.pccredit.intopieces.constant.ServerSideConstant;
 import com.cardpay.pccredit.intopieces.dao.LocalExcelDao;
 import com.cardpay.pccredit.intopieces.dao.LocalImageDao;
 import com.cardpay.pccredit.intopieces.filter.AddIntoPiecesFilter;
 import com.cardpay.pccredit.intopieces.filter.IntoPiecesFilter;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationInfo;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationProcess;
+import com.cardpay.pccredit.intopieces.model.CustomerSqInfo;
 import com.cardpay.pccredit.intopieces.model.Dcbzlr;
 import com.cardpay.pccredit.intopieces.model.Dcddpz;
 import com.cardpay.pccredit.intopieces.model.Dclrjb;
@@ -52,6 +56,7 @@ import com.cardpay.pccredit.intopieces.model.PicPojo;
 import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentBatch;
 import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentDetail;
 import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentList;
+import com.cardpay.pccredit.intopieces.service.CustomerSqInfoService;
 import com.cardpay.pccredit.intopieces.web.AddIntoPiecesForm;
 import com.cardpay.pccredit.intopieces.web.LocalExcelForm;
 import com.cardpay.pccredit.intopieces.web.LocalImageForm;
@@ -102,7 +107,8 @@ public class JnpadAddIntoPiecesService {
 	
 	@Autowired
 	private ProcessService processService;
-	
+	@Autowired
+	private CustomerSqInfoService InfoService;
 	/* 查询调查报告信息 */
 	public QueryResult<LocalExcelForm> findLocalExcelByProductAndCustomer(AddIntoPiecesFilter filter) {
 		List<LocalExcelForm> ls = localExcelDao.findByProductAndCustomer(filter);
@@ -118,136 +124,100 @@ public class JnpadAddIntoPiecesService {
 		return qr;
 	}
 
+	
 	//导入调查报告
-	public void importExcel(MultipartFile file,String productId, String customerId,String fileName_1) {
-		// TODO Auto-generated method stub
-		//本地测试
-		Map<String, String> map = JNPAD_UploadFileTool.uploadYxzlFileBySpring(file,customerId,fileName_1);
-		//指定服务器上传
-//		Map<String, String> map = JNPAD_SFTPUtil.uploadJn(file, customerId,fileName_1);
-		String fileName = map.get("fileName");
-		String url = map.get("url");
-		LocalExcel localExcel = new LocalExcel();
-		localExcel.setProductId(productId);
-		localExcel.setCustomerId(customerId);
-		localExcel.setCreatedTime(new Date());
-		if (StringUtils.trimToNull(url) != null) {
-			localExcel.setUri(url);
-		}
-		if (StringUtils.trimToNull(fileName) != null) {
-			localExcel.setAttachment(fileName);
-		}
-		
-		//读取excel内容
-		JXLReadExcel readExcel = new JXLReadExcel();
-		//本地测试
-		String sheet[] = readExcel.readExcelToHtml1(url, true);
-		//服务器
-//		String sheet[] = SFTPUtil.readExcelToHtml(url, true);
-		for(String str : sheet){
-			if(StringUtils.isEmpty(str)){
-				throw new RuntimeException("001");
+		public void importExcel(MultipartFile file,String productId, String customerId) {
+			 CustomerSqInfo CustomerSqInfo=null;
+			// TODO Auto-generated method stub
+			Map<String, String> map  = new HashMap<String, String>();
+				//本地测试
+			if(ServerSideConstant.IS_SERVER_SIDE_TRUE.equals("0")){
+				map = JNPAD_UploadFileTool.uploadYxzlFileBySpring(file,customerId);
+			}else{
+				//指定服务器上传
+				 map = JNPAD_SFTPUtil.uploadJn(file, customerId);
 			}
-		}
-		/*localExcel.setSheetJy(sheet[0]);
-		localExcel.setSheetJbzk(sheet[1]);
-		localExcel.setSheetJyzt(sheet[2]);
-		localExcel.setSheetSczt(sheet[3]);
-		localExcel.setSheetDdpz(sheet[4]);
-		localExcel.setSheetFz(sheet[5]);
-		localExcel.setSheetLrjb(sheet[6]);
-		localExcel.setSheetBzlrb(sheet[7]);
-		localExcel.setZyyw(sheet[8]);
-		localExcel.setSheetXjllb(sheet[9]);
-		localExcel.setSheetJc(sheet[10]);
-		localExcel.setSheetDhd(sheet[11]);
-		localExcel.setSheetGdzc(sheet[12]);
-		localExcel.setSheetYfys(sheet[13]);
-		localExcel.setSheetYsyf(sheet[14]);
-		localExcel.setSheetLsfx(sheet[15]);
-		localExcel.setApproveValue(sheet[17]);
-		localExcel.setJyb(sheet[16]);*/
-		localExcel.setSheetJy(sheet[0]);
-		localExcel.setSheetJbzk(sheet[1]);
-		localExcel.setSheetFz(sheet[2]);
-		localExcel.setSheetBzlrb(sheet[3]);
-		localExcel.setSheetXjllb(sheet[4]);
-		localExcel.setSheetJc(sheet[5]);
-		localExcel.setSheetGdzc(sheet[6]);
-		localExcel.setSheetYfys(sheet[7]);
-		localExcel.setSheetYsyf(sheet[8]);
-		localExcel.setJyb(sheet[9]);
-		
-		if(sheet[10].contains("元")){
-			localExcel.setApproveValue(sheet[10].substring(0,sheet[10].indexOf("元")));
-		}else{
-		    localExcel.setApproveValue(sheet[10]);
-		}
-		//删除旧模板
-		String sql = "delete from local_excel where customer_id='"+customerId+"' and product_id='"+productId+"'";
-		commonDao.queryBySql(LocalExcel.class, sql, null);
-		//添加模板
-		commonDao.insertObject(localExcel);
-	}
-	
-	//补充调查模板先删除原有的调查模板信息再新增
-	public void importExcelSupple(MultipartFile file,String productId, String customerId,String appId) {
-		// TODO Auto-generated method stub
-		//本地
-		Map<String, String> map = UploadFileTool.uploadYxzlFileBySpring(file,customerId);
-		//指定服务器上传
-//		Map<String, String> map = SFTPUtil.uploadJn(file, customerId);
-		String fileName = map.get("fileName");
-		String url = map.get("url");
-		//删除
-		localImageDao.deleteByProductIdAndCustomerId(productId,customerId);
-		
-		LocalExcel localExcel = new LocalExcel();
-		localExcel.setProductId(productId);
-		localExcel.setCustomerId(customerId);
-		localExcel.setCreatedTime(new Date());
-		localExcel.setApplicationId(appId);
-		
-		if (StringUtils.trimToNull(url) != null) {
-			localExcel.setUri(url);
-		}
-		if (StringUtils.trimToNull(fileName) != null) {
-			localExcel.setAttachment(fileName);
-		}
-		
-		//读取excel内容
-		JXLReadExcel readExcel = new JXLReadExcel();
-		//本地测试
-		String sheet[] = readExcel.readExcelToHtml1(url, true);
-		//服务器
-//		String sheet[] = SFTPUtil.readExcelToHtml(url, true);
-		for(String str : sheet){
-			if(StringUtils.isEmpty(str)){
-				throw new RuntimeException("导入失败，请检查excel文件与模板是否一致！");
+			String fileName = map.get("fileName");
+			String url = map.get("url");
+			LocalExcel localExcel = new LocalExcel();
+			localExcel.setId(IDGenerator.generateID());
+			localExcel.setProductId(productId);
+			localExcel.setCustomerId(customerId);
+			localExcel.setCreatedTime(new Date());
+			
+			if (StringUtils.trimToNull(url) != null) {
+				localExcel.setUri(url);
 			}
-		}
-		localExcel.setSheetJy(sheet[0]);
-		localExcel.setSheetJbzk(sheet[1]);
-		localExcel.setSheetFz(sheet[2]);
-		localExcel.setSheetBzlrb(sheet[3]);
-		localExcel.setSheetXjllb(sheet[4]);
-		localExcel.setSheetJc(sheet[5]);
-		localExcel.setSheetGdzc(sheet[6]);
-		localExcel.setSheetYfys(sheet[7]);
-		localExcel.setSheetYsyf(sheet[8]);
-		localExcel.setJyb(sheet[9]);
-		
-		if(sheet[10].contains("元")){
-			localExcel.setApproveValue(sheet[10].substring(0,sheet[10].indexOf("元")));
-		}else{
-		    localExcel.setApproveValue(sheet[10]);
-		}
-		
-		//添加模板
-		commonDao.insertObject(localExcel);
+			if (StringUtils.trimToNull(fileName) != null) {
+				localExcel.setAttachment(fileName);
+			}
+			
+			//读取excel内容
+			JXLReadExcel readExcel = new JXLReadExcel();
+			String sheet[] = null;
 	
-	}
+				//本地测试
+			if(ServerSideConstant.IS_SERVER_SIDE_TRUE.equals("0")){
+				  sheet = readExcel.readExcelToHtml1(url, true);
+				   CustomerSqInfo=readExcel.CustomerSqInfo;
+			}else{
+				//服务器
+				  sheet = SFTPUtil.readExcelToHtml(url, true);
+				  CustomerSqInfo=SFTPUtil.CustomerSqInfo;
+			}
+			 //查找该客户（选择产品后）的调查模板上传最大次数
+			 int count=InfoService.selectMaxIcount(productId, customerId);
+			 CustomerSqInfo.setIcount(count+1);
+			 CustomerSqInfo.setId(IDGenerator.generateID());
+			 CustomerSqInfo.setPid(productId);
+			 CustomerSqInfo.setCid(customerId);
+			 CustomerSqInfo.setTime(new Date());
+			 //将模板里面的申请基本信息存入对应的数据库表
+			 int a=InfoService.addSqInfo(CustomerSqInfo);
+			 
+			
+			localExcel.setSheetJy(sheet[0]);
+			localExcel.setSheetJbzk(sheet[1]);
+			localExcel.setSheetJyzt(sheet[2]);
+			localExcel.setSheetSczt(sheet[3]);
+			localExcel.setSheetDdpz(sheet[4]);
+			localExcel.setSheetFz(sheet[5]);
+			localExcel.setSheetLrjb(sheet[6]);
+			localExcel.setSheetBzlrb(sheet[7]);
+			localExcel.setZyyw(sheet[8]);
+			localExcel.setSheetXjllb(sheet[9]);
+			localExcel.setSheetJc(sheet[10]);
+			localExcel.setSheetDhd(sheet[11]);
+			localExcel.setSheetGdzc(sheet[12]);
+			localExcel.setSheetYfys(sheet[13]);
+			localExcel.setSheetYsyf(sheet[14]);
+			localExcel.setSheetLsfx(sheet[15]);
+			localExcel.setApproveValue(sheet[18]);
+			localExcel.setJyb(sheet[16]);
+			localExcel.setSheetdbrxx(sheet[17]);
 
+			
+			//查询选择此产品的客户最大次数上传
+			int b=customerInforDao.selectExclIcount(customerId, productId);
+			localExcel.setIcount(b+1);
+			if(b!=0){
+				CUSTORMERINFOUPDATE info=customerInforDao.selectExclApplicationId(customerId, productId);
+				localExcel.setApplicationId(info.getId());
+			}
+			//添加模板
+			customerInforDao.insertExcal(localExcel);
+		}
+		
+		//判断申请金额是否为整数
+	    public Boolean IsNum(String value){
+	    	java.util.regex.Pattern pattern = Pattern.compile("[0-9]*");
+	    	java.util.regex.Matcher isNum = pattern.matcher(value.trim());
+	    	if(!isNum.matches()){
+	    		return false;
+	    	}
+	    	return true;
+	    }
+		
 	/* 查询影像资料信息 */
 	public QueryResult<LocalImageForm> findLocalImageByProductAndCustomer(AddIntoPiecesFilter filter) {
 		List<LocalImageForm> ls = localImageDao.findByProductAndCustomer(filter);
@@ -276,11 +246,15 @@ public class JnpadAddIntoPiecesService {
 	}
 	
 	public void importImage(MultipartFile file, String productId,
-			String customerId,String applicationId ,String fileName_1) {
-		//本地测试
-		Map<String, String> map = JNPAD_UploadFileTool.uploadYxzlFileBySpring(file,customerId,fileName_1);
-		//指定服务器上传
-//		Map<String, String> map = JNPAD_SFTPUtil.uploadJn(file, customerId,fileName_1);
+			String customerId,String applicationId) {
+		Map<String, String> map  = new HashMap<String, String>();
+		if(ServerSideConstant.IS_SERVER_SIDE_TRUE.equals("0")){
+			//本地测试
+			map = UploadFileTool.uploadYxzlFileBySpring(file,customerId);
+		}else{
+			//指定服务器上传
+			map = SFTPUtil.uploadJn(file, customerId);
+		}
 		String fileName = map.get("fileName");
 		String url = map.get("url");
 		LocalImage localImage = new LocalImage();

@@ -155,7 +155,7 @@ public class JNPAD_UploadFileTool {
 	}
 
 	/* 上传影像资料专用 */
-	public static Map<String, String> uploadYxzlFileBySpring(MultipartFile file,String customerId,String fileName_1) {
+	public static Map<String, String> uploadYxzlFileBySpring(MultipartFile file,String customerId) {
 		String newFileName = null;
 		String fileName = null;
 		Map<String, String> map = new HashMap<String, String>();
@@ -167,15 +167,14 @@ public class JNPAD_UploadFileTool {
 		try {
 			// 取得上传文件
 			if (file != null && !file.isEmpty()) {
-//				fileName = file.getOriginalFilename();
-				fileName = fileName_1;
+				fileName = file.getOriginalFilename();
 				File tempFile = new File(path
-						+ fileName_1);
+						+ file.getOriginalFilename());
 				if (tempFile.exists()) {
 					newFileName = IDGenerator.generateID() + "."
-							+ fileName_1.split("\\.")[1];
+							+ file.getOriginalFilename().split("\\.")[1];
 				} else {
-					newFileName = fileName_1;
+					newFileName = file.getOriginalFilename();
 				}
 				File localFile = new File(path + newFileName);
 				file.transferTo(localFile);
@@ -187,6 +186,7 @@ public class JNPAD_UploadFileTool {
 		map.put("url", path + newFileName);
 		return map;
 	}
+	
 	
 	
 	

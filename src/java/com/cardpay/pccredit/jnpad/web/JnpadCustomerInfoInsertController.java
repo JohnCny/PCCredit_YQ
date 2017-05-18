@@ -187,7 +187,7 @@ public class JnpadCustomerInfoInsertController extends BaseController {
 		if(s==1){
 			filter.setUserId(userId);
 		}
-		filter.setStatus("returnToFirst");
+		filter.setStatus("returnedToFirst");
 		result = JnpadCustomerInfoInsertServ‎ice.findintoPiecesByFilter(filter);
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());

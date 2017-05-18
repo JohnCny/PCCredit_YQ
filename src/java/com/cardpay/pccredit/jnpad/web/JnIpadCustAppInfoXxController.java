@@ -20,7 +20,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cardpay.pccredit.customer.model.CIPERSONBASINFOCOPY;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
+import com.cardpay.pccredit.intopieces.filter.IntoPiecesFilter;
 import com.cardpay.pccredit.intopieces.model.IntoPieces;
+import com.cardpay.pccredit.intopieces.model.IntoPiecesFilters;
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
+import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
 import com.cardpay.pccredit.ipad.util.JsonDateValueProcessor;
 import com.cardpay.pccredit.jnpad.filter.CustomerApprovedFilter;
 import com.cardpay.pccredit.jnpad.filter.NotificationMessageFilter;
@@ -30,6 +34,7 @@ import com.cardpay.pccredit.jnpad.model.NotifyMsgListVo;
 import com.cardpay.pccredit.jnpad.model.RetrainUserVo;
 import com.cardpay.pccredit.jnpad.model.RetrainingVo;
 import com.cardpay.pccredit.jnpad.service.JnIpadCustAppInfoXxService;
+import com.cardpay.pccredit.jnpad.service.JnpadIntopiecesDecisionService;
 import com.cardpay.pccredit.manager.filter.RetrainingFilter;
 import com.cardpay.pccredit.manager.model.AccountManagerRetraining;
 import com.cardpay.pccredit.manager.model.Retraining;
@@ -50,7 +55,10 @@ import com.cardpay.pccredit.system.model.SystemUser;
  */
 @Controller
 public class JnIpadCustAppInfoXxController {
-	
+	@Autowired
+	private CustomerApplicationIntopieceWaitService customerApplicationIntopieceWaitService;
+	@Autowired
+	private JnpadIntopiecesDecisionService jnpadIntopiecesDecisionService;
 	@Autowired
 	private JnIpadCustAppInfoXxService appInfoXxService;
 
@@ -62,7 +70,7 @@ public class JnIpadCustAppInfoXxController {
 	 * @param request
 	 * @return
 	 */
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping(value = "/ipad/custAppInfo/browse.json", method = { RequestMethod.GET })
 	public String browse(HttpServletRequest request) {
 		//当前登录用户ID
@@ -85,7 +93,7 @@ public class JnIpadCustAppInfoXxController {
 		jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
 		JSONObject json = JSONObject.fromObject(result, jsonConfig);
 		return json.toString();
-	}
+	}*/
 	
 	
 	@ResponseBody
@@ -94,24 +102,29 @@ public class JnIpadCustAppInfoXxController {
 		//当前登录用户ID
 		String userId=request.getParameter("userId");
 		String userType=request.getParameter("userType");
+		String status1=null;
+		String status2=null;
+		String status3=null;
 		//refuse
-//		String status2=request.getParameter("status2");
-		String status2="refuse";
+		status1="refuse";
 		//approved
-//		String status3=request.getParameter("status3");
-		String status3="approved";
-		Integer s =new Integer(userType);
+		 status2="approved";
+		//return
+		 status3="returnedToFirst";
+		/*Integer s =new Integer(userType);
 		if(s!=1){
 			userId="";
-		}
-		int refuse = appInfoXxService.findCustAppInfoXxCount(userId,null,status2, null,null);
-		int approved = appInfoXxService.findCustAppInfoXxCount(userId,null,null, status3,null);
+		}*/
+		int refuse = appInfoXxService.findCustAppInfoXxCount(userId,status1);
+		int approved = appInfoXxService.findCustAppInfoXxCount(userId,status2);
+		int returnedToFirst=appInfoXxService.findCustAppInfoXxCount(userId,status3);
 		Map<String,Object> result = new LinkedHashMap<String,Object>();
 		
 		AppInfoListVo vo = new AppInfoListVo();
 		vo.setApprovedNum(approved);
 		vo.setRefuseNum(refuse);
-		
+		vo.setReturncount(returnedToFirst);
+		vo.setAllcount(approved+refuse+returnedToFirst);
 		result.put("result", vo);
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
@@ -311,7 +324,20 @@ public class JnIpadCustAppInfoXxController {
 		NotificationMessageFilter filter = new NotificationMessageFilter();
 		filter.setUserId(userId);
 		filter.setNoticeType("shendaihui");
-		int count1 = appInfoXxService.findNotificationCountMessageByFilter(filter);
+		//int count1 = appInfoXxService.findNotificationCountMessageByFilter(filter);
+		IntoPiecesFilter IntoPieces=new IntoPiecesFilter();
+		IntoPieces.setUserId(userId);
+		IntoPieces.setNextNodeName("进件初审");
+		List<CustomerApplicationIntopieceWaitForm> result=jnpadIntopiecesDecisionService.findCustomerApplicationIntopieceDecison1(IntoPieces);
+		IntoPiecesFilters Filters =new IntoPiecesFilters();
+		Filters.setUserId(request.getParameter("userId"));
+		//审贷决议
+		List<IntoPiecesFilters> result1 = customerApplicationIntopieceWaitService.findCustomerApplicationIntopieceDecisons1(Filters);
+		IntoPiecesFilters PiecesFilters=new IntoPiecesFilters();
+		PiecesFilters.setUserId(request.getParameter("userId"));
+		List<IntoPiecesFilters> result2 = customerApplicationIntopieceWaitService.findCustomerApplicationIntopieceDecisones1(PiecesFilters,request);
+		int count1=result.size()+result1.size()+result2.size();
+		
 		filter.setNoticeType("yuanshiziliao");
 		int count2 = appInfoXxService.findNotificationCountMessageByFilter(filter);
 		filter.setNoticeType("peixun");
