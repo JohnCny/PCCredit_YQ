@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +33,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.bouncycastle.ocsp.Req;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -69,11 +69,8 @@ import com.cardpay.pccredit.customer.model.CustomerFirsthendWork;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.customer.model.CustomerInforWeb;
 import com.cardpay.pccredit.customer.model.MaintenanceLog;
-import com.cardpay.pccredit.customer.model.SxOutputData;
-import com.cardpay.pccredit.customer.model.TyMibusidataForm;
 import com.cardpay.pccredit.customer.model.TyProductType;
 import com.cardpay.pccredit.customer.model.TyRepayLsz;
-import com.cardpay.pccredit.customer.model.TyRepayTkmxForm;
 import com.cardpay.pccredit.customer.model.TyRepayYehzVo;
 import com.cardpay.pccredit.datapri.service.DataAccessSqlService;
 import com.cardpay.pccredit.intopieces.constant.Constant;
@@ -87,6 +84,8 @@ import com.cardpay.pccredit.intopieces.model.CustomerApplicationProcess;
 import com.cardpay.pccredit.intopieces.model.CustomerApplicationRecom;
 import com.cardpay.pccredit.intopieces.model.VideoAccessories;
 import com.cardpay.pccredit.ipad.model.ProductAttribute;
+import com.cardpay.pccredit.jnpad.dao.MonthlyStatisticsDao;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
 import com.cardpay.pccredit.manager.dao.ManagerPerformmanceDao;
 import com.cardpay.pccredit.manager.filter.ManagerSalaryFilter;
 import com.cardpay.pccredit.manager.form.ManagerPerformmanceForm;
@@ -94,7 +93,6 @@ import com.cardpay.pccredit.manager.model.ManagerSalaryForm;
 import com.cardpay.pccredit.manager.model.TPerformanceParameters;
 import com.cardpay.pccredit.postLoan.filter.PostLoanFilter;
 import com.cardpay.pccredit.postLoan.model.Fcloaninfo;
-import com.cardpay.pccredit.postLoan.model.TyRarepaylistForm;
 import com.cardpay.pccredit.riskControl.model.RiskCustomer;
 import com.cardpay.pccredit.system.constants.NodeAuditTypeEnum;
 import com.cardpay.pccredit.system.constants.YesNoEnum;
@@ -152,7 +150,11 @@ public class CustomerInforService {
 	private ProcessService processService;
 	
 	@Autowired
-	private JdbcTemplate jdbcTemplate;  
+	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private MonthlyStatisticsDao StatisticsDao;  
+	
 	//客户原始信息
     //todo:文件换成济南的
 	private String[] fileTxt = {"kkh_grxx.txt","kkh_grjtcy.txt","kkh_grjtcc.txt","kkh_grscjy.txt","kkh_grxxll.txt","kkh_grgzll.txt","kkh_grrbxx.txt","cxd_dkcpmc.txt","kkh_hmdgl.txt","cxd_rygl.txt"};
@@ -4830,30 +4832,99 @@ public class CustomerInforService {
 	}
 	
 	/**
-	 * 添加台帐临时表信息
-	 * @throws IOException 
+	 * 定时跑批所有客户经理的预计贷款统计
 	 */
-	public void addmibusidata() throws IOException{
-		//添加ty_mibusidata表
-		customerInforDao.deletelastmibusidata();
-		List<TyMibusidataForm>lists=customerInforDao.findmibusidata();
-		for (TyMibusidataForm tyMibusidataForm : lists) {
-			customerInforDao.inserTyMIBUSIDATA(tyMibusidataForm);
+	public void inserNewMonthlyStatistics(){
+		log.info("******************开始查询新客户经理的基本信息********************");
+		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+	        Date date = new Date();
+	       Integer formatDate = Integer.parseInt(sdf.format(date));
+		List<MonthlyStatisticsModel>result=StatisticsDao.selectAllUserId(formatDate);
+		log.info("******************开始查询并添加新客户经理的月季贷款信息********************");  
+		for(int i=0;i<result.size();i++){
+			MonthlyStatisticsModel model=new MonthlyStatisticsModel();
+			model.setUserId(result.get(i).getUserId());
+			model.setId(IDGenerator.generateID());
+			model.setTeam(result.get(i).getTeam());
+			model.setOrgteam(result.get(i).getOrgteam());
+			model.setCustomeryeah(formatDate);
+			model.setCustomerApril(0);
+			model.setCustomerAugust(0);
+			model.setCustomerDecember(0);
+			model.setCustomerFebruary(0);
+			model.setCustomerJanuary(0);
+			model.setCustomerJuly(0);
+			model.setCustomerJune(0);
+			model.setCustomerMarch(0);
+			model.setCustomerMay(0);
+			model.setCustomerNovember(0);
+			model.setCustomerOctober(0);
+			model.setCustomerSeptember(0);
+			StatisticsDao.insertMonthlyStatistics(model);
+			/**
+			 * 添加去年的贷款信息，只限2016年，客户经理全部录入完成后此方法删除
+			 */
+		/*	MonthlyStatisticsModel model1=new MonthlyStatisticsModel();
+			model1.setUserId(result.get(i).getUserId());
+			model1.setId(IDGenerator.generateID());
+			model1.setTeam(result.get(i).getTeam());
+			model1.setOrgteam(result.get(i).getOrgteam());
+			model1.setCustomeryeah(formatDate-1);
+			model1.setCustomerApril(0);
+			model1.setCustomerAugust(0);
+			model1.setCustomerDecember(0);
+			model1.setCustomerFebruary(0);
+			model1.setCustomerJanuary(0);
+			model1.setCustomerJuly(0);
+			model1.setCustomerJune(0);
+			model1.setCustomerMarch(0);
+			model1.setCustomerMay(0);
+			model1.setCustomerNovember(0);
+			model1.setCustomerOctober(0);
+			model1.setCustomerSeptember(0);
+			StatisticsDao.insertMonthlyStatistics(model1);*/
 		}
-		log.info("addmibusidata success!");
-		//添加LSHTYLIST表
-		customerInforDao.truncateLshtylist();
-		List<TyRarepaylistForm>lslists=customerInforDao.findLshJnListByFilter();
-		for (TyRarepaylistForm tyRarepaylistForm : lslists) {
-			customerInforDao.insertLshtylist(tyRarepaylistForm);
+		log.info("******************开始查询所有客户经理********************");  
+		List<ManagerPerformmanceForm>result1=managerPerformmanceDao.selectAllManager();
+		log.info("******************开始查询并更新所有客户经理的月季贷款信息********************");  
+		for(int a=0;a<result.size();a++){
+			List<MonthlyStatisticsModel> MonthlyStatistics=StatisticsDao.selectotalAmountByUserId(result1.get(a).getManager_id());
+			for(int i=0;i<MonthlyStatistics.size();i++){
+				MonthlyStatisticsModel Model=new MonthlyStatisticsModel();
+				Model.setCustomeryeah(Integer.parseInt(MonthlyStatistics.get(i).getLoandate().substring(0, 4)));
+				if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("01")){
+					Model.setCustomerJanuary(MonthlyStatistics.get(i).getTotalAmount());
+				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("02")){
+					Model.setCustomerFebruary(MonthlyStatistics.get(i).getTotalAmount());
+				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("03")){
+					Model.setCustomerMarch(MonthlyStatistics.get(i).getTotalAmount());
+				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("04")){
+					Model.setCustomerApril(MonthlyStatistics.get(i).getTotalAmount());
+				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("05")){
+					Model.setCustomerMay(MonthlyStatistics.get(i).getTotalAmount());
+				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("06")){
+					Model.setCustomerJune(MonthlyStatistics.get(i).getTotalAmount());
+				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("07")){
+					Model.setCustomerJuly(MonthlyStatistics.get(i).getTotalAmount());
+				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("08")){
+					Model.setCustomerAugust(MonthlyStatistics.get(i).getTotalAmount());
+				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("09")){
+					Model.setCustomerSeptember(MonthlyStatistics.get(i).getTotalAmount());
+				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("10")){
+					Model.setCustomerOctober(MonthlyStatistics.get(i).getTotalAmount());
+				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("11")){
+					Model.setCustomerNovember(MonthlyStatistics.get(i).getTotalAmount());
+				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("12")){
+					Model.setCustomerDecember(MonthlyStatistics.get(i).getTotalAmount());
+				}
+				Model.setTotalAmount(MonthlyStatistics.get(i).getTotalAmount());
+				Model.setUserId(result1.get(a).getManager_id());
+				Model.setTeam(result1.get(a).getTeam());
+				Model.setOrgteam(result1.get(a).getOrdteam());
+				StatisticsDao.updateMonthlyStatistics(Model);
+			}
+			
 		}
-		log.info("addlshtylist success!");
-		//添加TKMXTYLIS表
-		customerInforDao.truncateTkmxtylist();
-		List<TyRepayTkmxForm>Tklists=customerInforDao.findtkmxJnListByFilter();
-		for (TyRepayTkmxForm tyRepayTkmxForm : Tklists) {
-			customerInforDao.insertTkmxtylist(tyRepayTkmxForm);
-		}
-		log.info("addtkmxtylist success!");
+		log.info("******************结束********************");  
 	}
 }

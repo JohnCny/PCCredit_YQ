@@ -22,4 +22,8 @@ public class JnpadDailyAccountManagerService {
 		QueryResult<DailyAccountManagerForm> qs = new QueryResult<DailyAccountManagerForm>(size, dailyAccountManagerForm);
 		return qs;
 	}
+	
+	public List<DailyAccountManagerForm> findDailyAccountManagersByFilter1(DailyAccountManagerFilter filter) {
+		return jnpadDailyAccountManagerDao.findDailyAccountManagersByFilter(filter);
+	}
 }

@@ -85,10 +85,21 @@ public class IntoPiecesService {
 	public QueryResult<IntoPieces> findintoPiecesByFilter(
 			IntoPiecesFilter filter) {
 		QueryResult<IntoPieces> queryResult = intoPiecesComdao.findintoPiecesByFilter(filter);
+	 for(int i=0;i<queryResult.getItems().size();i++){
+			if(queryResult.getItems().get(i).getStatus().equals("audit")){
+				queryResult.getItems().get(i).setStatusName("已申请");
+			}else if(queryResult.getItems().get(i).getStatus().equals("approved")){
+				queryResult.getItems().get(i).setStatusName("已通过");
+			}else if(queryResult.getItems().get(i).getStatus().equals("refuse")){
+				queryResult.getItems().get(i).setStatusName("已拒绝");
+			}else if(queryResult.getItems().get(i).getStatus().equals("returnedToFirst")){
+				queryResult.getItems().get(i).setStatusName("已退回");
+			}
+		}
 		//List<IntoPieces> queryResult = intoPiecesComdao.findintoPiecesListByFilter(filter);
 		int sum = intoPiecesComdao.findintoPiecesByFilterCount(filter);
 		QueryResult<IntoPieces> qs = new QueryResult<IntoPieces>(sum, queryResult.getItems());
-		List<IntoPieces> intoPieces = qs.getItems();
+		/*List<IntoPieces> intoPieces = qs.getItems();
 		for(IntoPieces pieces : intoPieces){
 			if(pieces.getStatus()==null){
 				pieces.setNodeName("未提交申请");
@@ -120,7 +131,7 @@ public class IntoPiecesService {
 					pieces.setNodeName("审批结束");
 				}
 			}
-		}
+		}*/
 		return qs;
 	/*	//QueryResult<IntoPieces> queryResult = intoPiecesComdao.findintoPiecesByFilter(filter);
 		List<IntoPieces> plans = intoPiecesDao.findIntoPiecesList(filter);

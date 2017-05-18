@@ -466,15 +466,27 @@ group by o.name,s.id,t.name
      (select sum(REQLMT)as f from mibusidata
     where userid=#{id})f
 </select>
-<!-- 查询所有客户经理 -->
+<!-- 查询所有客户经理团队以及区域 -->
 <select id="selectAllManager" resultMap="resultsum">
    select o.name as ordteam,s.id as manager_id ,t.name as team from sys_organization o,sys_department t,sys_dept_user d,sys_user s
 where o.id=t.org_id
 and t.id=d.dept_id
 and d.user_id=s.id
 group by o.name,s.id,t.name
-
 </select>
+
+<!-- 查询所有客户经理团队以及区域 -->
+<select id="selectManagerTeam" resultMap="resultsum">
+   select o.name as ordteam,s.id as manager_id ,t.name as team from sys_organization o,sys_department t,sys_dept_user d,sys_user s
+where o.id=t.org_id
+and t.id=d.dept_id
+and d.user_id=s.id
+and s.id=#{id}
+group by o.name,s.id,t.name
+</select>
+
+
+
 <!-- 定时每日更新客户经理业绩信息 -->
 <update id="updateManagerDate">
 		update manager_performmance1 m set
@@ -525,11 +537,18 @@ nvl(t1.PASSCOUNT,0) as passcount_s,
 nvl(t1.SIGNCOUNT,0) as signcount_s,
 nvl(t1.GIVEMONEYCOUNT,0) as givemoneycount_s,
 s.display_name as name
- from MANAGER_PERFORMMANCE1 t left join (select m.* from MANAGER_PERFORMMANCE m left join MANAGER_PERFORMMANCE m1 on m.manager_id=m1.manager_id  where m.crateday=#{crateday}) t1
+ from MANAGER_PERFORMMANCE1 t left join (select distinct m.* from MANAGER_PERFORMMANCE m left join MANAGER_PERFORMMANCE m1 on m.manager_id=m1.manager_id  where m.crateday=#{crateday}) t1
 on (t.manager_id=t1.manager_id) left join sys_user s on (s.id=t.manager_id)
 where 1=1
+ <if test="team != null and team != ''">
     and  t.team=#{team}
+    </if>
+     <if test="ordteam != null and ordteam != ''">
     and t.ordteam=#{ordteam}
+    </if>
+       <if test="manager_id != null and manager_id != ''">
+    and t.manager_id=#{manager_id}
+    </if>
 	</select>
 	
 <!-- 查询所有的机构，团队 -->
@@ -555,6 +574,33 @@ where 1=1
     <if test="ordteam != null and ordteam != ''">
     and t.ordteam=#{ordteam}
     </if>
-
 	</select>
+	
+
+
+<!-- 查询指定区域/团队的客户经理ID-->
+<select id="selectAllManagerByTeam" resultMap="resultsum">
+   select o.name as ordteam,s.id as manager_id ,t.name as team from sys_organization o,sys_department t,sys_dept_user d,sys_user s
+where o.id=t.org_id
+and t.id=d.dept_id
+and d.user_id=s.id
+    <if test="team != null and team != ''">
+    and t.name=#{name}
+    </if>
+     <if test="ordteam != null and ordteam != ''">
+    and t.ordteam=#{ordteam}
+    </if>
+group by o.name,s.id,t.name
+</select>
+
+<!-- 查询指定区域的团队名称-->
+<select id="selectAllManagerByOrgTeam" resultMap="resultsum">
+     select t.name as team from sys_organization o,sys_department t,sys_dept_user d,sys_user s
+where o.id=t.org_id
+and t.id=d.dept_id
+and d.user_id=s.id
+and o.name=#{ordteam}
+group by t.name
+</select>
+
 </mapper>

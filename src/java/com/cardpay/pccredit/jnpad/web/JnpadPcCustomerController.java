@@ -1,5 +1,6 @@
 package com.cardpay.pccredit.jnpad.web;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ import com.cardpay.pccredit.jnpad.model.CustomerInfo;
 import com.cardpay.pccredit.jnpad.model.JnpadPcCustomer;
 import com.cardpay.pccredit.jnpad.service.JnpadCustomerInfoInsertServ‎ice;
 import com.cardpay.pccredit.jnpad.service.JnpadPcCustomerService;
+import com.jcraft.jsch.SftpException;
 import com.wicresoft.jrad.base.auth.JRadOperation;
 import com.wicresoft.jrad.base.constant.JRadConstants;
 import com.wicresoft.jrad.base.database.id.IDGenerator;
@@ -198,7 +200,7 @@ public class JnpadPcCustomerController {
 				@ResponseBody
 				@RequestMapping(value = "/ipad/pccustormer/ckpcImage.json",method = { RequestMethod.GET })
 				@JRadOperation(JRadOperation.EXPORT)
-				public String ckpcImage(HttpServletRequest request){
+				public String ckpcImage(HttpServletRequest request) throws IOException, SftpException{
 					Map<String, Object> map = new HashMap<String, Object>();
 						String cardid =request.getParameter("cardid");
 						List<LocalImageForm> result=CustomerService.selectUri(cardid);

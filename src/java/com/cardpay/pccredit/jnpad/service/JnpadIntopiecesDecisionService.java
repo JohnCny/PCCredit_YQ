@@ -60,6 +60,11 @@ public class JnpadIntopiecesDecisionService {
 		QueryResult<CustomerApplicationIntopieceWaitForm> qs = new QueryResult<CustomerApplicationIntopieceWaitForm>(size, listCAI);
 		return qs;
 	}
+	
+	public List<CustomerApplicationIntopieceWaitForm> findCustomerApplicationIntopieceDecison1(IntoPiecesFilter filter) {
+		return jnpadIntopiecesDecisionDao.findCustomerApplicationIntopieceDecisionForm(filter);
+	}
+
 
 	public List<ManagerInfoForm> findManagerInfo() {
 

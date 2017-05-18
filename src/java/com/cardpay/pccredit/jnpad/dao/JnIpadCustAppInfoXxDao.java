@@ -16,10 +16,10 @@ import com.wicresoft.util.annotation.Mapper;
 public interface JnIpadCustAppInfoXxDao {
 
     public int findCustAppInfoXxCount(@Param("userId") String userId,
-						    		  @Param("status1") String status,
-						    		  @Param("status2") String status2,
+						    		  @Param("status") String status
+						    		/*  @Param("status2") String status2,
 						    		  @Param("status3") String status3,
-						    		  @Param("status4") String status4);
+						    		  @Param("status4") String status4*/);
     
     
     public List<IntoPieces> findCustomerApprovedList(CustomerApprovedFilter filter);

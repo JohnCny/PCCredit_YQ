@@ -154,7 +154,7 @@ public class JNPAD_SFTPUtil {
     /** 
      * upload all the files to the server 
      */  
-    public  static Map<String, String> uploadJn(MultipartFile oldFile,String customerId,String fileName_1) {
+    public  static Map<String, String> uploadJn(MultipartFile oldFile,String customerId) {
     	String newFileName = null;
 		String fileName = null;
     	Map<String, String> map = new HashMap<String, String>();
@@ -163,6 +163,7 @@ public class JNPAD_SFTPUtil {
 	        	//连接sftp
 	        	connect();
 	        	String path = Constant.FILE_PATH + customerId;
+	        	System.out.println(path);
 	        	try {
 	    			sftp.cd(path);
 				} catch (Exception e) {
@@ -171,18 +172,18 @@ public class JNPAD_SFTPUtil {
 					sftp.cd(path);
 				}
 	    			
-//	    	    fileName = oldFile.getOriginalFilename();
-	    	    fileName = fileName_1;
-				File tempFile = new File(path + File.separator + fileName_1);
+	    	    fileName = oldFile.getOriginalFilename();
+				File tempFile = new File(path + File.separator + oldFile.getOriginalFilename());
 				if (tempFile.exists()) {
-					newFileName = IDGenerator.generateID() + "."+ fileName_1.split("\\.")[1];
+					newFileName = IDGenerator.generateID() + "."+ oldFile.getOriginalFilename().split("\\.")[1];
 				} else {
-					newFileName = fileName_1;
+					newFileName = oldFile.getOriginalFilename();
 				}
 	    	   CommonsMultipartFile cf= (CommonsMultipartFile)oldFile;
 	    	   DiskFileItem fi = (DiskFileItem)cf.getFileItem(); 
 	           File file = fi.getStoreLocation();
 	    	   sftp.put(new FileInputStream(file), newFileName);
+	    	   System.out.println("上传成功！");
 	    	   disconnect();  
 	           
 	    	   map.put("fileName", fileName);
@@ -197,36 +198,6 @@ public class JNPAD_SFTPUtil {
             e.printStackTrace();  
         }  
           return map;
-    	/*//连接sftp
-   	 	connect();  
-    	String newFileName = null;
-		String fileName = null;
-		Map<String, String> map = new HashMap<String, String>();
-		String path = Constant.FILE_PATH + customerId + File.separator;
-		File tempDir = new File(path);
-		if (!tempDir.isDirectory()) {
-			tempDir.mkdirs();
-		}
-		try {
-			// 取得上传文件
-			if (oldFile != null && !oldFile.isEmpty()) {
-				fileName = oldFile.getOriginalFilename();
-				File tempFile = new File(path+ oldFile.getOriginalFilename());
-				if (tempFile.exists()) {
-					newFileName = IDGenerator.generateID() + "."+ oldFile.getOriginalFilename().split("\\.")[1];
-				} else {
-					newFileName = oldFile.getOriginalFilename();
-				}
-				File localFile = new File(path + newFileName);
-				oldFile.transferTo(localFile);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		disconnect();  
-		map.put("fileName", fileName);
-		map.put("url", path + newFileName);
-		return map;*/
     }
     
     /**

@@ -8,6 +8,20 @@ package com.cardpay.pccredit.jnpad.model;
 public class AppInfoListVo {
    private int refuseNum;
    private int approvedNum;
+ private int returncount;
+   private int allcount;
+public int getReturncount() {
+	return returncount;
+}
+public void setReturncount(int returncount) {
+	this.returncount = returncount;
+}
+public int getAllcount() {
+	return allcount;
+}
+public void setAllcount(int allcount) {
+	this.allcount = allcount;
+}
 public int getRefuseNum() {
 	return refuseNum;
 }

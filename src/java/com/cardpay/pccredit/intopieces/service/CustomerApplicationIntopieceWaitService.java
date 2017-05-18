@@ -82,6 +82,26 @@ public class CustomerApplicationIntopieceWaitService {
 	@Autowired
 	private UserLogService userLogService;
 	// 查询所有的初审审贷过的
+	public List<IntoPiecesFilters> findCustomerApplicationIntopieceDecisones1(IntoPiecesFilters filter,HttpServletRequest request) {
+		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+		List<Integer> list=new ArrayList<Integer>();
+		List<IntoPiecesFilters> listCAI =null;
+		listCAI= customerApplicationIntopieceWaitDao.findCustomerApplicationIntopieceDecisionFormes(filter);
+		for(int a=listCAI.size()-1;a>=0;a--){
+			if(listCAI.get(a).getZsw()==0){
+				 int result=customerApplicationIntopieceWaitDao.findzsw(listCAI.get(a).getId());
+				 if(result==0){
+					 listCAI.remove(a);
+				 }else{
+				 IntoPiecesFilters IntoPieces=customerApplicationIntopieceWaitDao.findfsw2(listCAI.get(a).getId(),filter.getUserId());
+				 if(IntoPieces!=null){
+					 listCAI.remove(a);
+				 }}
+			}
+		}
+		return listCAI;
+	}
+	// 查询所有的初审审贷过的
 	public QueryResult<IntoPiecesFilters> findCustomerApplicationIntopieceDecisones(IntoPiecesFilters filter,HttpServletRequest request) {
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		List<Integer> list=new ArrayList<Integer>();
@@ -126,6 +146,21 @@ public class CustomerApplicationIntopieceWaitService {
 		}
 		QueryResult<IntoPiecesFilters> qs = new QueryResult<IntoPiecesFilters>(size, listCAI);
 		return qs;
+
+	}
+	//pad查询所有的进件通过审核的
+	public List<IntoPiecesFilters> findCustomerApplicationIntopieceDecisons1(IntoPiecesFilters filter) {
+		
+		List<IntoPiecesFilters> listCAI = customerApplicationIntopieceWaitDao.findCustomerApplicationIntopieceDecisionForms(filter);
+		for(int a=listCAI.size()-1;a>=0;a--){
+			List<IntoPiecesFilters> result=customerApplicationIntopieceWaitDao.findStatus(listCAI.get(a).getId());
+			for(int b=0;b<result.size();b++){
+				if(result.get(b).getStatus().equals("2") || result.get(b).getStatus().equals("3") ){
+					listCAI.remove(a);
+				}
+			}
+		}
+		return listCAI;
 
 	}
 

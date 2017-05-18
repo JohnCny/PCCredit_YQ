@@ -83,4 +83,10 @@ public interface ManagerPerformmanceDao {
 	List<ManagerPerformmanceForm>selectAllManegerYj(ManagerPerformmanceForm from);
 	//查询所有的机构，团队 总业绩
 	ManagerPerformmanceForm selectAllTeamYj(ManagerPerformmanceForm from);
+	//查询当前客户经理所属团队和区域
+	List<ManagerPerformmanceForm>selectManagerTeam(@Param(value="id")String id);
+	//查询指定团队的客户经理ID
+	List<ManagerPerformmanceForm>selectAllManagerByTeam(ManagerPerformmanceForm ManagerPerformmanceForm);
+	//查询指定区域的团队名称
+	List<ManagerPerformmanceForm>selectAllManagerByOrgTeam(ManagerPerformmanceForm ManagerPerformmanceForm);
 }

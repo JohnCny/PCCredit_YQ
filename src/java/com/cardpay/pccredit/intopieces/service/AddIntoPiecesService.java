@@ -1240,7 +1240,12 @@ public class AddIntoPiecesService {
 	}*/
 	public  List<ImageMore>  selectAllImageByPcId(ImageMore ImageMore) throws IOException, SftpException{
 		List<ImageMore>result=localImageDao.selectAllImageByPcId(ImageMore);
-		 List<ImageMore> list=SFTPUtil.TestImageBinary(result);
+		List<ImageMore> list=null;
+		if(ServerSideConstant.IS_SERVER_SIDE_TRUE.equals("0")){
+			list=SFTPUtil.TestImageBinary1(result);
+		}else{
+			list=SFTPUtil.TestImageBinary(result);
+		}
 		return list;
 		
 	}
@@ -1259,7 +1264,12 @@ public class AddIntoPiecesService {
 	}*/
 	public List<ImageMore> selectBycardId(ImageMore ImageMore) throws IOException, SftpException{
 		List<ImageMore>result=localImageDao.selectBycardId(ImageMore);
-		 List<ImageMore> list=SFTPUtil.TestImageBinary(result);
+		List<ImageMore> list=null;
+		if(ServerSideConstant.IS_SERVER_SIDE_TRUE.equals("0")){
+			list=SFTPUtil.TestImageBinary1(result);
+		}else{
+			list=SFTPUtil.TestImageBinary(result);
+		}
 		return list;
 		
 	}

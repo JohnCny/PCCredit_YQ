@@ -1484,7 +1484,7 @@ public class SFTPUtil {
         return column;
     }
 /**
- * base64转换图片
+ * base64转换服务器图片
  * @param result
  * @return
  * @throws IOException
@@ -1522,4 +1522,43 @@ public static List<ImageMore> TestImageBinary(List<ImageMore> result) throws IOE
     }
 	return list;
     
-}}
+}
+
+
+/**
+ * base64转换本地图片
+ * @param result
+ * @return
+ * @throws IOException
+ * @throws SftpException 
+ */
+public static List<ImageMore> TestImageBinary1(List<ImageMore> result) throws IOException, SftpException {    
+    BASE64Encoder encoder = new BASE64Encoder();    
+    BASE64Decoder decoder = new BASE64Decoder();
+    List<ImageMore> list=new ArrayList<ImageMore>();
+    	  for(int i=0;i<result.size();i++){
+    		  byte[] data = null;
+    			  String url="D:"+result.get(i).getUri();
+    		      InputStream in = new FileInputStream(url);
+    	            data = new byte[in.available()];
+    	            in.read(data);
+    	            in.close();
+    	            ImageMore ImageMore=new ImageMore();
+    	            ImageMore.setUri(encoder.encode(data));
+    		    list.add(i, ImageMore);
+    	            if(i==result.size()-1){
+    	            	disconnect();
+    	            }
+    }
+	return list;
+    
+}
+
+
+
+
+
+
+
+
+}
