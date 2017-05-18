@@ -112,7 +112,7 @@
 	<select id="findCustomerApplicationIntopieceDecisionForm"
 		resultMap="BaseResultMap">
 		SELECT
-		b.*, U.CHINESE_NAME as chineseName,
+		<!-- b.*, U.CHINESE_NAME as chineseName,
 		U.RESIDENTIAL_ADDRESS AS
 		residentialAddress,
 		U.CARD_TYPE AS cardType,
@@ -137,7 +137,37 @@
 		AND N.ID=A.NEXT_NODE_ID
 		and
 		A.NEXT_NODE_ID=p.NODE_ID and p.USER_ID=#{userId}
-		and b.status='audit'
+		and b.status='audit' -->
+	
+		b.*, U.CHINESE_NAME as chineseName,
+		U.RESIDENTIAL_ADDRESS AS residentialAddress,
+		U.CARD_TYPE AS cardType,
+		U.CARD_ID AS cardId,
+		b.APPLY_QUOTA AS applyQuota,
+		A.SERIAL_NUMBER as SERIALNUMBER,
+   		N.NODE_NAME as nodeName,
+		A.AUDIT_TIME as auditTime,
+		b.CREATED_TIME   as createdTime,
+		prod.PRODUCT_NAME as productName,
+		su.display_name as displayName,
+		su.id as userId
+		FROM
+		CUSTOMER_APPLICATION_INFO b,
+		BASIC_CUSTOMER_INFORMATION U,
+		CUSTOMER_APPLICATION_PROCESS A,
+   		NODE_AUDIT N,NODE_AUDIT_USER p,
+   		PRODUCT_ATTRIBUTE prod,
+   		sys_user su
+		WHERE
+		1=1
+		and su.id=u.user_id
+		and U.ID = b.CUSTOMER_ID
+		and a.APPLICATION_ID=b.ID
+		AND N.ID=A.NEXT_NODE_ID
+		and prod.id = b.PRODUCT_ID
+		and A.NEXT_NODE_ID=p.NODE_ID and p.USER_ID=#{userId}
+		and b.status='audit' 
+		and b.id not in (select APPLICATION_ID from T_APP_MANAGER_AUDIT_LOG)
 		<if test="cardId!=null and cardId!=''">
 			and U.card_id=#{cardId}
 		</if>

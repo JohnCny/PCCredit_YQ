@@ -49,6 +49,28 @@ public class JnpadInquiryModelController {
 			String tableContentysyfb = getFromBASE64(localExcel.getSheetYsyf()).replaceAll("\n", "<br>").replace("><br><", "><");
 			String tableContentjueyb = getFromBASE64(localExcel.getJyb()).replaceAll("\n", "<br>").replace("><br><", "><");
 			
+			
+			String tableContentjyztb=getFromBASE64(localExcel.getSheetJyzt()).replaceAll("\n", "<br>").replace("><br><", "><");
+			String tableContentscztb=getFromBASE64(localExcel.getSheetSczt()).replaceAll("\n", "<br>").replace("><br><", "><");
+			String tableContentddpzb=getFromBASE64(localExcel.getSheetDdpz()).replaceAll("\n", "<br>").replace("><br><", "><");
+			String tableContentlrjbb=getFromBASE64(localExcel.getSheetLrjb()).replaceAll("\n", "<br>").replace("><br><", "><");
+			String tableContentzyywb=getFromBASE64(localExcel.getZyyw()).replaceAll("\n", "<br>").replace("><br><", "><");
+			String tableContentdhdb=getFromBASE64(localExcel.getSheetDhd()).replaceAll("\n", "<br>").replace("><br><", "><");
+			String tableContentlsb=getFromBASE64(localExcel.getSheetLsfx()).replaceAll("\n", "<br>").replace("><br><", "><");
+			String tableContentbzrb=getFromBASE64(localExcel.getSheetdbrxx()).replaceAll("\n", "<br>").replace("><br><", "><");
+			
+			map.put("tableContentjyztb", tableContentjyztb);
+			map.put("tableContentscztb", tableContentscztb);
+			map.put("tableContentddpzb", tableContentddpzb);
+			map.put("tableContentlrjbb", tableContentlrjbb);
+			map.put("tableContentzyywb", tableContentzyywb);
+			map.put("tableContentdhdb", tableContentdhdb);
+			map.put("tableContentlsb", tableContentlsb);
+			map.put("tableContentbzrb", tableContentbzrb);
+			
+			
+			
+			
 			map.put("tableContentjyb", tableContentjyb);
 			map.put("tableContentjbzkb", tableContentjbzkb);
 			map.put("tableContentzcfzb", tableContentzcfzb);

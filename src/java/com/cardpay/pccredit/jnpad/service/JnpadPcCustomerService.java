@@ -6,6 +6,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -29,6 +30,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.cardpay.pccredit.common.SFTPUtil;
 import com.cardpay.pccredit.intopieces.constant.Constant;
+import com.cardpay.pccredit.intopieces.constant.ServerSideConstant;
+import com.cardpay.pccredit.intopieces.model.ImageMore;
 import com.cardpay.pccredit.intopieces.model.LocalImage;
 import com.cardpay.pccredit.intopieces.web.LocalImageForm;
 import com.cardpay.pccredit.jnpad.dao.JnpadDailyAccountManagerDao;
@@ -153,10 +156,14 @@ public class JnpadPcCustomerService {
 	
 	public void importpcImage(MultipartFile file, String cardid,
 			String userId ,String fileName_1) {
-		//本地测试
-		//Map<String, String> map = JNPAD_UploadFileTool.scpcImage(file,cardid,fileName_1);
-		//指定服务器上传
-		Map<String, String> map =uploadJn(file, userId,fileName_1);
+		Map<String, String> map=null;
+		if(ServerSideConstant.IS_SERVER_SIDE_TRUE.equals("0")){
+			//本地测试
+			map = JNPAD_UploadFileTool.scpcImage(file,cardid,fileName_1);
+		}else{
+			//指定服务器上传
+			map =uploadJn(file, userId,fileName_1);
+		}
 		String fileName = map.get("fileName");
 		String url = map.get("url");
 		LocalImageForm localImage = new LocalImageForm();
@@ -175,9 +182,34 @@ public class JnpadPcCustomerService {
 		}
 		CustomerDao.insertPCImage(localImage);
 	}
-	
-	public List<LocalImageForm> selectUri(@Param("cardid") String cardid){
-		return CustomerDao.selectUri(cardid);
+	/**
+	 * 将图片转成base64编码
+	 * @param cardid
+	 * @return
+	 * @throws IOException
+	 * @throws SftpException
+	 */
+	public List<LocalImageForm> selectUri(@Param("cardid") String cardid) throws IOException, SftpException{
+		List<ImageMore> list=null;
+		List<ImageMore>result=new ArrayList<ImageMore>();
+		List<LocalImageForm>Alist=new ArrayList<LocalImageForm>();
+		List<LocalImageForm> from= CustomerDao.selectUri(cardid);
+		for(int i=0;i<from.size();i++){
+			ImageMore more =new ImageMore();
+			more.setUri(from.get(i).getUri());
+			result.add(i, more);
+		}
+		if(ServerSideConstant.IS_SERVER_SIDE_TRUE.equals("0")){
+			list=SFTPUtil.TestImageBinary1(result);
+		}else{
+			list=SFTPUtil.TestImageBinary(result);
+		}
+		for(int i=0;i<list.size();i++){
+			LocalImageForm more =new LocalImageForm();
+			more.setUri(list.get(i).getUri());
+			Alist.add(i, more);
+		}
+		return Alist;
 	}
 	public static void ckpcImage(HttpServletResponse response,String uri,String attment) throws Exception{
 		String filePath=uri;

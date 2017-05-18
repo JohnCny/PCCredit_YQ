@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -70,6 +71,7 @@ import com.cardpay.pccredit.intopieces.service.AddIntoPiecesService;
 import com.cardpay.pccredit.intopieces.service.CustomerSqInfoService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
 import com.cardpay.pccredit.intopieces.service.JnpadCustormerSdwUserService;
+import com.cardpay.pccredit.ipad.util.JsonDateValueProcessor;
 import com.cardpay.pccredit.jnpad.model.JnpadCsSdModel;
 import com.cardpay.pccredit.manager.constant.ManagerLevelAdjustmentConstant;
 import com.cardpay.pccredit.manager.web.AccountManagerParameterForm;
@@ -2192,6 +2194,7 @@ public class IntoPiecesControl extends BaseController {
 		@RequestMapping(value = "selectAllImageByPcId.page")
 		public AbstractModelAndView selectAllImageByPcId(@ModelAttribute ImageMore filter,HttpServletRequest request) throws IOException, SftpException {
 			List<String> list=new ArrayList<String>();
+	filter.setLimit(Integer.MAX_VALUE);
 			List<ImageMore> result = addIntoPiecesService.selectAllImageByPcId(filter);
 			for(int i=0;i<result.size();i++){
 				list.add(i, result.get(i).getUri());
@@ -2226,6 +2229,7 @@ public class IntoPiecesControl extends BaseController {
 			List<String> list=new ArrayList<String>();
 			String id = request.getParameter("id");
 			filter.setPid(pid);
+filter.setLimit(Integer.MAX_VALUE);
 			List<ImageMore> result = addIntoPiecesService.selectBycardId(filter);
 			for(int i=0;i<result.size();i++){
 				list.add(i, result.get(i).getUri());

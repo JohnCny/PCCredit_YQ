@@ -297,10 +297,9 @@ public class ManagerPerformmanceService {
         response.setHeader("Connection", "close");
         response.setHeader("Content-Type", "application/vnd.ms-excel;charset=GBK");
         response.setHeader("Content-Disposition", "attachment;filename="
-        + new String("济南农村商业银行客户经理业务进度监控表.xls".getBytes(), "iso-8859-1"));
+   + new String("阳泉农村信用社联社客户经理业绩进度表.xls".getBytes(), "iso-8859-1"));
         OutputStream out = response.getOutputStream();  
-        wb.write(out);
-     
+		        wb.write(out);     
 			out.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -523,6 +522,15 @@ public class ManagerPerformmanceService {
 		}
 		public ManagerPerformmanceForm selectAllTeamYj(ManagerPerformmanceForm from){
 			return managerPerformmanceDao.selectAllTeamYj(from);
+		}
+public List<ManagerPerformmanceForm>selectManagerTeam(@Param(value="id")String id){
+			return managerPerformmanceDao.selectManagerTeam(id);
+		}
+		public List<ManagerPerformmanceForm>selectAllManagerByTeam(ManagerPerformmanceForm ManagerPerformmanceForm){
+			return managerPerformmanceDao.selectAllManagerByTeam(ManagerPerformmanceForm);
+		}
+		public List<ManagerPerformmanceForm>selectAllManagerByOrgTeam(ManagerPerformmanceForm ManagerPerformmanceForm){
+			return managerPerformmanceDao.selectAllManagerByOrgTeam(ManagerPerformmanceForm);
 		}
 }
 

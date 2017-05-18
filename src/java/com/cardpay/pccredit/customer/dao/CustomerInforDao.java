@@ -318,15 +318,5 @@ public interface CustomerInforDao {
 	public int updateCustormerBytyId(CustomerFirsthendBase filter);
 	public List<CUSTORMERINFOUPDATE> findCustormerUpdate(@Param("cardid") String cardid);
 	public int selectExclIcount(@Param("cid") String cid,@Param("pid") String pid);
-	
-	//===
-	public void deletelastmibusidata();
-	public List<TyMibusidataForm> findmibusidata();
-	public void inserTyMIBUSIDATA(TyMibusidataForm tyMibusidataForm);
-	public void truncateLshtylist();
-	public List<TyRarepaylistForm> findLshJnListByFilter();
-	public void insertLshtylist(TyRarepaylistForm tyRarepaylistForm);
-	public void truncateTkmxtylist();
-	public List<TyRepayTkmxForm> findtkmxJnListByFilter();
-	public void insertTkmxtylist(TyRepayTkmxForm tyRepayTkmxForm);
+	CUSTORMERINFOUPDATE selectExclApplicationId(@Param("cid") String cid,@Param("pid") String pid);
 }

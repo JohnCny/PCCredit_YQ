@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,8 +57,8 @@ public class JnIpadCustAppInfoXxService {
 	private RiskCustomerDao riskCustomerDao;
 	
 	
-	public int findCustAppInfoXxCount(String userId,String status1,String status2,String status3,String status4){
-		return jnIpadCustAppInfoDao.findCustAppInfoXxCount(userId,status1,status2,status3,status4);
+	public int findCustAppInfoXxCount(String userId,@Param("status") String status){
+		return jnIpadCustAppInfoDao.findCustAppInfoXxCount(userId,status);
 	}
 	
 	

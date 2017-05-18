@@ -7,23 +7,14 @@
 				<div class="title">客户经理业绩进度总览</div>
 			</div>
 			<div class="search">
+			#if($!hava!="无" )
            <form id="submitForm" >
             <ul>
                <li>
-                <span>团队<select id="team" name="team" >
+                <span>团队成员<select id="username" name="username" >
                   <option  value="" >请选择</option>
-    			 #foreach($model in $!result)
-    			  <option  value="$model.team" >$model.team</option>
-    			 #end
-                </select>
-                </span>
-              </li>
-              
-               <li>
-                <span>区域<select id="ordteam" name="ordteam" >
-                  <option  value="" >请选择</option>
-    			 #foreach($model in $!result)
-    			  <option  value="$model.ordteam" >$model.ordteam</option>
+    			 #foreach($model in $!resultModel)
+    			  <option  value="$model.userId" >$model.name</option>
     			 #end
                 </select>
                 </span>
@@ -38,10 +29,8 @@
               </li>
             </ul>
           </form> 
+          #end
         </div>
-			<form id="id_module_form"
-				action="${contextPath}/manager/performmance/update.json" />
-			
 				<table cellpadding="0" cellspacing="0" class="table-bd" border="1"
 					bordercolor="#cccccc" style="width: 100%">
 					<colgroup>
@@ -119,7 +108,6 @@
 					</tr>
 					#end
 				</table>
-			</form>
 			 <div class="submit" style="text-align: left;">
 				<!-- <input id="id_save_button" type="button"
 					value="修改业绩进度" class="current" />
@@ -142,31 +130,17 @@
      document.getElementById("submitForm").action = url;
      document.getElementById("submitForm").submit();
  });
-$("#export_button").click(function() {
-	 var team=$("#team").val();
-	 var ordteam=$("#ordteam").val();
-	 var exporturl="";
-	 if(team=="" && ordteam==""){
-		  exporturl = "${contextPath}/manager/performmance/performexport.json"
-	 }else{
-		 exporturl = "${contextPath}/manager/performmance/portselectTeamName.json?orgteam="+ordteam+"&team="+team;
-	 }
+ $("#export_button").click(function() {
+     var exporturl = "${contextPath}/manager/performmance/performexport.json?startdate="+$("#date").val()+"&enddate="+$("#enddate").val();
      window.location.href = exporturl;
-
- });
-
- $("#selectUser").click(function() {
-	 var team=$("#team").val();
-	 var ordteam=$("#ordteam").val();
-	 if(team!="" || ordteam!=""){
-		 var 	 exporturl = "${contextPath}/manager/performmance/selectTeamName.json?orgteam="+ordteam+"&team="+team;
-     window.location.href = exporturl;
-	 }else{
-		 Dialog.message("请选择区域或团队!");
-	 }
 
  });
  
+ $("#selectUser").click(function() {
+     var exporturl = "${contextPath}/manager/performmance/selectUserName.json?id="+$("#username").val();
+     window.location.href = exporturl;
+
+ });
  })
  </script>
 #parse ("common/iframe_page_footer.htm")
