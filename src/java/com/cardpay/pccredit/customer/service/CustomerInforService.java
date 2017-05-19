@@ -69,8 +69,10 @@ import com.cardpay.pccredit.customer.model.CustomerFirsthendWork;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
 import com.cardpay.pccredit.customer.model.CustomerInforWeb;
 import com.cardpay.pccredit.customer.model.MaintenanceLog;
+import com.cardpay.pccredit.customer.model.TyMibusidataForm;
 import com.cardpay.pccredit.customer.model.TyProductType;
 import com.cardpay.pccredit.customer.model.TyRepayLsz;
+import com.cardpay.pccredit.customer.model.TyRepayTkmxForm;
 import com.cardpay.pccredit.customer.model.TyRepayYehzVo;
 import com.cardpay.pccredit.datapri.service.DataAccessSqlService;
 import com.cardpay.pccredit.intopieces.constant.Constant;
@@ -93,6 +95,7 @@ import com.cardpay.pccredit.manager.model.ManagerSalaryForm;
 import com.cardpay.pccredit.manager.model.TPerformanceParameters;
 import com.cardpay.pccredit.postLoan.filter.PostLoanFilter;
 import com.cardpay.pccredit.postLoan.model.Fcloaninfo;
+import com.cardpay.pccredit.postLoan.model.TyRarepaylistForm;
 import com.cardpay.pccredit.riskControl.model.RiskCustomer;
 import com.cardpay.pccredit.system.constants.NodeAuditTypeEnum;
 import com.cardpay.pccredit.system.constants.YesNoEnum;
@@ -4926,5 +4929,33 @@ public class CustomerInforService {
 			
 		}
 		log.info("******************结束********************");  
+	}
+	
+	/**
+	 * 添加台帐临时表信息
+	 * @throws IOException 
+	 */
+	public void addmibusidata() throws IOException{
+		//添加ty_mibusidata表
+		customerInforDao.deletelastmibusidata();
+		List<TyMibusidataForm>lists=customerInforDao.findmibusidata();
+		for (TyMibusidataForm tyMibusidataForm : lists) {
+			customerInforDao.inserTyMIBUSIDATA(tyMibusidataForm);
+		}
+		log.info("addmibusidata success!");
+		//添加LSHTYLIST表
+		customerInforDao.truncateLshtylist();
+		List<TyRarepaylistForm>lslists=customerInforDao.findLshJnListByFilter();
+		for (TyRarepaylistForm tyRarepaylistForm : lslists) {
+			customerInforDao.insertLshtylist(tyRarepaylistForm);
+		}
+		log.info("addlshtylist success!");
+		//添加TKMXTYLIS表
+		customerInforDao.truncateTkmxtylist();
+		List<TyRepayTkmxForm>Tklists=customerInforDao.findtkmxJnListByFilter();
+		for (TyRepayTkmxForm tyRepayTkmxForm : Tklists) {
+			customerInforDao.insertTkmxtylist(tyRepayTkmxForm);
+		}
+		log.info("addtkmxtylist success!");
 	}
 }

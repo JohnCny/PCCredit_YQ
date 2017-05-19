@@ -2105,4 +2105,168 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 	  values
 	  (#{customermanager},#{fkmoney},#{organization})
 	</insert>
+	
+	<select id="deletelastmibusidata"  >
+			truncate table ty_mibusidata
+	</select>
+	
+	<select id="findmibusidata"  resultMap="MibusidataMap">
+			select * from Mibusidata
+	</select>
+	
+		<insert id="inserTyMIBUSIDATA" parameterType="com.cardpay.pccredit.customer.model.TyMibusidataForm">
+	     insert into TY_MIBUSIDATA(YWBH,ID,KHH,KHMC,ZJHM,SSBM,SJ,SXED,GHJL,LOANDATE,DQRQ,DKQX,JZLL,REQLMT,DELAYINTERESTDAYS,DELAYAMTDAYS,
+	DLAYDT,SHBJ,JKJE,KSQXRQ,PAYDEBT,DKYE,BNQX,BWQX,BALAMT,YXYE,WJFL3,WJFL4,WJFL5,OPERDATETIME,USERID,DISPLAY_NAME,YWJG)
+	values(#{YWBH},#{ID},#{KHH},#{KHMC},#{ZJHM},#{SSBM},#{SJ},#{SXED},#{GHJL},#{LOANDATE},#{DQRQ},#{DKQX},#{JZLL},#{REQLMT},#{DELAYINTERESTDAYS},#{DELAYAMTDAYS},
+	#{DLAYDT},#{SHBJ},#{JKJE},#{KSQXRQ},#{PAYDEBT},#{DKYE},#{BNQX},#{BWQX},#{BALAMT},#{YXYE},#{WJFL3},#{WJFL4},#{WJFL5},#{OPERDATETIME},#{USERID},#{DISPLAY_NAME},#{YWJG}) 
+	</insert>
+	
+	<select id="truncateLshtylist"  >
+			truncate table LSHTYLIST
+	</select>
+	
+	<select id="findLshJnListByFilter"  resultMap="lszform">
+			 select
+             distinct 
+             tkmx.ywbh,
+             b.khmc,
+             tkmx.jkrq,
+             shbj.df as bj,
+             shlx.df as lx,
+             tkmx.HKFS as jxfs,
+             shbj.jzrq,
+             sysuser.display_name,
+             yehz.create_time
+             from
+              (select  sum(lsz.df) as df ,
+                            tkmx.ywbh ,
+                            c.zjhm
+                    from
+                     ty_customer_rygl rygl,
+                    TY_REPAY_TKMX tkmx ,
+                    TY_REPAY_YEHZ yehz,
+                    ty_repay_lsz lsz,
+                    ty_customer_base c,
+                   ty_product_type protype,
+                    sys_user sysuser
+                    where  c.khjl=rygl.dm and
+                    rygl.ddrq=sysuser.external_id and
+                    c.KHNM = tkmx.khh and
+                    yehz.JJH = tkmx.JJH and
+                    protype.product_code=tkmx.cpmc and
+                    lsz.jjh=tkmx.jjh 
+                    and lsz.zy='批量自动扣利息'
+                    group by   tkmx.ywbh , c.zjhm) shlx,
+            (select  c.khmc,
+                    sum(lsz.df) as df ,
+                            tkmx.ywbh ,
+                            c.zjhm,
+                             max(lsz.jzrq) as jzrq
+                    from
+                     ty_customer_rygl rygl,
+                    TY_REPAY_TKMX tkmx ,
+                    TY_REPAY_YEHZ yehz,
+                    ty_repay_lsz lsz,
+                    ty_customer_base c,
+                   ty_product_type protype,
+                    sys_user sysuser
+                    where  c.khjl=rygl.dm and
+                    rygl.ddrq=sysuser.external_id and
+                    c.KHNM = tkmx.khh and
+                    yehz.JJH = tkmx.JJH and
+                    protype.product_code=tkmx.cpmc and
+                    lsz.jjh=tkmx.jjh 
+                  and (lsz.zy='批量自动扣本金'
+                  or lsz.zy='贷款柜台提前还款')
+                  
+                    group by   tkmx.ywbh , c.zjhm ,c.khmc) shbj,
+                    ty_repay_tkmx tkmx,
+                    ty_customer_base b,
+                    ty_customer_rygl rygl,
+                    sys_user sysuser,
+                   ty_kdk_jh jh,
+                    ty_repay_yehz yehz,
+                    ty_repay_lsz lsz
+                    where b.khjl=rygl.dm and
+                    rygl.ddrq=sysuser.external_id and
+                    b.khnm=tkmx.khh and
+                    jh.ywbh=tkmx.ywbh||'HT' and
+                    yehz.jjh=tkmx.jjh and
+                    tkmx.jjh =lsz.jjh and
+                     shlx.ywbh=tkmx.ywbh and
+                    shlx.zjhm=b.zjhm and
+                   shbj.ywbh=tkmx.ywbh and
+                    shbj.zjhm=b.Zjhm
+	</select>
+	
+	<insert id="insertLshtylist" parameterType="com.cardpay.pccredit.postLoan.model.TyRarepaylistForm">
+	     insert into LSHTYLIST(YWBH,KHMC,JKRQ,BJ,LX,JXFS,JZRQ,DISPLAY_NAME,CREATE_TIME)
+	values(#{ywbh},#{khmc},#{jkrq},#{bj},#{lx},#{jxfs},#{jzrq},#{display_name},#{create_time}) 
+	</insert>
+	
+		<select id="truncateTkmxtylist"  >
+			truncate table TKMXTYLIST
+	</select>
+	
+	<select id="findtkmxJnListByFilter"  resultMap="BaseResultMap">
+			select distinct tkmx.ywbh as ywbh,
+              base.khmc as cname,
+              base.zjhm as zjhm,
+              sysuser.id as userId,
+              tkmx.jkrq,
+              tkmx.ffje as ffje,
+              yehz.DKYE as balamt,
+              yehz.bnqx+yehz.bwqx as debtinterest,
+              tkmx.ffje as reqlmt,
+              base.khh as khh,
+              base.Khlx as khlx,
+              base.Zjlx as zjlx,
+              tkmx.dqrq as dqrq,
+              (case when(to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) > 0 then (to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) else 0  end ) as DELAYINTERESTDAYS,
+                (case when(to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) > 0 then (to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) else 0  end )as DELAYAMTDAYS
+                from
+           (select  tkmx.ywbh as ywbh,
+                      max(to_number(jh.qs)) as qs
+          from
+                      TY_REPAY_TKMX tkmx,
+                      TY_CUSTOMER_BASE  b,
+                      TY_REPAY_YEHZ yehz,
+                      ty_kdk_jh jh,
+                      ty_customer_rygl rygl,
+                      sys_user sysuser
+                      where 1=1 and
+                      b.khnm=tkmx.khh and
+                      yehz.JJH = tkmx.JJH and
+                      jh.ywbh=tkmx.ywbh||'HT' and
+                      b.khjl=rygl.dm and
+                      rygl.ddrq=sysuser.external_id
+                   group by tkmx.ywbh)  maxqs,
+                    ty_customer_rygl rygl,
+                    ty_customer_base base,
+                     ty_product_type protype,
+                    ty_repay_tkmx tkmx,
+                    SYS_USER sysuser  ,
+                    ty_repay_yehz yehz,
+                    ty_kdk_jh jh,
+                    ty_repay_lsz lsz
+                    WHERE 
+                    base.khjl=rygl.dm
+                    and rygl.ddrq=sysuser.external_id
+                    and base.khnm=tkmx.khh
+                    and tkmx.JJH=yehz.JJH
+                    and protype.product_code=tkmx.cpmc
+                    and jh.ywbh=tkmx.ywbh||'HT' 
+                    and lsz.jjh=tkmx.jjh
+                    and maxqs.ywbh=tkmx.ywbh
+                    and maxqs.qs=jh.qs
+                     group by tkmx.ywbh, base.khmc,base.zjhm,tkmx.jkrq, base.Zjlx,sysuser.id,
+              tkmx.ffje,yehz.DKYE,yehz.bnqx,yehz.bwqx,tkmx.dqrq,base.khh,base.Khlx
+            order  by tkmx.jkrq
+            
+	</select>
+	
+	<insert id="insertTkmxtylist" parameterType="com.cardpay.pccredit.customer.model.TyRepayTkmxForm">
+	     insert into TKMXTYLIST(YWBH,CNAME,ZJHM,JKRQ,FFJE,BALAMT,DEBTINTEREST,REQLMT,DELAYINTERESTDAYS,DELAYAMTDAYS,KHH,KHLX,ZJLX,DQRQ,USERID)
+	values(#{ywbh},#{cname},#{zjhm},#{jkrq},#{ffje},#{balamt},#{debtinterest},#{reqlmt},#{delayinterestdays},#{delayamtdays},#{khh},#{khlx},#{zjlx},#{dqrq},#{userId}) 
+	</insert>
 </mapper>
