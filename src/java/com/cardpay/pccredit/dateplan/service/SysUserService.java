@@ -76,7 +76,7 @@ public class SysUserService {
 		Integer mbsll=0;
 		Integer whsll=0;
 		Integer dhsll=0;
-		List list=new ArrayList<JBUser>();
+		List<JBUser> list=new ArrayList<JBUser>();
 		for(int a=0;a<result.size();a++){
 			JBUser user=new JBUser();
 			user.setName(result.get(a).getName());
@@ -136,9 +136,11 @@ public class SysUserService {
 					List<datePlanModel> result3=UserDao.selectdhsl(result.get(a).getId());
 					if(result3.size()>0){
 						for(int af=0;af<result3.size();af++){
-							String newDate1 = sdf.format(result3.get(af).getZdtime());
-							if(newDate1.substring(0, 10).trim().equals(newDate)){
-								dhsll+=1;
+							if(!result3.get(af).getZdtime().equals(null)){
+								String newDate1 = sdf.format(result3.get(af).getZdtime());
+								if(newDate1.substring(0, 10).trim().equals(newDate)){
+									dhsll+=1;
+								}
 							}
 						}
 					}
@@ -150,6 +152,7 @@ public class SysUserService {
 					}else{
 						user.setRebfl("1");
 					}
+					user.setUserId(result.get(a).getId());
 					list.add(a, user);
 					rwzs=0;
 					wcrwzs=0;
@@ -201,6 +204,7 @@ public class SysUserService {
 			
 						
 			}
+			user.setUserId(result.get(a).getId());
 			list.add(a, user);
 			rwzs=0;
 			wcrwzs=0;
@@ -209,6 +213,16 @@ public class SysUserService {
 			 whsll=0;
 			 dhsll=0;
 		}
+		for(int bb=0;bb<list.size();bb++){
+			for(int j=list.size()-1;j>=0;j--){
+				if(bb!=j){
+					if(list.get(j).getUserId().equals(list.get(bb).getUserId())){
+						
+						list.remove(j);
+					}
+				}
+			}
+		 }
 		QueryResult<JBUser> qs = new QueryResult<JBUser>(count, list);
 		return qs;
 	}

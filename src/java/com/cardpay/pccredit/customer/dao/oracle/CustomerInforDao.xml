@@ -2106,9 +2106,9 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 	  (#{customermanager},#{fkmoney},#{organization})
 	</insert>
 	
-	<select id="deletelastmibusidata"  >
+	<delete id="deletelastmibusidata"  >
 			truncate table ty_mibusidata
-	</select>
+	</delete>
 	
 	<select id="findmibusidata"  resultMap="MibusidataMap">
 			select * from Mibusidata
@@ -2121,9 +2121,9 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 	#{DLAYDT},#{SHBJ},#{JKJE},#{KSQXRQ},#{PAYDEBT},#{DKYE},#{BNQX},#{BWQX},#{BALAMT},#{YXYE},#{WJFL3},#{WJFL4},#{WJFL5},#{OPERDATETIME},#{USERID},#{DISPLAY_NAME},#{YWJG}) 
 	</insert>
 	
-	<select id="truncateLshtylist"  >
+	<delete id="truncateLshtylist"  >
 			truncate table LSHTYLIST
-	</select>
+	</delete>
 	
 	<select id="findLshJnListByFilter"  resultMap="lszform">
 			 select
@@ -2209,7 +2209,8 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 	</select>
 	
 	<select id="findtkmxJnListByFilter"  resultMap="BaseResultMap">
-			select distinct tkmx.ywbh as ywbh,
+						
+select distinct tkmx.ywbh as ywbh,
               base.khmc as cname,
               base.zjhm as zjhm,
               sysuser.id as userId,
@@ -2225,23 +2226,23 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
               (case when(to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) > 0 then (to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) else 0  end ) as DELAYINTERESTDAYS,
                 (case when(to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) > 0 then (to_date(max(lsz.jzrq),'yyyy-mm-dd')-to_date(tkmx.dqrq,'yyyy-mm-dd')) else 0  end )as DELAYAMTDAYS
                 from
-           (select  tkmx.ywbh as ywbh,
+           (select distinct tkmx.ywbh as ywbh,
                       max(to_number(jh.qs)) as qs
           from
                       TY_REPAY_TKMX tkmx,
                       TY_CUSTOMER_BASE  b,
                       TY_REPAY_YEHZ yehz,
                       ty_kdk_jh jh,
-                      ty_customer_rygl rygl,
+                      basic_customer_information basic,
                       sys_user sysuser
                       where 1=1 and
                       b.khnm=tkmx.khh and
                       yehz.JJH = tkmx.JJH and
                       jh.ywbh=tkmx.ywbh||'HT' and
-                      b.khjl=rygl.dm and
-                      rygl.ddrq=sysuser.external_id
+                      basic.ty_customer_id=b.id and
+                      basic.user_id=sysuser.id
                    group by tkmx.ywbh)  maxqs,
-                    ty_customer_rygl rygl,
+                    basic_customer_information basic,
                     ty_customer_base base,
                      ty_product_type protype,
                     ty_repay_tkmx tkmx,
@@ -2249,9 +2250,9 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
                     ty_repay_yehz yehz,
                     ty_kdk_jh jh,
                     ty_repay_lsz lsz
-                    WHERE 
-                    base.khjl=rygl.dm
-                    and rygl.ddrq=sysuser.external_id
+                    WHERE 1=1 
+                    and basic.ty_customer_id =base.id 
+                    and basic.user_id=sysuser.id
                     and base.khnm=tkmx.khh
                     and tkmx.JJH=yehz.JJH
                     and protype.product_code=tkmx.cpmc
@@ -2262,6 +2263,7 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
                      group by tkmx.ywbh, base.khmc,base.zjhm,tkmx.jkrq, base.Zjlx,sysuser.id,
               tkmx.ffje,yehz.DKYE,yehz.bnqx,yehz.bwqx,tkmx.dqrq,base.khh,base.Khlx
             order  by tkmx.jkrq
+
             
 	</select>
 	
