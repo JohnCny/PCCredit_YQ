@@ -46,10 +46,10 @@ text-overflow: ellipsis;"><a href="${contextPath}/intopieces/intopiecesquery/sel
             </ul>
          </div>
 <!-- 第一种,都在同一组,一组里面很多个 -->
-	<div class="gallery">
+		<div class="gallery" style="margin-left:100px">
 	    #foreach($result in $list)
-	    <a href="data:image/png;base64,$!result" data-size="1000x800" data-med="data:image/png;base64,$!result" data-med-size="1920x1200">
-			<img width="750" height="400" src="data:image/png;base64,$!result"/>
+	    <a  href="data:image/png;base64,$!result" data-size="1000x800" data-med="data:image/png;base64,$!result" data-med-size="1920x1200">
+			<img  width="350" height="250" src="data:image/png;base64,$!result"/>
 		</a>
 #end
 	</div>

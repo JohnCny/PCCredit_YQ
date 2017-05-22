@@ -178,7 +178,7 @@ public class SFTPUtil {
     /** 
      * upload all the files to the server 
      */  
-    public  static Map<String, String> uploadJn(MultipartFile oldFile,String customerId) {
+    public  synchronized  static Map<String, String> uploadJn(MultipartFile oldFile,String customerId) {
     	String newFileName = null;
 		String fileName = null;
     	Map<String, String> map = new HashMap<String, String>();

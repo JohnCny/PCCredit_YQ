@@ -324,7 +324,7 @@ public class Loan_TY_JJB_Controller extends BaseController {
 			mv.addObject("type", "1");//客户经理
 		}
 		
-		filter.setStatus("end");
+		filter.setStatus("approved");
 		result = intoPiecesService.findintoPiecesByFilter(filter);
 		JRadPagedQueryResult<IntoPieces> pagedResult = new JRadPagedQueryResult<IntoPieces>(filter, result);
 		mv.addObject(PAGED_RESULT, pagedResult);

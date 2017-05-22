@@ -11,18 +11,18 @@
 	<script src="${contextPath}/js/jquery.hammer.js"></script>
 <body class="whitebg">
  <div class="place">
-        <div class="title">影像资料</div>
+        <div class="title">褰卞儚璧勬枡</div>
       </div>
-<!-- 第一种,都在同一组,一组里面很多个 -->
-	<div class="gallery">
+<!-- 绗竴绉�閮藉湪鍚屼竴缁�涓�粍閲岄潰寰堝涓�-->
+		<div class="gallery" style="margin-left:100px">
 	    #foreach($result in $list)
-	    <a href="data:image/png;base64,$!result" data-size="1000x800" data-med="data:image/png;base64,$!result" data-med-size="1920x1200">
-			<img width="750" height="400" src="data:image/png;base64,$!result"/>
+	    <a  href="data:image/png;base64,$!result" data-size="1000x800" data-med="data:image/png;base64,$!result" data-med-size="1920x1200">
+			<img  width="350" height="250" src="data:image/png;base64,$!result"/>
 		</a>
 #end
 	</div>
 	
-	<!-- 图片弹出模态框 -->
+	<!-- 鍥剧墖寮瑰嚭妯℃�妗�-->
 	<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="pswp__bg"></div>
 		<div class="pswp__scroll-wrap">
@@ -67,11 +67,11 @@
 	</div>
  </body>
  <script type="text/javascript">
-	    (function() {//获取图片原始尺寸
-	    	// 读取尺寸大小
+	    (function() {//鑾峰彇鍥剧墖鍘熷灏哄
+	    	// 璇诲彇灏哄澶у皬
 	    	var imgReady = (function () {
 	    		var list = [], intervalId = null,
-	    		// 用来执行队列
+	    		// 鐢ㄦ潵鎵ц闃熷垪
 	    		tick = function () {
 	    			var i = 0;
 	    			for (; i < list.length; i++) {
@@ -79,7 +79,7 @@
 	    			};
 	    			!list.length && stop();
 	    		},
-	    		// 停止所有定时器队列
+	    		// 鍋滄鎵�湁瀹氭椂鍣ㄩ槦鍒�
 	    		stop = function () {
 	    			clearInterval(intervalId);
 	    			intervalId = null;
@@ -87,7 +87,7 @@
 	    		return function (url, ready, load, error) {
 	    			var onready, width, height, newWidth, newHeight,img = new Image();
 	    			img.src = url;
-	    			// 如果图片被缓存，则直接返回缓存数据
+	    			// 濡傛灉鍥剧墖琚紦瀛橈紝鍒欑洿鎺ヨ繑鍥炵紦瀛樻暟鎹�
 	    			if (img.complete) {
 	    				ready.call(img);
 	    				load && load.call(img);
@@ -100,35 +100,35 @@
 	    				onready.end = true;
 	    				img = img.onload = img.onerror = null;
 	    			};
-	    			// 图片尺寸就绪
+	    			// 鍥剧墖灏哄灏辩华
 	    			onready = function () {
 	    				newWidth = img.width;
 	    				newHeight = img.height;
 	    				if (newWidth !== width || newHeight !== height || newWidth * newHeight > 1024){
-	    					// 如果图片已经在其他地方加载可使用面积检测
+	    					// 濡傛灉鍥剧墖宸茬粡鍦ㄥ叾浠栧湴鏂瑰姞杞藉彲浣跨敤闈㈢Н妫�祴
 	    					ready.call(img);
 	    					onready.end = true;
 	    				};
 	    			};
 	    			onready();
-	    			// 完全加载完毕的事件
+	    			// 瀹屽叏鍔犺浇瀹屾瘯鐨勪簨浠�
 	    			img.onload = function () {
-	    				// onload在定时器时间差范围内可能比onready快
-	    				// 这里进行检查并保证onready优先执行
+	    				// onload鍦ㄥ畾鏃跺櫒鏃堕棿宸寖鍥村唴鍙兘姣攐nready蹇�
+	    				// 杩欓噷杩涜妫�煡骞朵繚璇乷nready浼樺厛鎵ц
 	    				!onready.end && onready();
 	    				load && load.call(img);
-	    				// IE gif动画会循环执行onload，置空onload即可
+	    				// IE gif鍔ㄧ敾浼氬惊鐜墽琛宱nload锛岀疆绌簅nload鍗冲彲
 	    				img = img.onload = img.onerror = null;
 	    			};
-	    			// 加入队列中定期执行
+	    			// 鍔犲叆闃熷垪涓畾鏈熸墽琛�
 	    			if (!onready.end) {
 	    				list.push(onready);
-	    				// 无论何时只允许出现一个定时器，减少浏览器性能损耗
+	    				// 鏃犺浣曟椂鍙厑璁稿嚭鐜颁竴涓畾鏃跺櫒锛屽噺灏戞祻瑙堝櫒鎬ц兘鎹熻�
 	    				if (intervalId === null) intervalId = setInterval(tick, 40);
 	    			};
 	    		};
 	    	})();
-			$(".article img").each(function(index, el) {//自定义——将其他图片做成这种形式
+			$(".article img").each(function(index, el) {//鑷畾涔夆�鈥斿皢鍏朵粬鍥剧墖鍋氭垚杩欑褰㈠紡
 				var self = $(this);
 				imgReady($(this).attr("src"), function () {
 					$(self).wrap('<div class="gallery"><a href="'+$(self).attr("src")+'" data-size="'+this.width+"x"+this.height+'" data-med="'+$(self).attr("src")+'" data-med-size="'+this.width+"x"+this.height+'"></div>');

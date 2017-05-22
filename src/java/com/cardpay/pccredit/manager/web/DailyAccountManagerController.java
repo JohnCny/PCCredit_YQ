@@ -90,8 +90,8 @@ public class DailyAccountManagerController extends BaseController {
 		String dailyId = RequestHelper.getStringValue(request, ID);
 		if (StringUtils.isNotEmpty(dailyId)) {
 			DailyAccountManager dailyAccountManager = dailyAccountService.findDailyAccountManagerById(dailyId);
-			ManagerPerformmance managerPerformmanceold = managerPerformmanceService.finManagerPerformmanceByIdAndDate(dailyAccountManager.getManagerId(),dailyAccountManager.getReportDate());
-			mv.addObject("gxperformList", managerPerformmanceold);
+			//ManagerPerformmance managerPerformmanceold = managerPerformmanceService.finManagerPerformmanceByIdAndDate(dailyAccountManager.getManagerId(),dailyAccountManager.getReportDate());
+			//mv.addObject("gxperformList", managerPerformmanceold);
 			mv.addObject("dailyAccountManager", dailyAccountManager);
 		}
 		mv.addObject("dailyId",dailyId);
@@ -143,8 +143,8 @@ public class DailyAccountManagerController extends BaseController {
 		String dailyId = RequestHelper.getStringValue(request, ID);
 		if (StringUtils.isNotEmpty(dailyId)) {
 			DailyAccountManager dailyAccountManager = dailyAccountService.findDailyAccountManagerById(dailyId);
-			ManagerPerformmance managerPerformmanceold = managerPerformmanceService.finManagerPerformmanceByIdAndDate(dailyAccountManager.getManagerId(),dailyAccountManager.getReportDate());
-			mv.addObject("gxperformList", managerPerformmanceold);
+			//ManagerPerformmance managerPerformmanceold = managerPerformmanceService.finManagerPerformmanceByIdAndDate(dailyAccountManager.getManagerId(),dailyAccountManager.getReportDate());
+			//mv.addObject("gxperformList", managerPerformmanceold);
 			mv.addObject("dailyAccountManager", dailyAccountManager);
 		}
 		return mv;

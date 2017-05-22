@@ -435,13 +435,8 @@
 				FROM (
 				select distinct tym.YWBH,tym.ID,tym.KHH,tym.KHMC,tym.ZJHM,tym.SSBM,tym.SJ,tym.SXED,tym.GHJL,tym.LOANDATE, tym.DQRQ,tym.DKQX,
 tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0) as DELAYINTERESTDAYS ,  nvl(tym.DELAYAMTDAYS,0) as DELAYAMTDAYS,
-        tym.DLAYDT,tym.SHBJ,tym.JKJE,tym.KSQXRQ,nvl(sum(lsz.df)-tkmx.ffje,0) as PAYDEBT,DKYE as YE ,tym.BNQX,tym.BWQX,sum(tym.DKYE+tym.BNQX+tym.BWQX) as dlayamtsum,tym.BALAMT ,tym.YXYE,tym.USERID as  userid,tym.DISPLAY_NAME as display_name
-                 from ty_mibusidata tym,
-                 ty_repay_tkmx tkmx,
-                 ty_repay_lsz lsz 
-                 where 1=1  and
-                 tym.ywbh=tkmx.ywbh and
-                 tkmx.jjh=lsz.jjh 
+        tym.DLAYDT,tym.SHBJ,tym.JKJE,DKYE as YE ,tym.BNQX,tym.BWQX,tym.PAYDEBT,sum(tym.DKYE+tym.BNQX+tym.BWQX) as dlayamtsum,tym.BALAMT ,tym.YXYE,tym.USERID as  userid,tym.DISPLAY_NAME as display_name
+                 from ty_mibusidata tym  where 1=1
 			           <if test="userId != null and userId != '' and userId !='000001'">
 			             and tym.USERID  =#{userId}
 				         </if>
@@ -451,8 +446,8 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0) as DELAYINTERESTDAYS ,  nvl(tym
 						<if test="customerName != null and customerName != '' ">
 							AND tym.KHMC=#{customerName}
 						</if>
-						  group by tym.YWBH,tym.ID,tym.KHH,tym.KHMC,tym.ZJHM,tym.SSBM,tym.SJ,tym.SXED,tym.GHJL,tym.LOANDATE, tym.DQRQ,tym.DKQX,
-tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),tkmx.ffje,
+						 group by tym.YWBH,tym.ID,tym.KHH,tym.KHMC,tym.ZJHM,tym.SSBM,tym.SJ,tym.SXED,tym.GHJL,tym.LOANDATE, tym.DQRQ,tym.DKQX,
+tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
         tym.DLAYDT,tym.SHBJ,tym.JKJE,tym.KSQXRQ,tym.PAYDEBT,DKYE ,tym.BNQX,tym.BWQX ,tym.BALAMT ,tym.YXYE,tym.USERID ,tym.DISPLAY_NAME
          order by tym.LOANDATE
 					<!--   select
@@ -520,10 +515,14 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),tkm
 	
 	
 	<select id="findTzJnListCountByFilter" resultType="int" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
-	  	select count(*)  from t_mibusidata_view where 1=1
+	  	select count(distinct  YWBH)  from ty_mibusidata where 1=1
+
 	  	<if test="busiCode != null and busiCode != '' ">
 			AND trim(BUSICODE)=#{busiCode}
 		</if>
+		   <if test="userId != null and userId != '' and userId !='000001'">
+			             and USERID  =#{userId}
+				         </if>
 		
 	  	<if test="customerName != null and customerName != '' ">
 			AND cname =#{customerName}
@@ -683,10 +682,11 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),tkm
 	
 	<!-- 信贷流程跟踪表 -->
 	<select id="queryCreditProcess" resultMap="CreditProcess">
-		  SELECT *from 
+		   SELECT *from 
 		  (SELECT ROW_.*,ROWNUM ROWNUM_
 				FROM (
 					  select 
+					  distinct  cai.id,
             bai.spmc,
             bai.chinese_name,
             (select t.name from sys_department t where t.id in 
@@ -714,8 +714,7 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),tkm
              when cai.id in (select capid from CUSTOMER_APPLICATION_SDH) then
              '审批结束' 
              else
-	          ''  end) as status,
-             cai.id
+	          ''  end) as status
               from customer_application_info cai  
 				  	  left join customer_application_process aa on cai.id=aa.application_id
 			          left join basic_customer_information bai on cai.customer_id=bai.id
@@ -737,11 +736,12 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),tkm
 						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
 					WHERE ROWNUM_ > #{limit}*#{page}
 					]]>
+
 	</select>
 	
 	<!-- 统计行数 -->
 	<select id="querySize" resultType="int" parameterType="com.cardpay.pccredit.postLoan.model.CreditProcess">
-		  select count(*)
+		 select count(distinct cai.id)
 			  			from customer_application_info cai  
 				  	  left join customer_application_process aa on cai.id=aa.application_id
 			          left join basic_customer_information bai on cai.customer_id=bai.id
@@ -792,7 +792,7 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),tkm
            '初审通过'
            when cai.status ='approved' or cai.status ='end' then
            '决议通过'
-           else '' end) as examine_result，
+           else '' end) as examine_result,
            (case 
            when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) 
             and sdh.sdtime is null then

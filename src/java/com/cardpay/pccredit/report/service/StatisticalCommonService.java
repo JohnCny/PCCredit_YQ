@@ -1,7 +1,9 @@
 package com.cardpay.pccredit.report.service;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,10 @@ import org.springframework.stereotype.Service;
 
 import com.cardpay.pccredit.common.PieJsonData;
 import com.cardpay.pccredit.customer.filter.FkRankingFilter;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
+import com.cardpay.pccredit.manager.form.ManagerPerformmanceForm;
+import com.cardpay.pccredit.manager.service.ManagerPerformmanceService;
 import com.cardpay.pccredit.report.dao.StatisticalCommonDao;
 import com.cardpay.pccredit.report.model.NameValueRecord;
 
@@ -26,7 +32,8 @@ import com.cardpay.pccredit.report.model.NameValueRecord;
 public class StatisticalCommonService {
 	@Autowired
 	private StatisticalCommonDao statisticalCommonDao;
-	
+	@Autowired
+	private ManagerPerformmanceService managerPerformmanceService;
 	/**
      * 统计当前进件状况
      * @param filter
@@ -266,5 +273,33 @@ public class StatisticalCommonService {
 	public List<FkRankingFilter> queryFkRanking() {
 		// TODO Auto-generated method stub
 		return statisticalCommonDao.queryFkRanking();
+	}
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
+	//统计月季贷款总额
+	public String tjsydk(){
+		 MonthlyStatisticsModel StatisticsModel =new MonthlyStatisticsModel();
+		 Date d = new Date();  
+	      SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy");  
+	      String dateNowStr = sdf1.format(d);  
+	      StatisticsModel.setCustomeryeah(Integer.parseInt(dateNowStr));
+	      List<MonthlyStatisticsModel> result=StatisticsService.selectTeamYear(StatisticsModel);
+	List<Double> list = new ArrayList<Double>();
+	list.add(0, Double.valueOf(result.get(0).getCustomerJanuary()));
+	list.add(1, Double.valueOf(result.get(0).getCustomerFebruary()));
+	list.add(2, Double.valueOf(result.get(0).getCustomerMarch()));
+	list.add(3, Double.valueOf(result.get(0).getCustomerApril()));
+	list.add(4, Double.valueOf(result.get(0).getCustomerMay()));
+	list.add(5, Double.valueOf(result.get(0).getCustomerJune()));
+	list.add(6, Double.valueOf(result.get(0).getCustomerJuly()));
+	list.add(7, Double.valueOf(result.get(0).getCustomerAugust()));
+	list.add(8, Double.valueOf(result.get(0).getCustomerSeptember()));
+	list.add(9, Double.valueOf(result.get(0).getCustomerOctober()));
+	list.add(10, Double.valueOf(result.get(0).getCustomerNovember()));
+	list.add(11, Double.valueOf(result.get(0).getCustomerDecember()));
+	List<MonthlyStatisticsModel> result1=StatisticsService.selectTeamYear(StatisticsModel);
+    double money=result1.get(0).getTotalAmount();
+	list.add(12, Double.valueOf(money));
+	return JSONArray.fromObject(list).toString();
 	}
 }
