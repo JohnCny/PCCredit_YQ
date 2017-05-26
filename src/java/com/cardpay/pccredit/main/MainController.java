@@ -251,6 +251,7 @@ public class MainController {
 		   // mv.addObject("organApplicationblJson",statisticalCommonService.statisticalblorgan());
 		    //放款排名
 		    List<FkRankingFilter> fk=statisticalCommonService.queryFkRanking();
+		    mv.addObject("sydk",statisticalCommonService.tjsydk());
 		    mv.addObject("fk",fk);
 		    long end = System.currentTimeMillis();
 			//System.out.println("查询时间花费：" + (end - start) + "毫秒");

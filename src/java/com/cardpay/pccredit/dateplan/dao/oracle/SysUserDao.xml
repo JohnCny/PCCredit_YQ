@@ -103,7 +103,7 @@ insert into SYS_DATEPLAN (ID,USERID,GXUSERID,ZDTIME,MBSL,ZT,WCQK,WHSL,DCSL,DHSL)
 		<select id="selectdhsl" resultMap="ResultMap2" parameterType="com.cardpay.pccredit.dateplan.model.datePlanModel">	
 		select cc.zdtime as zdtime from(select t.created_time as zdtime from dh_appln_attachment_list t ,BASIC_CUSTOMER_INFORMATION b
 		where t.CUSTOMER_ID=b.id and 
-		b.user_id=#{id})cc
+		b.user_id=#{id} and t.created_time is not null)cc
       </select>
       
 			<select id="selectzgUser" resultMap="ResultMap1" parameterType="com.cardpay.pccredit.dateplan.model.JBUser">	

@@ -45,7 +45,7 @@
 		AND c.created_by=#{userId}
 		</if>
 		and c.user_id is null
-		
+		    and c.created_by is not null
 		) ROW_)
 </select>
 

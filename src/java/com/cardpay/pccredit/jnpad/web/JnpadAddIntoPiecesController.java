@@ -91,6 +91,7 @@ public class JnpadAddIntoPiecesController {
 				String productId = request.getParameter("productId");
 				String customerId = request.getParameter("customerId");
 				String applicationId = request.getParameter("applicationId");
+				
 				jnpadaddIntoPiecesService.importImage(file,productId,customerId,applicationId);
 				map.put(JRadConstants.SUCCESS, true);
 				map.put(JRadConstants.MESSAGE, CustomerInforConstant.IMPORTSUCCESS);
