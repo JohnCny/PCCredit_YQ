@@ -2106,9 +2106,9 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 	  (#{customermanager},#{fkmoney},#{organization})
 	</insert>
 	
-	<delete id="deletelastmibusidata"  >
+	<select id="deletelastmibusidata"  >
 			truncate table ty_mibusidata
-	</delete>
+	</select>
 	
 	<select id="findmibusidata"  resultMap="MibusidataMap">
 			select * from Mibusidata
@@ -2121,9 +2121,9 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 	#{DLAYDT},#{SHBJ},#{JKJE},#{KSQXRQ},#{PAYDEBT},#{DKYE},#{BNQX},#{BWQX},#{BALAMT},#{YXYE},#{WJFL3},#{WJFL4},#{WJFL5},#{OPERDATETIME},#{USERID},#{DISPLAY_NAME},#{YWJG}) 
 	</insert>
 	
-	<delete id="truncateLshtylist"  >
+	<select id="truncateLshtylist"  >
 			truncate table LSHTYLIST
-	</delete>
+	</select>
 	
 	<select id="findLshJnListByFilter"  resultMap="lszform">
 			 select
@@ -2209,7 +2209,7 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 	</select>
 	
 	<select id="findtkmxJnListByFilter"  resultMap="BaseResultMap">
-						
+			
 select distinct tkmx.ywbh as ywbh,
               base.khmc as cname,
               base.zjhm as zjhm,
@@ -2263,8 +2263,6 @@ select distinct tkmx.ywbh as ywbh,
                      group by tkmx.ywbh, base.khmc,base.zjhm,tkmx.jkrq, base.Zjlx,sysuser.id,
               tkmx.ffje,yehz.DKYE,yehz.bnqx,yehz.bwqx,tkmx.dqrq,base.khh,base.Khlx
             order  by tkmx.jkrq
-
-            
 	</select>
 	
 	<insert id="insertTkmxtylist" parameterType="com.cardpay.pccredit.customer.model.TyRepayTkmxForm">

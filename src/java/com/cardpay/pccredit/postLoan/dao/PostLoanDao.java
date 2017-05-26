@@ -109,4 +109,7 @@ public interface PostLoanDao {
 	List<CreditProcess> queryAll(String id);
 	List<CreditProcess> creditProcessExportQueryAll(CreditProcess filter);
 	List<CreditProcess> queryByCardId(String cardId);
+	List<CreditProcess> findwfsr(String id);
+	List<CreditProcess> findsplist(String id);
+	List<CreditProcess> findcaslist(String id);
 }

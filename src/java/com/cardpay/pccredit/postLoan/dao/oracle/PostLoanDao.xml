@@ -38,7 +38,35 @@
 		<result column="id" 		property="id" />
 		<result column="CARD_ID" 		property="cardId" />
 		<result column="carId" 		property="zjmh" />
+		
+		<result column="USER_ID_4" 		property="userid4" />
+		<result column="START_EXAMINE_TIME" 		property="startexaminetime" />
+		<result column="cssptime" 		property="cssptime" />
+		<result column="DBFS" 		property="dbfs" />
+		<result column="EXAMINE_RESULT" 		property="examineresult" />
+		<result column="user_id_1" 		property="userid1" />
+		<result column="user_id_2" 		property="userid2" />
+		<result column="user_id_3" 		property="userid3" />
+		<result column="qx" 		property="qx" />
+		<result column="examine_lv" 		property="examinelv" />
+		<result column="sptime" 		property="sptime" />
+		<result column="sdjytime" 		property="sdjytime" />
+		<result column="spje" 		property="spje" />
+		<result column="splv" 		property="splv" />
+		<result column="spqx" 		property="spqx" />
+		<result column="beizhu" 		property="beizhu" />
+		<result column="jlyy" 		property="jlyy" />
+		<result column="zsw" 		property="zsw" />
+		<result column="sdwuser1" 		property="sdwuser1" />
+		<result column="sdtime" 		property="sdtime" />
+		<result column="sdqx" 		property="sdqx" />
+		<result column="sdje" 		property="sdje" />
+		<result column="lv" 		property="lv" />
+		<result column="jjyy" 		property="jjyy" />
+		<result column="sdwuser1yj" 		property="sdwuser1yj" />
  	 </resultMap>
+ 	 
+ 	
 	
 	 <resultMap id="MibusidateView" type="com.cardpay.pccredit.postLoan.model.MibusidateView" >
 	<result column="YWBH" property="YWBH" jdbcType="VARCHAR" />
@@ -516,13 +544,9 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
 	
 	<select id="findTzJnListCountByFilter" resultType="int" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
 	  	select count(distinct  YWBH)  from ty_mibusidata where 1=1
-
 	  	<if test="busiCode != null and busiCode != '' ">
 			AND trim(BUSICODE)=#{busiCode}
 		</if>
-		   <if test="userId != null and userId != '' and userId !='000001'">
-			             and USERID  =#{userId}
-				         </if>
 		
 	  	<if test="customerName != null and customerName != '' ">
 			AND cname =#{customerName}
@@ -682,7 +706,7 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
 	
 	<!-- 信贷流程跟踪表 -->
 	<select id="queryCreditProcess" resultMap="CreditProcess">
-		   SELECT *from 
+		  SELECT *from 
 		  (SELECT ROW_.*,ROWNUM ROWNUM_
 				FROM (
 					  select 
@@ -736,12 +760,11 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
 						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
 					WHERE ROWNUM_ > #{limit}*#{page}
 					]]>
-
 	</select>
 	
 	<!-- 统计行数 -->
 	<select id="querySize" resultType="int" parameterType="com.cardpay.pccredit.postLoan.model.CreditProcess">
-		 select count(distinct cai.id)
+		  select count(distinct cai.id)
 			  			from customer_application_info cai  
 				  	  left join customer_application_process aa on cai.id=aa.application_id
 			          left join basic_customer_information bai on cai.customer_id=bai.id
@@ -761,7 +784,7 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
 	
 	<!-- 显示详情 -->
 	<select id="queryAll" resultMap="CreditProcess" parameterType="String">
-		     select  bai.spmc, bai.chinese_name,
+		     select  distinct cai.id,bai.spmc, bai.chinese_name,
              (select t.name from sys_department t where t.id in 
              (select tt.dept_id from sys_dept_user tt where tt.user_id = su.id)) as teamname,
              (select org.name from sys_organization org where id in(select t.org_id from sys_department t where t.id in 
@@ -792,7 +815,7 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
            '初审通过'
            when cai.status ='approved' or cai.status ='end' then
            '决议通过'
-           else '' end) as examine_result,
+           else '' end) as examine_result，
            (case 
            when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) 
             and sdh.sdtime is null then
@@ -839,6 +862,18 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
                   where 1=1 and cai.id=#{id}
               
 	</select>
+	
+	<select id="findwfsr" resultMap="CreditProcess" parameterType="String">
+   			select * from findwfsrs where 1=1 and id=#{id}
+	    </select>
+	    
+	    <select id="findsplist" resultMap="CreditProcess" parameterType="String">
+   			select * from findsplists where 1=1 and id=#{id}
+	    </select>
+	    
+	     <select id="findcaslist" resultMap="CreditProcess" parameterType="String">
+   			select * from findcaslist where 1=1 and id=#{id} and zsw='1'
+	    </select>
 	
 	<!-- 导出-->
 	<select id="creditProcessExportQueryAll" resultMap="CreditProcess" parameterType="com.cardpay.pccredit.postLoan.model.CreditProcess">
