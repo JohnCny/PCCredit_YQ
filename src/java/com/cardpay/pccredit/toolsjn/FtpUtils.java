@@ -20,11 +20,11 @@ import com.wicresoft.util.spring.Beans;
 public class FtpUtils {
 	public static String bank_ftp_host="10.96.1.14";  	        // 数据库地址 生产
 	//public static String bank_ftp_host="61.98.0.31";  		// ftp地址 测试
-	public static int bank_ftp_port = 21;						// ftp端口
+	public static int bank_ftp_port = 22;						// ftp端口
 	public static String bank_ftp_username="root";  			// ftp用户名
 	public static String bank_ftp_password="qkjr123";  			// ftp密码
 	public static String bank_ftp_path="/home/xwdftp/";     	    // 数据库存放下发压缩包文件目录
-	
+	//public static String bank_ftp_path="/";
 	//public static String bank_ftp_down_path="D:/xwd31/"; // 下载本地目
 	public static String bank_ftp_down_path="/xwd31/"; 			// 解析压缩包所放运行服务器目录
 	private ChannelSftp sftp = null;
@@ -54,6 +54,7 @@ public class FtpUtils {
 		Channel channel = session.openChannel("sftp");
 
 		channel.connect();
+		System.out.println("1111111");
 		sftp = (ChannelSftp) channel;
 		sftp.setFilenameEncoding("GBK");
 	}

@@ -157,13 +157,13 @@ public class CustomerInforService {
 	
 	@Autowired
 	private MonthlyStatisticsDao StatisticsDao;  
-	
 	//客户原始信息
     //todo:文件换成济南的
-	private String[] fileTxt = {"kkh_grxx.txt","kkh_grjtcy.txt","kkh_grjtcc.txt","kkh_grscjy.txt","kkh_grxxll.txt","kkh_grgzll.txt","kkh_grrbxx.txt","cxd_dkcpmc.txt","kkh_hmdgl.txt","cxd_rygl.txt"};
+
+	private String[] fileTxt = {"cxd_rygl.txt","kkh_grxx.txt","kkh_grjtcy.txt","kkh_grjtcc.txt","kkh_grxxll.txt","kkh_grgzll.txt","kkh_grscjy.txt","kkh_grrbxx.txt","cxd_dkcpmc.txt","kkh_hmdgl.txt"};
 	//流水账、余额汇总表、借据表
     //todo:文件换成济南的
-	private String[] fileTxtRepay ={"kdk_yehz.txt","kdk_lsz.txt","kdk_tkmx.txt","kdk_jh.txt"};
+	private String[] fileTxtRepay ={"kdk_yehz.txt","kdk_jh.txt"};
 	/**
 	 * 得到该客户经理下的客户数量
 	 * @param userId
@@ -2583,7 +2583,7 @@ public class CustomerInforService {
 								throw new RuntimeException(e);
 							}
 						}
-						f.delete();
+						//f.delete();
 				}
 	        }
 	        log.info(dateString+"******************完成读取贷款文件********************");
@@ -4867,7 +4867,7 @@ public class CustomerInforService {
 			/**
 			 * 添加去年的贷款信息，只限2016年，客户经理全部录入完成后此方法删除
 			 */
-		/*	MonthlyStatisticsModel model1=new MonthlyStatisticsModel();
+			MonthlyStatisticsModel model1=new MonthlyStatisticsModel();
 			model1.setUserId(result.get(i).getUserId());
 			model1.setId(IDGenerator.generateID());
 			model1.setTeam(result.get(i).getTeam());
@@ -4885,7 +4885,7 @@ public class CustomerInforService {
 			model1.setCustomerNovember(0);
 			model1.setCustomerOctober(0);
 			model1.setCustomerSeptember(0);
-			StatisticsDao.insertMonthlyStatistics(model1);*/
+			StatisticsDao.insertMonthlyStatistics(model1);
 		}
 		log.info("******************开始查询所有客户经理********************");  
 		List<ManagerPerformmanceForm>result1=managerPerformmanceDao.selectAllManager();

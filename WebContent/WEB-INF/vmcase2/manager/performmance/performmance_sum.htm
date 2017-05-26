@@ -81,7 +81,7 @@
 						<td class="titlefc3"><label for="givemoneycount">放款金额:</label></td>
 						</tr>
 						 #foreach($gxperformList in $!gxperformList)
-						 #if($gxperformList.ordteam=="总计" || $gxperformList.team=="总计" || $gxperformList.ordteam=="汇总" || $gxperformList.team=="汇总")
+						 #if($gxperformList.ordteam=="累计" || $gxperformList.team=="累计" || $gxperformList.ordteam=="总计" || $gxperformList.team=="总计" || $gxperformList.ordteam=="汇总" || $gxperformList.team=="汇总")
 						<td class="titlefc3">$gxperformList.ordteam</td>
 						<td class="titlefc3">$gxperformList.team</td>
 						<td class="titlefc3">$gxperformList.name</td>

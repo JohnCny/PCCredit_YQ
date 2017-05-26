@@ -37,7 +37,7 @@ public class OdsTools_jn {
 	//private static ChannelSftp csftp = null;  
 	public String curRemotePath = "";//本次下载服务器目录
 	//private String[] fileName = {"20170307.zip"};
-	private String[] fileName = {"kkh_grxx.zip","kkh_grjtcy.zip","kkh_grjtcc.zip","kkh_grscjy.zip","kkh_grxxll.zip","kkh_grgzll.zip","kkh_grrbxx.zip","kdk_yehz.zip","kdk_lsz.zip","kdk_tkmx.zip","cxd_dkcpmc.zip","kkh_hmdgl.zip","cxd_rygl.zip","kdk_jh.zip"};
+	private String[] fileName = {"kkh_grxx.zip","kkh_grjtcy.zip","kkh_grjtcc.zip","kkh_grscjy.zip","kkh_grxxll.zip","kkh_grgzll.zip","kkh_grrbxx.zip","kdk_yehz.zip","cxd_dkcpmc.zip","kkh_hmdgl.zip","kdk_lsz.zip","kdk_tkmx.zip","cxd_rygl.zip","kdk_jh.zip"};
 	@Autowired
 	private CustomerInforService customerInforService;
 	
@@ -56,7 +56,6 @@ public class OdsTools_jn {
 			curRemotePath = curRemotePath+dateString+"/";
 			//获取文件列表
 			ArrayList<String> files = sftp.getList(curRemotePath);
-			System.out.println(files.size());
 			//处理ftp文件
 			processFtpFile(sftp, files);
 			//update task
@@ -94,7 +93,6 @@ public class OdsTools_jn {
 		 File url = new File(downloadPath);
 		 //本地创建当日数据文件夹
         if(!url.exists()){ 
-        	System.out.println("123");
         	url.mkdirs();  
         }
 		while(pathIterator.hasNext()){
