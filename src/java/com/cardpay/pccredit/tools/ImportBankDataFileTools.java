@@ -139,6 +139,7 @@ public class ImportBankDataFileTools {
 	            	}
 	            	if(!StringUtils.isEmpty(value)){
 		            	value=value.replaceAll(" ","");
+		            	value=value.replace("“", "");
 	            		value=value.replace("\"", "");
 	            	}
 	            	if("$".equals(value)){

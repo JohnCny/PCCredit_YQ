@@ -222,9 +222,9 @@ public class DailyReportScheduleService {
 		return PARAM;
 	}
 	
-	/*public String findServer4(){
-		String sql = "select * from dict where dict_type = '61.34.0.34' ";
+	public String findServer4(){
+		String sql = "select * from dict where dict_type = '10.96.1.2' ";
 		String PARAM = (String) commonDao.queryBySql(sql, null).get(0).get("TYPE_CODE");
 		return PARAM;
-	}*/
+	}
 }
