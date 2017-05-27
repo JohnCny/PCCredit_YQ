@@ -56,8 +56,15 @@ private String sdje;
 private String lv;
 private String jjyy;
 private String sdwuser1yj;
+private String productname;
 
 
+public String getProductname() {
+	return productname;
+}
+public void setProductname(String productname) {
+	this.productname = productname;
+}
 public String getSdwuser1yj() {
 	return sdwuser1yj;
 }
