@@ -64,9 +64,8 @@
 		<result column="lv" 		property="lv" />
 		<result column="jjyy" 		property="jjyy" />
 		<result column="sdwuser1yj" 		property="sdwuser1yj" />
+		<result column="productname" 		property="productname" />
  	 </resultMap>
- 	 
- 	
 	
 	 <resultMap id="MibusidateView" type="com.cardpay.pccredit.postLoan.model.MibusidateView" >
 	<result column="YWBH" property="YWBH" jdbcType="VARCHAR" />
@@ -544,9 +543,13 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
 	
 	<select id="findTzJnListCountByFilter" resultType="int" parameterType="com.cardpay.pccredit.postLoan.filter.PostLoanFilter">
 	  	select count(distinct  YWBH)  from ty_mibusidata where 1=1
+
 	  	<if test="busiCode != null and busiCode != '' ">
 			AND trim(BUSICODE)=#{busiCode}
 		</if>
+		   <if test="userId != null and userId != '' and userId !='000001'">
+			             and USERID  =#{userId}
+				         </if>
 		
 	  	<if test="customerName != null and customerName != '' ">
 			AND cname =#{customerName}
@@ -706,7 +709,7 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
 	
 	<!-- 信贷流程跟踪表 -->
 	<select id="queryCreditProcess" resultMap="CreditProcess">
-		  SELECT *from 
+		   SELECT *from 
 		  (SELECT ROW_.*,ROWNUM ROWNUM_
 				FROM (
 					  select 
@@ -760,11 +763,12 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
 						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
 					WHERE ROWNUM_ > #{limit}*#{page}
 					]]>
+
 	</select>
 	
 	<!-- 统计行数 -->
 	<select id="querySize" resultType="int" parameterType="com.cardpay.pccredit.postLoan.model.CreditProcess">
-		  select count(distinct cai.id)
+		 select count(distinct cai.id)
 			  			from customer_application_info cai  
 				  	  left join customer_application_process aa on cai.id=aa.application_id
 			          left join basic_customer_information bai on cai.customer_id=bai.id
@@ -784,7 +788,7 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
 	
 	<!-- 显示详情 -->
 	<select id="queryAll" resultMap="CreditProcess" parameterType="String">
-		     select  distinct cai.id,bai.spmc, bai.chinese_name,
+		     select  bai.spmc, bai.chinese_name,
              (select t.name from sys_department t where t.id in 
              (select tt.dept_id from sys_dept_user tt where tt.user_id = su.id)) as teamname,
              (select org.name from sys_organization org where id in(select t.org_id from sys_department t where t.id in 
@@ -815,7 +819,7 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
            '初审通过'
            when cai.status ='approved' or cai.status ='end' then
            '决议通过'
-           else '' end) as examine_result，
+           else '' end) as examine_result,
            (case 
            when cai.id  in (select application_id from T_APP_MANAGER_AUDIT_LOG) 
             and sdh.sdtime is null then
@@ -863,7 +867,7 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
               
 	</select>
 	
-	<select id="findwfsr" resultMap="CreditProcess" parameterType="String">
+		<select id="findwfsr" resultMap="CreditProcess" parameterType="String">
    			select * from findwfsrs where 1=1 and id=#{id}
 	    </select>
 	    
