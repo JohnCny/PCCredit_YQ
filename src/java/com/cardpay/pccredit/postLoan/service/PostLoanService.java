@@ -195,4 +195,16 @@ public class PostLoanService {
 		// TODO Auto-generated method stub
 		return postLoanDao.queryByCardId(cardId);
 	}
+	public List<CreditProcess> findwfsr(String id) {
+		// TODO Auto-generated method stub
+		return postLoanDao.findwfsr(id);
+	}
+	public List<CreditProcess> findsplist(String id) {
+		// TODO Auto-generated method stub
+		return postLoanDao.findsplist(id);
+	}
+	public List<CreditProcess> findcaslist(String id) {
+		// TODO Auto-generated method stub
+		return postLoanDao.findcaslist(id);
+	}
 	}

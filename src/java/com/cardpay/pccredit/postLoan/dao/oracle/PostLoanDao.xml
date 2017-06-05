@@ -38,6 +38,33 @@
 		<result column="id" 		property="id" />
 		<result column="CARD_ID" 		property="cardId" />
 		<result column="carId" 		property="zjmh" />
+		
+		<result column="USER_ID_4" 		property="userid4" />
+		<result column="START_EXAMINE_TIME" 		property="startexaminetime" />
+		<result column="cssptime" 		property="cssptime" />
+		<result column="DBFS" 		property="dbfs" />
+		<result column="EXAMINE_RESULT" 		property="examineresult" />
+		<result column="user_id_1" 		property="userid1" />
+		<result column="user_id_2" 		property="userid2" />
+		<result column="user_id_3" 		property="userid3" />
+		<result column="qx" 		property="qx" />
+		<result column="examine_lv" 		property="examinelv" />
+		<result column="sptime" 		property="sptime" />
+		<result column="sdjytime" 		property="sdjytime" />
+		<result column="spje" 		property="spje" />
+		<result column="splv" 		property="splv" />
+		<result column="spqx" 		property="spqx" />
+		<result column="beizhu" 		property="beizhu" />
+		<result column="jlyy" 		property="jlyy" />
+		<result column="zsw" 		property="zsw" />
+		<result column="sdwuser1" 		property="sdwuser1" />
+		<result column="sdtime" 		property="sdtime" />
+		<result column="sdqx" 		property="sdqx" />
+		<result column="sdje" 		property="sdje" />
+		<result column="lv" 		property="lv" />
+		<result column="jjyy" 		property="jjyy" />
+		<result column="sdwuser1yj" 		property="sdwuser1yj" />
+		<result column="productname" 		property="productname" />
  	 </resultMap>
 	
 	 <resultMap id="MibusidateView" type="com.cardpay.pccredit.postLoan.model.MibusidateView" >
@@ -839,6 +866,18 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
                   where 1=1 and cai.id=#{id}
               
 	</select>
+	
+		<select id="findwfsr" resultMap="CreditProcess" parameterType="String">
+   			select * from findwfsrs where 1=1 and id=#{id}
+	    </select>
+	    
+	    <select id="findsplist" resultMap="CreditProcess" parameterType="String">
+   			select * from findsplists where 1=1 and id=#{id}
+	    </select>
+	    
+	     <select id="findcaslist" resultMap="CreditProcess" parameterType="String">
+   			select * from findcaslist where 1=1 and id=#{id} and zsw='1'
+	    </select>
 	
 	<!-- 导出-->
 	<select id="creditProcessExportQueryAll" resultMap="CreditProcess" parameterType="com.cardpay.pccredit.postLoan.model.CreditProcess">
