@@ -16,8 +16,11 @@
 <!-- 绗竴绉�閮藉湪鍚屼竴缁�涓�粍閲岄潰寰堝涓�-->
 	<div class="gallery" style="margin-left:100px">
 	    #foreach($result in $list)
-	    <a  href="data:image/png;base64,$!result" data-size="1000x800" data-med="data:image/png;base64,$!result" data-med-size="1920x1200">
+	  <!--   <a  href="data:image/png;base64,$!result" data-size="1000x800" data-med="data:image/png;base64,$!result" data-med-size="1920x1200">
 			<img  width="350" height="250" src="data:image/png;base64,$!result"/>
+		</a> -->
+		<a  href="http://192.168.191.1:8080/PCCredit/ipad/JnpadImageBrowse/downLoadYxzlJn.json?id=$!result" data-size="1000x800" data-med="http://192.168.191.1:8080/PCCredit/ipad/JnpadImageBrowse/downLoadYxzlJn.json?id=$!result" data-med-size="1920x1200">
+			<img  width="350" height="250" src="http://192.168.191.1:8080/PCCredit/ipad/JnpadImageBrowse/downLoadYxzlJn.json?id=$!result"/>
 		</a>
 #end
 	</div>

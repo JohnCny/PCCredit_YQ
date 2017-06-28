@@ -166,6 +166,7 @@ public class CustomerInfo_wh_TY_Controller extends BaseController {
 			icount=Integer.parseInt(count);
 		}
 		List<LocalExcel> result=addIntoPiecesService.findAllTimeById(pid,cid);
+		
 		mv.addObject("result", result);
 		LocalExcel localExcel1=null;
 			if(icount!=0){

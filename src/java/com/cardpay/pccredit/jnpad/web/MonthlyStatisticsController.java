@@ -85,7 +85,7 @@ public class MonthlyStatisticsController {
       String team=request.getParameter("team");
       String yeardate=request.getParameter("year");
       Integer formatDate=0;
-      List<MonthlyStatisticsModel> resultModel=null;
+     MonthlyStatisticsModel resultModel=null;
       MonthlyStatisticsModel Model=new MonthlyStatisticsModel();
       //查询团队当年的月季贷款信息
       if(yeardate.equals("0")){
@@ -101,8 +101,8 @@ public class MonthlyStatisticsController {
       //计算团队年份贷款总额
       MonthlyStatisticsModel Model1=new MonthlyStatisticsModel();
       Model1.setTeam(team);
-      List<MonthlyStatisticsModel>result= StatisticsService.selectTeamYear(Model1);
-      double money=result.get(0).getTotalAmount();
+      MonthlyStatisticsModel result= StatisticsService.selectTeamYear(Model1);
+      double money=result.getTotalAmount();
       Map<String,Object> map = new LinkedHashMap<String,Object>();
       map.put("resultModel", resultModel);
       map.put("money", money);
@@ -124,7 +124,7 @@ public class MonthlyStatisticsController {
 	public String selectAllTeamxq(HttpServletRequest request) {
       String yeardate=request.getParameter("yaar");
       Integer formatDate=0;
-      List<MonthlyStatisticsModel> resultModel=null;
+     MonthlyStatisticsModel resultModel=null;
       MonthlyStatisticsModel Model=new MonthlyStatisticsModel();
       //查询全部的月季贷款信息
       if(yeardate.equals("0")){
@@ -138,8 +138,8 @@ public class MonthlyStatisticsController {
       resultModel=StatisticsService.selectTeamYear(Model);
       //查询贷款总额
       MonthlyStatisticsModel StatisticsModel =new MonthlyStatisticsModel();
-      List<MonthlyStatisticsModel> result=StatisticsService.selectTeamYear(StatisticsModel);
-      double money=result.get(0).getTotalAmount();
+      MonthlyStatisticsModel result=StatisticsService.selectTeamYear(StatisticsModel);
+      double money=result.getTotalAmount();
       List<MonthlyStatisticsModel> team=StatisticsService.selectAllteam();
       for(int a=0;a<team.size();a++){
     	  if(team.get(a).getOrgteam().equals("阳泉市农村信用社")){
@@ -168,7 +168,7 @@ public class MonthlyStatisticsController {
       String team=request.getParameter("team");
       String yeardate=request.getParameter("customeryeah");
       String orgteam=request.getParameter("orgteam");
-      List<MonthlyStatisticsModel> resultModel=null;
+      MonthlyStatisticsModel resultModel=null;
       MonthlyStatisticsModel Model=new MonthlyStatisticsModel();
       Model.setCustomeryeah(Integer.parseInt(yeardate));
       if(!team.equals("0")){
@@ -186,8 +186,8 @@ public class MonthlyStatisticsController {
       if(!orgteam.equals("0")){
     	  Model1.setOrgteam(orgteam);
       }
-      List<MonthlyStatisticsModel>result= StatisticsService.selectTeamYear(Model1);
-      double money=result.get(0).getTotalAmount();
+      MonthlyStatisticsModel result= StatisticsService.selectTeamYear(Model1);
+      double money=result.getTotalAmount();
       Map<String,Object> map = new LinkedHashMap<String,Object>();
       map.put("result", resultModel);
       map.put("money", money);

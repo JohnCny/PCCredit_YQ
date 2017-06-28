@@ -470,27 +470,40 @@ public class ManagerPerformmanceController extends BaseController {
 			gxperformList.add(count+form.size(), form1);
 			count+=form.size()+1;
 		}
-		
+		List<ManagerPerformmanceForm>result2=managerPerformmanceService.selectAllManegerTeam();
+		for(int c=result2.size()-1;c>=0;c--){
+			result2.get(c).setCrateday(dateNowStr);
+			if(result2.get(c).getTeam().equals("管理团队")){
+				result2.remove(c);			}
+		}
+		for(int b=0;b<result2.size();b++){
+			for(int j=result2.size()-1;j>=0;j--){
+				if(j!=b){
+					if(result2.get(j).getOrdteam().equals(result2.get(b).getOrdteam())){
+						result2.remove(j);
+					}
+				}
+			}
+		}
 		for(int b=0;b<result.size();b++){
-			
 			for(int j=result.size()-1;j>=0;j--){
 				if(j!=b){
-					if(result.get(j).getOrdteam().equals(result.get(b).getOrdteam())){
+					if(result.get(j).getTeam().equals(result.get(b).getTeam())){
 						result.remove(j);
 					}
 				}
 			}
 		}
 		
-		for(int b=0;b<result.size();b++){
+		for(int b=0;b<result2.size();b++){
 			
 			ManagerPerformmanceForm Form1 =new ManagerPerformmanceForm();
-			Form1.setOrdteam(result.get(b).getOrdteam());
+			Form1.setOrdteam(result2.get(b).getOrdteam());
 			Form1.setCrateday(dateNowStr);
 			ManagerPerformmanceForm form1=managerPerformmanceService.selectAllTeamYj(Form1);
 			form1.setOrdteam("汇总");
-			form1.setTeam(result.get(b).getOrdteam());
-			form1.setName(result.get(b).getOrdteam());
+			form1.setTeam(result2.get(b).getOrdteam());
+			form1.setName(result2.get(b).getOrdteam());
 			gxperformList.add(count, form1);
 			count+=1;
 		}
@@ -503,6 +516,7 @@ public class ManagerPerformmanceController extends BaseController {
 			JRadModelAndView mv = new JRadModelAndView("/manager/performmance/performmance_sum", request);
 			mv.addObject("gxperformList", gxperformList);
 			mv.addObject("result", result);
+			mv.addObject("result2", result2);
 			return mv;
 			}else{
 				JRadModelAndView mv = new JRadModelAndView("/manager/performmance/performmance_sum1", request);
@@ -612,6 +626,7 @@ public class ManagerPerformmanceController extends BaseController {
 					}
 				}
 			}else{
+				
 				ManagerPerformmanceForm from1=new ManagerPerformmanceForm();
 				from.setOrdteam(orgteam);
 				from.setCrateday(dateNowStr);
@@ -645,13 +660,39 @@ public class ManagerPerformmanceController extends BaseController {
 				}
 			}
 			mv.addObject("gxperformList", gxperformList);
+			List<ManagerPerformmanceForm>result2=managerPerformmanceService.selectAllManegerTeam();
+			for(int c=result2.size()-1;c>=0;c--){
+				result2.get(c).setCrateday(dateNowStr);
+				if(result2.get(c).getTeam().equals("管理团队")){
+					result2.remove(c);			}
+			}
+			for(int b=0;b<result2.size();b++){
+				for(int j=result2.size()-1;j>=0;j--){
+					if(j!=b){
+						if(result2.get(j).getOrdteam().equals(result2.get(b).getOrdteam())){
+							result2.remove(j);
+						}
+					}
+				}
+			}
 			List<ManagerPerformmanceForm>result=managerPerformmanceService.selectAllManegerTeam();
 			for(int c=result.size()-1;c>=0;c--){
 				result.get(c).setCrateday(dateNowStr);
 				if(result.get(c).getTeam().equals("管理团队")){
 					result.remove(c);			}
 			}
+			for(int b=0;b<result.size();b++){
+				
+				for(int j=result.size()-1;j>=0;j--){
+					if(j!=b){
+						if(result.get(j).getTeam().equals(result.get(b).getTeam())){
+							result.remove(j);
+						}
+					}
+				}
+			}
 			mv.addObject("result", result);
+			mv.addObject("result2", result2);
 			return mv;
 		}
 		

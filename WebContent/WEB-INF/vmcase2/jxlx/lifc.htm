@@ -1,0 +1,344 @@
+#parse ("common/iframe_page_header.htm")
+<script src="${contextPath}/js/intopieces/intopieces.js" charset="utf-8"></script>
+<script type="text/javascript">
+</script>
+<body>
+  <div class="content_main">
+    <div class="contentinner">
+      <div class="place">
+        <div class="title">利息分拆系数设置</div>
+      </div>
+      <div class="inquiry">
+       <div class="search_tag">利息分拆系数设置</div>
+        <div class="search">
+          <form id="queryForm" action="${contextPath}/intopieces/intopiecesquery/browse.page" 
+          			onkeydown="javascript:if(event.keyCode==13) this.submit();">
+          <ul>
+            <li>
+               <span>客户名称：<input type="text" id="name" name="name"  /></span>
+              </li>
+            
+              <li>
+                 <span>所属团队：<select id="team" name="team"><option value="">请选择</option>
+               #dict("DEM","")
+                 </select></span>
+              </li>
+                <li>
+                 <span>所属机构：<select id="orgteam" name="orgteam"><option value="">请选择</option>
+                 #dict("Organizations","")
+                 </select></span>
+              </li>
+              <li class="search_button">
+                <input id="id_report_button" type="button" value="筛选" class="search_button_inquiry"
+                  title="筛选" style="height: 26px; line-height: 24px;" />
+              </li>
+            </ul>
+          </form>
+        </div>
+        <div id="topDiv" class="inquiry_list inquiry_top">
+          <table>
+            <colgroup>
+              <col width="5%" />
+			  <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+            </colgroup>
+             <tr class="title">
+              <th nowrap="nowrap"></th>
+              <th nowrap="nowrap">客户经理</th>
+              <th nowrap="nowrap">系数值</th>
+              <th nowrap="nowrap">所属团队</th>
+              <th nowrap="nowrap">所属机构</th>
+            </tr>
+          </table>
+        </div>
+        <div id="downDiv" class="inquiry_list inquiry_down">
+          <table>
+             <colgroup>
+              <col width="5%" />
+			  <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+            </colgroup>
+           #foreach ($customer in $result.items)
+            <tr>
+              <td class="checkbox"><input type="radio" name="checkbox" value="$!customer.userid"/>
+              <td nowrap="nowrap">$!customer.name</td>
+              <td nowrap="nowrap">$!customer.code</td>
+              <td nowrap="nowrap">$!customer.team</td>
+              <td nowrap="nowrap">$!customer.orgteam</td>
+            </tr>
+            #end
+
+
+          </table>
+        </div>
+      </div>
+      <div class="pagebar">
+        <div class="controlbtn">
+ 		     <a class="btn_g" href="javascript:void(0);" title="修改客户经理系数" id="upadatename">修改客户经理系数</a>
+        <a class="btn_g" href="javascript:void(0);" title="修改团队/机构系数" id="upadateam">修改团队/机构系数</a>
+		</div>
+        #parse ("common/pagination.htm")
+        <div class="clear"></div>
+      </div>
+    </div>
+  </div>
+</body>
+<script language="javascript" type="text/javascript">
+	var layout = new TableLayout(2);
+	window.top.currentWindow.setLayout(layout);
+	
+	
+
+	$(document).ready(function() {
+		var opsObj = new Object();
+		
+		$("#id_bc_button").hide();
+		$("#id_return_button").hide();
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		$("#id_report_button").click(function() {
+			
+			var name=$("#name").val();
+			var team=$("#team").val();
+			var orgteam=$("#orgteam").val();
+			var url="${contextPath}/customer/Coefficient/selectCoefficient.page?name=" + name+"&orgteam="+orgteam+"&team="+team;
+			window.location.href = url;
+	    });
+		
+		
+	$("#upadatename").click(function() {
+		if ($(".checkbox :checked").length == 1) {
+			var rowid = $("input[name='checkbox']:checked").val();
+			var url = "${contextPath}/customer/Coefficient/selectCoefficientByuserId.page?userid=" + rowid.split("@")[0];
+			window.location.href = url;
+		}
+		else{
+			Dialog.message("请选择一行!");
+		}
+	    });
+	
+	$("#upadateam").click(function() {
+		var url = "${contextPath}/customer/Coefficient/selectTeam.page";
+		window.location.href = url;
+	    });
+		
+		/* $("#id_image_button").click(function() {
+			if ($(".checkbox :checked").length == 1) {
+				var rowid = $("input[name='checkbox']:checked").val();
+				var url = "${contextPath}/customer/customerInfor_wh_ty/imageImport.page?applicationId=" + rowid.split("@")[0];
+				if (opsObj.formObj) {
+	                // 回调URL
+	                var callBackUrlObj = opsObj.formObj.find("div.pagebar div.page a.current");
+	                if (callBackUrlObj) {
+	                	if(url.indexOf("?")>=0){
+	                		url += "&" + $.param({
+		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+		                    });
+	                	}else{
+		                    url += "?" + $.param({
+		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+		                    });
+	                	}
+	                }
+	            }
+				window.location.href = url;
+			}
+			else{
+				Dialog.message("请选择一行!");
+			}
+	    }); */
+	    $("#id_image_button").click(function() {
+			if ($(".checkbox :checked").length == 1) {
+				var rowid = $("input[name='checkbox']:checked").val();
+				var url = "${contextPath}/intopieces/intopiecesquery/selectAllImageByPcId.page?pid=" + rowid.split("@")[7]+"&cid="+rowid.split("@")[1]+"&page=0&type=0&sxtype=4";
+				window.location.href = url;
+			}
+			else{
+				Dialog.message("请选择一行!");
+			}
+	    });
+		$("#id_sy_button").click(function() {
+			if ($(".checkbox :checked").length == 1) {
+				var rowid = $("input[name='checkbox']:checked").val();
+				if(rowid.split("/")[3]=='audit'){
+					Dialog.message("无审贷决议!");
+					return;
+				}
+				var url ="${contextPath}/intopieces/intopiecesdecision/input_decision.page?appId="+rowid.split("@")[0];
+				if (opsObj.formObj) {
+	                // 回调URL
+	                var callBackUrlObj = opsObj.formObj.find("div.pagebar div.page a.current");
+	                if (callBackUrlObj) {
+	                	if(url.indexOf("?")>=0){
+	                		url += "&" + $.param({
+		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+		                    });
+	                	}else{
+		                    url += "?" + $.param({
+		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+		                    });
+	                	}
+	                }
+	            }
+				
+				window.location.href= url;
+			}
+			else{
+				Dialog.message("请选择一行!");
+			}
+	    });
+		
+		
+		$("#id_yx_button").click(function() {
+			if ($(".checkbox :checked").length == 1) {
+				var rowid = $("input[name='checkbox']:checked").val();
+				var url ="${contextPath}/intopieces/intopiecesquery/browe.page?appId="+rowid.split("@")[0];
+				if (opsObj.formObj) {
+	                // 回调URL
+	                var callBackUrlObj = opsObj.formObj.find("div.pagebar div.page a.current");
+	                if (callBackUrlObj) {
+	                	if(url.indexOf("?")>=0){
+	                		url += "&" + $.param({
+		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+		                    });
+	                	}else{
+		                    url += "?" + $.param({
+		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+		                    });
+	                	}
+	                }
+	            }
+				window.location.href= url;
+			}
+			else{
+				Dialog.message("请选择一行!");
+			}
+	    });
+		
+		$("#id_bc_button").click(function() {
+			if ($(".checkbox :checked").length == 1) {
+				var rowid = $("input[name='checkbox']:checked").val();
+				if(rowid.split("@")[6] != 'returnedToFirst'){
+					alert("审核状态非退回至客户经理!");
+					return;
+				}
+				var url ="${contextPath}/intopieces/intopiecesquery/reportImport.page?customerId="+rowid.split("@")[1]+"&productId="+rowid.split("@")[7]+"&applicationId="+rowid.split("@")[0];
+				if (opsObj.formObj) {
+	                // 回调URL
+	                var callBackUrlObj = opsObj.formObj.find("div.pagebar div.page a.current");
+	                if (callBackUrlObj) {
+	                	if(url.indexOf("?")>=0){
+	                		url += "&" + $.param({
+		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+		                    });
+	                	}else{
+		                    url += "?" + $.param({
+		                        'callBackUrl': callBackUrlObj.length == 0 ? window.location.href: callBackUrlObj[0].href
+		                    });
+	                	}
+	                }
+	            }
+				window.location.href=url;
+			}
+			else{
+				Dialog.message("请选择一行!");
+			}
+	    });
+		
+		//退回重新调查发起进件
+		 $("#id_return_button").click(function() {
+				var url = "${modulePath}/applyInfo.json";
+				if ($(".checkbox :checked").length == 1) {
+					var rowid = $("input[name='checkbox']:checked").val();
+					 if(rowid.split("@")[6]!='returnedToFirst'){
+						 Dialog.message("审核状态非退回至客户经理!");
+						return; 
+					 }
+					Dialog.confirm("确定要处理吗？", "提示",
+			     		function() {
+			     			$.ajax({
+			      				url : url,
+			      				type : "get",
+			      				data : "id=" + rowid.split("@")[0],//要发送的数据
+			      				success : function(data) {
+			      					if (data.success) {
+			      						topWin.Dialog.message("处理成功！");
+			      						window.location.reload(true);
+			      					}
+			      					else{
+			      						topWin.Dialog.message(data.message);
+			      				    }
+			      					submitFlag = 0;
+			      				}
+			      			});
+				 	});
+				} else {
+	                Dialog.message("请选择一行!");
+	            } 
+	     });
+	});
+	
+	
+	
+	//flag: 1:为影像补扫入口。null：内部审核
+	function scan(flag){
+		var appId = null;
+		$("input[name='checkbox']:checked").each(function() {
+			appId = $(this).val().split("@")[0];
+			custId = $(this).val().split("@")[1];
+		});
+		if(appId!=null){
+			var url="${contextPath}/intopieces/intopiecesquery/sunds_ocx.page?appId=" + appId+"&custId="+custId;
+			window.location.href = url;
+		
+		}else{
+			Dialog.message("请选择一条记录!");
+		}
+	}
+	
+	
+	//下载调查模板
+	$("#id_download_button").click(function() {
+		if ($(".checkbox :checked").length == 1) {
+			var rowid = $("input[name='checkbox']:checked").val();
+			custId = rowid.split("@")[1];
+			prodId = rowid.split("@")[7];
+			var url = "${contextPath}/customer/customerInfor_wh_ty/downLoadDcmb.json?prodId=" + prodId+"&custId="+custId;
+			self.location.href=url;
+		}else{
+			Dialog.message("请选择一行!");
+		}
+    });
+	
+</script>
+#parse ("common/iframe_page_footer.htm")

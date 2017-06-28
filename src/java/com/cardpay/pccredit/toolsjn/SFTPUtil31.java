@@ -54,7 +54,7 @@ public class SFTPUtil31 {
             Session sshSession = jsch.getSession(username, host, port);  
             System.out.println("Session created.");
             DailyReportScheduleService dailyReportScheduleService =Beans.get(DailyReportScheduleService.class);
-            password = dailyReportScheduleService.findServer1();
+            password = dailyReportScheduleService.findServer2();
             sshSession.setPassword(password);  
             Properties sshConfig = new Properties();  
             sshConfig.put("StrictHostKeyChecking", "no");  

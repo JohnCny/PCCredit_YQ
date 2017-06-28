@@ -40,7 +40,45 @@ public class StatisticalCommonService {
      * @return
      */
 	public List<NameValueRecord> statisticalApplicationStatus(){
-		List<NameValueRecord> list= statisticalCommonDao.statisticalApplicationStatus();
+		List<NameValueRecord> list=new ArrayList<NameValueRecord>();
+		NameValueRecord  statisticalApplicationStatussum=statisticalCommonDao.statisticalApplicationStatussum("audit");
+		if(statisticalApplicationStatussum!=null){
+			if(statisticalApplicationStatussum.getValue()==null || statisticalApplicationStatussum.getValue()==""){
+				statisticalApplicationStatussum.setValue("0");
+			}
+			statisticalApplicationStatussum.setName("已申请");
+			list.add(0, statisticalApplicationStatussum);
+		}
+		NameValueRecord  statisticalApplicationStatussum1=statisticalCommonDao.statisticalApplicationStatussum("refuse");
+		if(statisticalApplicationStatussum1!=null){
+		if(statisticalApplicationStatussum1.getValue()==null || statisticalApplicationStatussum1.getValue()==""){
+			statisticalApplicationStatussum1.setValue("0");
+		}
+		statisticalApplicationStatussum1.setName("被拒绝");
+		list.add(0, statisticalApplicationStatussum1);
+		}
+		NameValueRecord  statisticalApplicationStatussum2=statisticalCommonDao.statisticalApplicationStatussum("returnedToFirst");
+		if(statisticalApplicationStatussum2!=null){
+		if(statisticalApplicationStatussum2.getValue()==null || statisticalApplicationStatussum2.getValue()==""){
+			statisticalApplicationStatussum2.setValue("0");
+		}
+		statisticalApplicationStatussum2.setName("被退回");
+		list.add(0, statisticalApplicationStatussum2);}
+		NameValueRecord  statisticalApplicationStatussum3=statisticalCommonDao.statisticalApplicationStatussum1();
+		if(statisticalApplicationStatussum3!=null){
+		if(statisticalApplicationStatussum3.getValue()==null || statisticalApplicationStatussum3.getValue()==""){
+			statisticalApplicationStatussum3.setValue("0");
+		}
+		statisticalApplicationStatussum3.setName("通过");
+		list.add(0, statisticalApplicationStatussum3);
+		}
+		
+		
+		
+		
+		
+		
+	/*	List<NameValueRecord> list= statisticalCommonDao.statisticalApplicationStatus();
 		for(int a=0;a<list.size();a++){
 			try {
 				if(list.get(a).getValue()==null || list.get(a).getValue()==""){
@@ -50,7 +88,7 @@ public class StatisticalCommonService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}*/
 		return list;
 	}
 	
@@ -169,7 +207,19 @@ public class StatisticalCommonService {
 			pieJsonData.setSelected(false);
 			pList.add(pieJsonData);
 		}
-		return pList;*/List<PieJsonData> pList= new ArrayList<PieJsonData>();
+		return pList;*/
+		List<NameValueRecord> alist = statisticalCommonDao.statisticalApplicationStatusAmt();
+		for(int a=0;a<alist.size();a++){
+			if(alist.get(a).getValue()=="" || alist.get(a).getValue()==null){
+				alist.get(a).setValue("0");
+			}
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		for(NameValueRecord nameValueRecord1 : alist){
+			map.put(nameValueRecord1.getName(), nameValueRecord1.getValue());
+		}
+		
+		List<PieJsonData> pList= new ArrayList<PieJsonData>();
 		for(NameValueRecord nameValueRecord : list){
 			PieJsonData pieJsonData = new PieJsonData();
 			pieJsonData.setName(nameValueRecord.getName());
@@ -283,23 +333,26 @@ public class StatisticalCommonService {
 	      SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy");  
 	      String dateNowStr = sdf1.format(d);  
 	      StatisticsModel.setCustomeryeah(Integer.parseInt(dateNowStr));
-	      List<MonthlyStatisticsModel> result=StatisticsService.selectTeamYear(StatisticsModel);
+	      MonthlyStatisticsModel result=StatisticsService.selectTeamYear(StatisticsModel);
 	List<Double> list = new ArrayList<Double>();
-	list.add(0, Double.valueOf(result.get(0).getCustomerJanuary()));
-	list.add(1, Double.valueOf(result.get(0).getCustomerFebruary()));
-	list.add(2, Double.valueOf(result.get(0).getCustomerMarch()));
-	list.add(3, Double.valueOf(result.get(0).getCustomerApril()));
-	list.add(4, Double.valueOf(result.get(0).getCustomerMay()));
-	list.add(5, Double.valueOf(result.get(0).getCustomerJune()));
-	list.add(6, Double.valueOf(result.get(0).getCustomerJuly()));
-	list.add(7, Double.valueOf(result.get(0).getCustomerAugust()));
-	list.add(8, Double.valueOf(result.get(0).getCustomerSeptember()));
-	list.add(9, Double.valueOf(result.get(0).getCustomerOctober()));
-	list.add(10, Double.valueOf(result.get(0).getCustomerNovember()));
-	list.add(11, Double.valueOf(result.get(0).getCustomerDecember()));
-	List<MonthlyStatisticsModel> result1=StatisticsService.selectTeamYear(StatisticsModel);
-    double money=result1.get(0).getTotalAmount();
+	if(result!=null){
+		
+	list.add(0, Double.valueOf(result.getCustomerJanuary()));
+	list.add(1, Double.valueOf(result.getCustomerFebruary()));
+	list.add(2, Double.valueOf(result.getCustomerMarch()));
+	list.add(3, Double.valueOf(result.getCustomerApril()));
+	list.add(4, Double.valueOf(result.getCustomerMay()));
+	list.add(5, Double.valueOf(result.getCustomerJune()));
+	list.add(6, Double.valueOf(result.getCustomerJuly()));
+	list.add(7, Double.valueOf(result.getCustomerAugust()));
+	list.add(8, Double.valueOf(result.getCustomerSeptember()));
+	list.add(9, Double.valueOf(result.getCustomerOctober()));
+	list.add(10, Double.valueOf(result.getCustomerNovember()));
+	list.add(11, Double.valueOf(result.getCustomerDecember()));
+	MonthlyStatisticsModel result1=StatisticsService.selectTeamYear(StatisticsModel);
+    double money=result1.getTotalAmount();
 	list.add(12, Double.valueOf(money));
+	}
 	return JSONArray.fromObject(list).toString();
 	}
 }

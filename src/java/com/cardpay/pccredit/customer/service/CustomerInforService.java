@@ -88,6 +88,9 @@ import com.cardpay.pccredit.intopieces.model.VideoAccessories;
 import com.cardpay.pccredit.ipad.model.ProductAttribute;
 import com.cardpay.pccredit.jnpad.dao.MonthlyStatisticsDao;
 import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jxlx.dao.CustomerCoefficientDao;
+import com.cardpay.pccredit.jxlx.model.COEFFICIENT;
+import com.cardpay.pccredit.jxlx.model.SPLITOFINTEREST;
 import com.cardpay.pccredit.manager.dao.ManagerPerformmanceDao;
 import com.cardpay.pccredit.manager.filter.ManagerSalaryFilter;
 import com.cardpay.pccredit.manager.form.ManagerPerformmanceForm;
@@ -1797,7 +1800,7 @@ public class CustomerInforService {
 			}
 			//释放空间
 			datas=null;
-		} catch (Exception e) {
+		}  catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -4823,12 +4826,12 @@ public class CustomerInforService {
 		log.info("******************开始查询所有客户经理********************");  
 		List<ManagerPerformmanceForm>result1=managerPerformmanceDao.selectAllManager();
 		log.info("******************开始查询并更新所有客户经理的业绩基本信息********************");  
-		for(int a=0;a<result.size();a++){
-			ManagerPerformmanceForm from= managerPerformmanceDao.selectManagerYj(result.get(a).getManager_id());
-			from.setManager_id(result.get(a).getManager_id());
+		for(int a=0;a<result1.size();a++){
+			ManagerPerformmanceForm from= managerPerformmanceDao.selectManagerYj(result1.get(a).getManager_id());
+			from.setManager_id(result1.get(a).getManager_id());
 			from.setId(IDGenerator.generateID());
-			from.setTeam(result.get(a).getTeam());
-			from.setOrdteam(result.get(a).getOrdteam());
+			from.setTeam(result1.get(a).getTeam());
+			from.setOrdteam(result1.get(a).getOrdteam());
 			managerPerformmanceDao.updateManagerDate(from);
 		}
 		log.info("******************结束********************");  
@@ -4838,6 +4841,8 @@ public class CustomerInforService {
 	 * 定时跑批所有客户经理的预计贷款统计
 	 */
 	public void inserNewMonthlyStatistics(){
+		log.info("******************清除月季贷款信息********************");
+		StatisticsDao.deleteAll();
 		log.info("******************开始查询新客户经理的基本信息********************");
 		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 	        Date date = new Date();
@@ -4890,7 +4895,7 @@ public class CustomerInforService {
 		log.info("******************开始查询所有客户经理********************");  
 		List<ManagerPerformmanceForm>result1=managerPerformmanceDao.selectAllManager();
 		log.info("******************开始查询并更新所有客户经理的月季贷款信息********************");  
-		for(int a=0;a<result.size();a++){
+		for(int a=0;a<result1.size();a++){
 			List<MonthlyStatisticsModel> MonthlyStatistics=StatisticsDao.selectotalAmountByUserId(result1.get(a).getManager_id());
 			for(int i=0;i<MonthlyStatistics.size();i++){
 				MonthlyStatisticsModel Model=new MonthlyStatisticsModel();
@@ -4957,5 +4962,71 @@ public class CustomerInforService {
 			customerInforDao.insertTkmxtylist(tyRepayTkmxForm);
 		}
 		log.info("addtkmxtylist success!");
+	}
+	
+	@Autowired
+	private CustomerCoefficientDao CoefficientDao;
+	public void insertCoefficientB(){
+		log.info("******************查询没有进入系数表的客户经理********************"); 
+		List<COEFFICIENT> result=CoefficientDao.selectNewManager();
+		log.info("******************没有进入系数表的客户经理到系数表********************"); 
+		for(int i=0;i<result.size();i++){
+			COEFFICIENT c=new COEFFICIENT();
+			c.setId(IDGenerator.generateID());
+			c.setTeam(result.get(i).getTeam());
+			c.setName(result.get(i).getName());
+			c.setOrgteam(result.get(i).getOrgteam());
+			c.setUserid(result.get(i).getUserid());
+			double code=0.00;
+			if(result.get(i).getOrgteam().equals("阳泉郊区信用联社")){
+				code=0.05;
+				c.setCode(code);
+			}else{
+				code=0.04;
+				c.setCode(code);
+			}
+			CoefficientDao.insertCoefficient(c);
+		}
+		log.info("******************结束********************");  
+	}
+	
+	
+	public void insertSPLITOFINTERESTB(){
+		double cost=0.00;
+		double provision=0.00;
+		double netprofit=0.00;
+		log.info("******************根据年月查询没有进入利息分叉表的客户经理********************");
+		 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+	        Date date = new Date();
+	        String datime=sdf.format(date);
+	        SPLITOFINTEREST st=new SPLITOFINTEREST();
+	        st.setYear(datime.substring(0, 4));
+	        st.setMonth(datime.substring(4, 6));
+		List<SPLITOFINTEREST> result=CoefficientDao.selectNewManager1(st);
+		log.info("******************没有进入利息分叉表的客户经理到利息分叉表********************"); 
+		for(int i=0;i<result.size();i++){
+			//查询客户经理的系数值
+			COEFFICIENT code= CoefficientDao.selectallCOEFFICIENTByUserId(result.get(i).getUserid());
+			//查询当前客户经理不是质押的还款
+			List<SPLITOFINTEREST> lst=CoefficientDao.selecthkb(result.get(i).getUserid());
+			for(int i1=0;i1<lst.size();i1++){
+				//融资成本
+				cost=cost+Double.parseDouble(lst.get(i1).getLxsr())*(code.getCode()/Double.parseDouble(lst.get(i1).getHtlv()));
+				//拨备
+				provision=provision+(Double.parseDouble(lst.get(i1).getZje())*0.02)/Double.parseDouble(lst.get(i1).getQs());
+				//净利润
+				netprofit=netprofit+(Double.parseDouble(lst.get(i1).getLxsr())-cost-provision);
+			}
+			SPLITOFINTEREST c=new SPLITOFINTEREST();
+			c.setId(IDGenerator.generateID());
+			c.setTeam(result.get(i).getTeam());
+			c.setName(result.get(i).getName());
+			c.setOrgteam(result.get(i).getOrgteam());
+			c.setUserid(result.get(i).getUserid());
+			c.setYear(datime.substring(0, 4));
+			c.setMonth(datime.substring(4, 6));
+			CoefficientDao.insertSPLITOFINTEREST(c);
+		}
+		log.info("******************结束********************");  
 	}
 }

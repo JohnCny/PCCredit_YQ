@@ -14,13 +14,24 @@
 		<result property="organization" column="deptcode" />
 		<result property="rankingnum" column="rownum" />
 	</resultMap>
-	
+	<select id="statisticalApplicationStatussum" resultMap="ResultMap" >
+	    select c.status as name,sum(nvl(c.APPLY_QUOTA,0)) as value from CUSTOMER_APPLICATION_INFO c,(select count(status),status from CUSTOMER_APPLICATION_INFO where status=#{status} group by status)cc
+where c.status=cc.status
+and c.status=#{status}
+group by c.status
+	    </select>
+	    <select id="statisticalApplicationStatussum1" resultMap="ResultMap" >
+	    select c.status as name,sum(nvl(c.APPLY_QUOTA,0)) as value from CUSTOMER_APPLICATION_INFO c,(select count(status),status from CUSTOMER_APPLICATION_INFO where status='approved' group by status)cc
+where c.status=cc.status
+and c.status='approved'
+group by c.status
+	    </select>
 	<select id="statisticalApplicationStatusAmt" resultMap="ResultMap" >
 	  select t.STATUS as name ,sum(nvl(t.APPLY_QUOTA,0)) as value from customer_application_info t where t.status ='audit' group by t.STATUS
       union all
-      select t.STATUS as name,sum(nvl(t.APPLY_QUOTA,0))  as value from customer_application_info t where t.status ='refuse'group by t.STATUS
-      union all
-      select t.STATUS as name,sum(nvl(t.ACTUAL_QUOTE,0)) as value from customer_application_info t where t.status ='end' group by t.STATUS
+      select t.STATUS as name,sum(nvl(t.APPLY_QUOTA,0))  as value from customer_application_info t where t.status ='refuse' group by t.STATUS
+    <!--   union all
+      select t.STATUS as name,sum(nvl(t.ACTUAL_QUOTE,0)) as value from customer_application_info t where t.status ='end' group by t.STATUS -->
       union all
       select t.STATUS as name,sum(nvl(t.APPLY_QUOTA,0))  as value from customer_application_info t where t.status ='returnedToFirst' group by t.STATUS
       union all
@@ -40,13 +51,13 @@
 	       end) value
 	
 	  from (select app_status.name, app_status.id, return_num.value
-	          from (select '放款成功' as name, 'end' as id
+	          from (<!-- select '放款成功' as name, 'end' as id
 	                  from dual
-	                union all
+	                union all -->
 	                select '审批中' as name, 'audit' as id
 	                  from dual
 	                union all
-	                select '已审批' as name, 'approved' as id
+	                select '通过' as name, 'approved' as id
 	                  from dual
 	                union all
 	                select '退回' as name, 'returnedToFirst' as id

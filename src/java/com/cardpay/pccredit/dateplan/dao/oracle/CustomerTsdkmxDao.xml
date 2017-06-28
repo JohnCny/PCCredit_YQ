@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.dateplan.dao.CustomerTsdkmxDao">
+		<resultMap id="ResultMap1" type="com.cardpay.pccredit.dateplan.model.CustomerTsdkmxModel">
+		<result property="YWBH" column="YWBH" />
+		<result property="KHNM" column="KHNM" />
+		<result property="REQLMT" column="REQLMT" />
+		<result property="KHMC" column="KHMC" />
+		<result property="ZJHM" column="ZJHM" />
+		<result property="SJ" column="SJ" />
+		<result property="SXED" column="SXED" />
+		<result property="LOANDATE" column="LOANDATE" />
+		<result property="DQRQ" column="DQRQ" />
+		<result property="DKQX" column="DKQX" />
+		<result property="JZLL" column="JZLL" />
+		<result property="HTLL" column="HTLL" />
+		<result property="DKYE" column="DKYE" />
+		<result property="PRODUCT_NAME" column="PRODUCT_NAME" />
+		<result property="BNQX" column="BNQX" />
+		<result property="BWQX" column="BWQX" />
+		<result property="YXYE" column="YXYE" />
+		<result property="USERID" column="USERID" />
+		<result property="DISPLAY_NAME" column="DISPLAY_NAME" />
+		<result property="YWJG" column="YWJG" />
+		<result property="TEAM" column="TEAM" />
+		<result property="SFZD" column="SFZD" />
+	</resultMap>
+	<insert id="insertCustomerTsdk">
+	    insert into CUSTOMER_TSDKMX (YWBH,KHNM,REQLMT,KHMC,ZJHM,SJ,SXED,LOANDATE,DQRQ,DKQX,JZLL,HTLL,DKYE,PRODUCT_NAME,BNQX,BWQX,YXYE,USERID,DISPLAY_NAME,YWJG,TEAM,SFZD)
+	    values (#{YWBH},#{KHNM},#{REQLMT},#{KHMC},#{ZJHM},#{SJ},#{SXED},#{LOANDATE},#{DQRQ},#{DKQX},
+	    #{JZLL},#{HTLL},#{DKYE},#{PRODUCT_NAME},#{BNQX},#{BWQX},#{YXYE},#{USERID},#{DISPLAY_NAME},#{YWJG},#{TEAM},#{SFZD})
+	</insert>
+	
+	<select id="selectMaxLOANDATE" resultMap="ResultMap1">
+	    select max(LOANDATE) from CUSTOMER_TSDKMX where USERID=#{userId}
+	</select>
+	<select id="selectCustomerTsdk">
+	      select * from CUSTOMER_TSDKMX where USERID=#{userId} and LOANDATE>#{LOANDATE}
+	</select>
+</mapper>

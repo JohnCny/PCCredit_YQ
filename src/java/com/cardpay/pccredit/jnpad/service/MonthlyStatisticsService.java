@@ -25,7 +25,7 @@ public class MonthlyStatisticsService {
 	public List<MonthlyStatisticsModel>findxzz(@Param("userId") String userId){
 		return commonDao.findxzz(userId);
 	}
-	public List<MonthlyStatisticsModel>selectTeamYear(MonthlyStatisticsModel MonthlyStatisticsModel){
+	public MonthlyStatisticsModel selectTeamYear(MonthlyStatisticsModel MonthlyStatisticsModel){
 		return commonDao.selectTeamYear(MonthlyStatisticsModel);
 	}
 	public List<MonthlyStatisticsModel>selectAllteam(){
@@ -33,5 +33,8 @@ public class MonthlyStatisticsService {
 	}
 	public List<MonthlyStatisticsModel>selectAllYear(){
 		return commonDao.selectAllYear();
+	}
+	public MonthlyStatisticsModel selectUserOnTeam(@Param("userId") String userId){
+		return commonDao.selectUserOnTeam(userId);
 	}
 }

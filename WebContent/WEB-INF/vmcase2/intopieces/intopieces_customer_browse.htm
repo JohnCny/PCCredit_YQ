@@ -108,7 +108,7 @@
             </colgroup>
            #foreach ($wait in $result.items)
             <tr onclick="showButton();">
-              <td class="checkbox"><input type="radio" name="checkbox" value="$!wait.id@$!wait.customerId@$!wait.id@$!wait.applyQuota@$!wait.serialNumber@$!wait.cardId@$!wait.status@$!wait.productId"/></td>
+              <td class="checkbox"><input type="radio" name="checkbox" value="$!wait.id@$!wait.customerId@$!wait.id@$!wait.applyQuota@$!wait.serialNumber@$!wait.cardId@$!wait.status@$!wait.productId@$!wait.cardId"/></td>
               <td nowrap="nowrap">$!wait.chineseName</td>
               <td nowrap="nowrap">$!wait.productName</td>
               <td nowrap="nowrap">$!wait.displayName</td>
@@ -145,7 +145,7 @@
           <a id="id_return_button" class="btn_g" href="javascript:void(0);" title="退回重新调查提交进件">重新提交进件</a>
           <a class="btn_g" href="javascript:void(0);" title="查看用信信息" onclick="viewIntoYX('NO')">用信信息</a>
           <a id="id_download_button" class="btn_g" href="javascript:void(0);" title="调查报告下载">调查报告下载</a>
-          <a class="btn_g" href="javascript:void(0);" title="影像补扫" onclick="scan('NO')">影像补扫</a>  
+        <!--   <a class="btn_g" href="javascript:void(0);" title="影像补扫" onclick="scan('NO')">影像补扫</a>   -->
 		</div>
         #parse ("common/pagination.htm")
         <div class="clear"></div>
@@ -177,7 +177,7 @@
 	function viewIntoYX(ifHideUser){
 		var id = null;
 		$("input[name='checkbox']:checked").each(function() {
-			id = $(this).val().split("@")[1];
+			id = $(this).val().split("@")[8];
 			
 		});
 		if(id!=null){

@@ -21,6 +21,13 @@ public class MonthlyStatisticsModel {
 	private String orgteam;
 	private String loandate;
 	private String name;
+	private String sfzz;
+	public String getSfzz() {
+		return sfzz;
+	}
+	public void setSfzz(String sfzz) {
+		this.sfzz = sfzz;
+	}
 	public String getName() {
 		return name;
 	}

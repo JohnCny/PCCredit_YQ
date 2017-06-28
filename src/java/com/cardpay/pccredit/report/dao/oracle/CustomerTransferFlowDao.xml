@@ -529,7 +529,13 @@
 						AND a.team=#{team}
 					</if>
 	</select>
-	
+	<select id="findyxjlls" resultMap="DkyetjbbFormResultMap">
+	     select khmc as cname ,zjhm as cardnum,
+	     REQLMT as money,product_name as prodName ,
+	     htll as interest,LOANDATE,yxye as balamt,display_name as busimanager,
+	     team as team,ywjg as instcode from mibusidata where zjhm=#{cardId}
+	    
+	    </select>
 	<!-- 贷款余额统计 -->
 	<select id="findDkyetjbbFormList" resultMap="DkyetjbbFormResultMap" 
 			parameterType="com.cardpay.pccredit.report.filter.ReportFilter">

@@ -17,9 +17,9 @@
               <li>
                 <span>证件号码：<input type="text" name="cardId"  maxlength="30" /></span>
               </li>
-              <li>
+             <!--  <li>
                 <span>所属机构：<select id="organName" name="organName"><option value="">请选择</option>#dict("ORGANJN","")</select></span>
-              </li>
+              </li> -->
               <li class="search_button">
                 <input type="button" value="筛选" class="search_button_inquiry" title="#i18n('button.browse.hint')" style="height: 26px; line-height: 24px;" onclick="javascript:this.form.submit();"/>
               </li>
@@ -151,7 +151,10 @@
 		$("#id_report_button").click(function() {
 			if ($(".checkbox :checked").length == 1) {
 				var rowid = $("input[name='checkbox']:checked").val();
-				var url = "${contextPath}/customer/customerInfor_wh_ty/report_jy.page?appId=" + rowid.split("@")[2]+"&icount=0";
+				var pid=rowid.split("@")[5];
+				var cid=rowid.split("@")[1];
+				var icount="0";
+				var url = "${contextPath}/customer/customerInfor_wh_ty/report_jy.page?appId="+rowid.split("@")[2]+"&pid="+pid+"&cid="+cid+"&icount="+icount;
 				if (opsObj.formObj) {
 	                // 回调URL
 	                var callBackUrlObj = opsObj.formObj.find("div.pagebar div.page a.current");

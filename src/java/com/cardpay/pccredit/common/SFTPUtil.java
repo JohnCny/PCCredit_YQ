@@ -59,11 +59,14 @@ import com.cardpay.pccredit.intopieces.model.ImageMore;
 import com.cardpay.pccredit.intopieces.web.LocalImageForm;
 import com.cardpay.pccredit.manager.service.DailyReportScheduleService;
 import com.cardpay.pccredit.tools.ImportParameter;
+import com.cardpay.pccredit.toolsjn.ImaUtils;
+import com.cardpay.pccredit.toolsjn.deleteFiles;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Logger;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageDecoder;
@@ -77,7 +80,7 @@ import com.wicresoft.util.spring.Beans;
  */
 public class SFTPUtil {
 	
-	private static String host = "10.96.1.12";//生产
+	private static String host = "10.96.1.11";//生产
 //	private static String host = "61.98.0.32";//测试
     private static String username="root";  
     private static String password="qkjr123";  
@@ -99,7 +102,7 @@ public class SFTPUtil {
             Session sshSession = jsch.getSession(username, host, port);  
             System.out.println("Session created.");
             DailyReportScheduleService dailyReportScheduleService =Beans.get(DailyReportScheduleService.class);
-            password = dailyReportScheduleService.findServer2();
+            password = dailyReportScheduleService.findServer1();
             sshSession.setPassword(password);  
             Properties sshConfig = new Properties();  
             sshConfig.put("StrictHostKeyChecking", "no");  
@@ -173,8 +176,27 @@ public class SFTPUtil {
         }  
           return map;
     }
-
-    
+/*
+       if (!file1.isDirectory()) {
+                        System.out.println("1");
+                        ((File) file1).delete();
+                    } else if (file.isDirectory()) {
+                        System.out.println("2");
+                        File[] fileList = ((File) file).listFiles();
+                        for (int i = 0; i < fileList.length; i++) {
+                            File delfile = fileList[i];
+                            if (!delfile.isDirectory()) {
+                                System.out.println("相对路径=" + delfile.getPath());
+                                System.out.println("绝对路径=" + delfile.getAbsolutePath());
+                                System.out.println("文件全名=" + delfile.getName());
+                                delfile.delete();
+                                System.out.println("删除文件成功");
+                            } else if (delfile.isDirectory()) {
+                                deleteFile(fileList[i].getPath());
+                            }
+                        }
+                        file.delete();
+                    }}*/
     /** 
      * upload all the files to the server 
      */  
@@ -184,6 +206,7 @@ public class SFTPUtil {
     	Map<String, String> map = new HashMap<String, String>();
         try {  
         	if (oldFile != null && !oldFile.isEmpty()) {
+        		
 	        	//连接sftp
 	        	connect();
 	        	String path = Constant.FILE_PATH + customerId;
@@ -222,6 +245,130 @@ public class SFTPUtil {
             e.printStackTrace();  
         }  
           return map;
+    /*	String newFileName = null;
+		String fileName = null;
+		Map<String, String> map = new HashMap<String, String>();
+		String path = Constant.FILE_PATH + customerId + File.separator;
+		File tempDir = new File(path);
+		if (!tempDir.isDirectory()) {
+			tempDir.mkdirs();
+		}
+		try {
+			// 取得上传文件
+			if (file != null && !file.isEmpty()) {
+				fileName = file.getOriginalFilename();
+				File tempFile = new File(path
+						+ file.getOriginalFilename());
+				if (tempFile.exists()) {
+					newFileName = IDGenerator.generateID() + "."
+							+ file.getOriginalFilename().split("\\.")[1];
+				} else {
+					newFileName = file.getOriginalFilename();
+				}
+				File localFile = new File(path + newFileName);
+				file.transferTo(localFile);
+				System.out.println("开始压缩：" + new Date().toLocaleString()); 
+				ImaUtils.imgCom(path + newFileName);  
+				ImaUtils.resizeFix(1200, 600);  
+			        System.out.println("压缩完毕：" + new Date().toLocaleString());  
+			    	connect();
+			    	sftp.cd(Constant.FILE_PATH);
+			    	if(!isDirExist(customerId)){
+			    		 sftp.mkdir(customerId);
+			    	}
+						 sftp.cd(Constant.FILE_PATH + customerId);
+						 FileInputStream in = null;
+						   File file1 = new File(path + newFileName);
+				            in = new FileInputStream(file1);
+				            sftp.put(in,newFileName);
+				          
+				       
+				        	deleteFiles hfc = new deleteFiles();  
+				    	    String path1 = Constant.FILE_PATH + customerId;  
+				    	    boolean result = hfc.DeleteFolder(path1);  
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		map.put("fileName", fileName);
+		map.put("url", path + newFileName);
+		return map;*/
+    }
+    
+    
+ /*     public static boolean deleteFile(String delpath)throws FileNotFoundException, IOException {
+            try {
+                File file = new File(delpath);
+                if (!file.isDirectory()) {
+                    System.out.println("1");
+                    file.delete();
+                } else if (file.isDirectory()) {
+                    System.out.println("2");
+                    File[] fileList = file.listFiles();
+                    for (int i = 0; i < fileList.length; i++) {
+                        File delfile = fileList[i];
+                        if (!delfile.isDirectory()) {
+                            System.out.println("相对路径=" + delfile.getPath());
+                            System.out.println("绝对路径=" + delfile.getAbsolutePath());
+                            System.out.println("文件全名=" + delfile.getName());
+                            delfile.delete();
+                            System.out.println("删除文件成功");
+                        } else if (delfile.isDirectory()) {
+                            deleteFile(fileList[i].getPath());
+                        }
+                    }
+                    file.delete();
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("deletefile()  Exception:" + e.getMessage());
+            }
+            return true;
+        }
+    }*/
+    	/*String newFileName = null;
+		String fileName = null;
+    	Map<String, String> map = new HashMap<String, String>();
+        try {  
+        	if (oldFile != null && !oldFile.isEmpty()) {
+        		
+	        	//连接sftp
+	        	connect();
+	        	String path = Constant.FILE_PATH + customerId;
+	        	System.out.println(path);
+	        	try {
+	    			sftp.cd(path);
+				} catch (Exception e) {
+					sftp.cd(Constant.FILE_PATH);
+					sftp.mkdir(customerId);  
+					sftp.cd(path);
+				}
+	    			
+	    	    fileName = oldFile.getOriginalFilename();
+				File tempFile = new File(path + File.separator + oldFile.getOriginalFilename());
+				if (tempFile.exists()) {
+					newFileName = IDGenerator.generateID() + "."+ oldFile.getOriginalFilename().split("\\.")[1];
+				} else {
+					newFileName = oldFile.getOriginalFilename();
+				}
+	    	   CommonsMultipartFile cf= (CommonsMultipartFile)oldFile;
+	    	   DiskFileItem fi = (DiskFileItem)cf.getFileItem(); 
+	           File file = fi.getStoreLocation();
+	    	   sftp.put(new FileInputStream(file), newFileName);
+	    	   System.out.println("上传成功！");
+	    	   disconnect();  
+	           
+	    	   map.put("fileName", fileName);
+	   		   map.put("url", path +File.separator+ newFileName);
+	   		   
+        	}
+        } catch (FileNotFoundException e) {  
+            // TODO Auto-generated catch block  
+            e.printStackTrace();  
+        } catch (SftpException e) {  
+            // TODO Auto-generated catch block  
+            e.printStackTrace();  
+        }  
+          return map;*/
     	/*//连接sftp
    	 	connect();  
     	String newFileName = null;
@@ -252,8 +399,111 @@ public class SFTPUtil {
 		map.put("fileName", fileName);
 		map.put("url", path + newFileName);
 		return map;*/
+    public  static Map<String, String> uploadJnDCMB(MultipartFile oldFile,String customerId) {
+    	String newFileName = null;
+		String fileName = null;
+    	Map<String, String> map = new HashMap<String, String>();
+        try {  
+        	if (oldFile != null && !oldFile.isEmpty()) {
+	        	//连接sftp
+	        	connect();
+	        	String path = Constant.FILE_PATH + customerId;
+	        	try {
+	    			sftp.cd(path);
+				} catch (Exception e) {
+					sftp.cd(Constant.FILE_PATH);
+					sftp.mkdir(customerId);  
+					sftp.cd(path);
+				}
+	    			
+	    	    fileName = oldFile.getOriginalFilename();
+				File tempFile = new File(path + File.separator + oldFile.getOriginalFilename());
+				if (tempFile.exists()) {
+					newFileName = IDGenerator.generateID() + "."+ oldFile.getOriginalFilename().split("\\.")[1];
+				} else {
+					newFileName = oldFile.getOriginalFilename();
+				}
+	    	   CommonsMultipartFile cf= (CommonsMultipartFile)oldFile;
+	    	   DiskFileItem fi = (DiskFileItem)cf.getFileItem(); 
+	           File file = fi.getStoreLocation();
+	    	   sftp.put(new FileInputStream(file), newFileName);
+	    	   System.out.println("上传成功！");
+	    	   disconnect();  
+	           
+	    	   map.put("fileName", fileName);
+	   		   map.put("url", path +File.separator+ newFileName);
+	   		   
+        	}
+        } catch (FileNotFoundException e) {  
+            // TODO Auto-generated catch block  
+            e.printStackTrace();  
+        } catch (SftpException e) {  
+            // TODO Auto-generated catch block  
+            e.printStackTrace();  
+        }  
+          return map;
     }
-    
+    /**
+     * 删除stfp文件
+     * @param directory：要删除文件所在目录
+     * @param deleteFile：要删除的文件
+     * @param sftp
+     */
+    public static void deleteSFTP(String directory, String deleteFile)
+    {
+        try
+        {
+            // sftp.cd(directory);
+            sftp.rm(directory + deleteFile);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public static boolean deleteFiles(String path){
+    	File file=new File(path);
+    	if(!file.isDirectory()){
+    		file.delete();
+    	}else{
+    		File[] list=file.listFiles();
+        	for (int i = 0; i < list.length; i++) {
+        		
+        		File pfile=list[i];
+        		if(pfile.isDirectory()){
+        			pfile.delete();
+        		}else{
+        			deleteFiles(list[i].getPath())	;
+        		}
+        		file.delete();
+        	}
+    	}
+    	return true;
+    }
+    	
+    /**
+     * 判断目录是否存在
+     * @param directory
+     * @return
+     */
+    public static boolean isDirExist(String directory)
+    {
+        boolean isDirExistFlag = false;
+        try
+        {
+            SftpATTRS sftpATTRS = sftp.lstat(directory);
+            isDirExistFlag = true;
+            return sftpATTRS.isDir();
+        }
+        catch (Exception e)
+        {
+            if (e.getMessage().toLowerCase().equals("no such file"))
+            {
+                isDirExistFlag = false;
+            }
+        }
+        return isDirExistFlag;
+    }
     /**
      * 批量上传图片 济南
      */
@@ -1546,9 +1796,6 @@ public static List<ImageMore> TestImageBinary1(List<ImageMore> result) throws IO
     	            ImageMore ImageMore=new ImageMore();
     	            ImageMore.setUri(encoder.encode(data));
     		    list.add(i, ImageMore);
-    	            if(i==result.size()-1){
-    	            	disconnect();
-    	            }
     }
 	return list;
     

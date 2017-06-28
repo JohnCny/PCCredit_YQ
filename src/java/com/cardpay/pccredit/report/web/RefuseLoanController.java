@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.report.filter.CustomerMoveFilter;
 import com.cardpay.pccredit.report.filter.ReportFilter;
 import com.cardpay.pccredit.report.model.BjjdktjbbForm;
@@ -41,7 +43,8 @@ public class RefuseLoanController extends BaseController{
 	
 	@Autowired
 	private CustomerTransferFlowService customerTransferFlowService;
-	
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	/**
 	 * 被拒绝贷款统计查询
 	 * @param filter
@@ -54,15 +57,30 @@ public class RefuseLoanController extends BaseController{
 	public AbstractModelAndView queryHaveBeenLoan(@ModelAttribute ReportFilter filter,HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/report/refuseLoan/refuseLoan", request);
 		filter.setRequest(request);
+		List<MonthlyStatisticsModel> resultModel=null;
+		MonthlyStatisticsModel model=new MonthlyStatisticsModel();
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String id = user.getId();
 		Integer usertype=user.getUserType();
 		if(usertype==1){
-			filter.setUserId(id);
+			model.setId("0");
+			resultModel=StatisticsService.findxzz(id);
+			if(resultModel.size()>0){
+				model.setSfzz("1");
+				MonthlyStatisticsModel team=StatisticsService.selectUserOnTeam(id);
+				filter.setTeam(team.getTeam());
+			}else{
+				model.setSfzz("0");
+				filter.setUserId(id);
+			}
+		}else{
+			model.setId("1");
 		}
 	    QueryResult<BjjdktjbbForm> result =  customerTransferFlowService.findbjjdktjbbFormList(filter);
 		JRadPagedQueryResult<BjjdktjbbForm> pagedResult = new JRadPagedQueryResult<BjjdktjbbForm>(filter, result);
 		mv.addObject(PAGED_RESULT, pagedResult);
+		mv.addObject("model", resultModel);
+		mv.addObject("model1", model);
 		return mv;
 	}
 	

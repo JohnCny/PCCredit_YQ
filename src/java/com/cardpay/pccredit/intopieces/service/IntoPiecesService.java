@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +52,8 @@ import com.cardpay.pccredit.manager.model.AccountManagerParameter;
 import com.cardpay.pccredit.manager.model.ManagerBelongMap;
 import com.cardpay.pccredit.postLoan.model.MibusidataForm;
 import com.cardpay.pccredit.product.model.AddressAccessories;
+import com.cardpay.pccredit.report.dao.CustomerTransferFlowDao;
+import com.cardpay.pccredit.report.model.DkyetjbbForm;
 import com.cardpay.pccredit.riskControl.model.RiskCustomer;
 import com.cardpay.pccredit.system.model.SystemUser;
 import com.wicresoft.jrad.base.database.dao.common.CommonDao;
@@ -59,9 +62,9 @@ import com.wicresoft.jrad.base.database.model.QueryResult;
 
 @Service
 public class IntoPiecesService {
-
 	// TODO 路径使用相对路径，首先获得应用所在路径，之后建立上传文件目录，图片类型使用IMG，文件使用DOC
-
+	@Autowired
+	private CustomerTransferFlowDao FlowDao;
 	@Autowired
 	private CommonDao commonDao;
 	
@@ -913,7 +916,10 @@ public class IntoPiecesService {
 	public List<MibusidataForm> findMibusidataForm(String id) {
 		return intoPiecesComdao.findMibusidataForm(id);
 	}
-	
+	public List<DkyetjbbForm>findyxjlls(@Param("cardId") String cardId){
+		return FlowDao.findyxjlls(cardId);
+		
+	}
 	/*public List<AppManagerAuditLogForm> findAuditConfigureById(String id) {
 		//return intoPiecesComdao.findAuditConfigureById(id);
 	}*/

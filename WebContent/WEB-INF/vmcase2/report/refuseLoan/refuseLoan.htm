@@ -14,18 +14,18 @@
      <div class="search">
           <form id="submitForm">
             <ul>
-             <!--  <li>
+           <li>
                <span>客户名称：<input type="text" id="customerName" name="customerName" /></span>
-              </li> -->
+              </li>
               
               <li>
-               <span>客户证件号码：<input type="text" id="certiCode" name="certiCode"" /></span>
+                 <span>客户证件号码：<input type="text" id="certiCode" name="certiCode"" /></span>
               </li>
-              <li>
+              <!-- <li>
                  <span>所属客户经理：<input type="text" id="custManagerName" name="custManagerName"" /></span>
-              </li>
-              
-         <li>
+              </li> -->
+                   #if($!model1.id=="1")
+              <li>
                  <span>所属团队：<select id="team" name="team"><option value="">请选择</option>
                #dict("DEM","")
                  </select></span>
@@ -35,6 +35,16 @@
                  #dict("Organizations","")
                  </select></span>
               </li>
+                #end
+              #if($!model1.sfzz=="1")
+               <li>
+                 <span>团队成员：<select id="userId" name="userId"><option value="">请选择</option>
+                 #foreach($result in $model)
+                 <option value="$!result.userId">$!result.name</option>
+                   #end
+                 </select></span>
+              </li>
+              #end
               
               <li class="search_button">
                 <input id="id_browse_button" type="button" value="#i18n('button.browse')" class="search_button_inquiry"

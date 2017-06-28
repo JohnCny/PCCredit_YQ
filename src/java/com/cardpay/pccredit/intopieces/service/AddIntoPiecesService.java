@@ -143,7 +143,7 @@ public class AddIntoPiecesService {
 			 map = UploadFileTool.uploadYxzlFileBySpring(file,customerId);
 		}else{
 			//指定服务器上传
-			 map = SFTPUtil.uploadJn(file, customerId);
+			 map = SFTPUtil.uploadJnDCMB(file, customerId);
 		}
 		String fileName = map.get("fileName");
 		String url = map.get("url");
@@ -249,7 +249,7 @@ public class AddIntoPiecesService {
 					 map = UploadFileTool.uploadYxzlFileBySpring(file,customerId);
 				}else{
 					//指定服务器上传
-					 map = SFTPUtil.uploadJn(file, customerId);
+					 map = SFTPUtil.uploadJnDCMB(file, customerId);
 				}
 				String fileName = map.get("fileName");
 				String url = map.get("url");
@@ -1272,5 +1272,21 @@ public class AddIntoPiecesService {
 		}
 		return list;
 		
+	}
+	
+	
+	/**
+	 * stfp获取图片
+	 * @param ImageMore
+	 * @return
+	 * @throws IOException
+	 * @throws SftpException
+	 */
+	public  List<ImageMore>  selectAllImageByPcId1(ImageMore ImageMore) throws IOException, SftpException{
+		return localImageDao.selectAllImageByPcId(ImageMore);
+		
+	}
+	public List<ImageMore> selectBycardId1(ImageMore ImageMore) throws IOException, SftpException{
+		return localImageDao.selectBycardId(ImageMore);
 	}
 }

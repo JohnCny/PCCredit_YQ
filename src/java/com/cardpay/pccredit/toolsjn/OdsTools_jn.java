@@ -3,6 +3,7 @@ package com.cardpay.pccredit.toolsjn;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +15,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.zip.ZipException;
 
+import org.apache.commons.net.ftp.FTPFile;
 import org.apache.log4j.Logger;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -28,16 +31,20 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 
+import sun.net.ftp.FtpClient;
+import sun.net.ftp.FtpDirEntry;
+import sun.net.ftp.FtpProtocolException;
+
 /** 
  * 解压数据
  */
 @Service
 public class OdsTools_jn {
-	public Logger log = Logger.getLogger(OdsTools.class);
+	public static Logger log = Logger.getLogger(OdsTools.class);
 	//private static ChannelSftp csftp = null;  
 	public String curRemotePath = "";//本次下载服务器目录
 	//private String[] fileName = {"20170307.zip"};
-	private String[] fileName = {"kkh_grxx.zip","kkh_grjtcy.zip","kkh_grjtcc.zip","kkh_grscjy.zip","kkh_grxxll.zip","kkh_grgzll.zip","kkh_grrbxx.zip","kdk_yehz.zip","cxd_dkcpmc.zip","kkh_hmdgl.zip","kdk_lsz.zip","kdk_tkmx.zip","cxd_rygl.zip","kdk_jh.zip"};
+	public static String[] fileName = {"kkh_grxx.zip","kkh_grjtcy.zip","kkh_grjtcc.zip","kkh_grscjy.zip","kkh_grxxll.zip","kkh_grgzll.zip","kkh_grrbxx.zip","kdk_yehz.zip","cxd_dkcpmc.zip","kkh_hmdgl.zip","kdk_lsz.zip","kdk_tkmx.zip","cxd_rygl.zip","kdk_jh.zip"};
 	@Autowired
 	private CustomerInforService customerInforService;
 	
@@ -248,5 +255,73 @@ public class OdsTools_jn {
 		log.error(dateString+"******************解压完毕********************");  
 	}
 	
+	public static void cFtp() throws IOException {
+/*ConnectFtp ftp = new ConnectFtp();
+		ftp.connectFTP();
+		DateFormat format = new SimpleDateFormat("yyyyMMdd");
+		String dateString = format.format(new Date());
+		 File url = new File(ConnectFtp.localFile+dateString);
+		 //本地创建当日数据文件夹
+        if(!url.exists()){ 
+        	url.mkdirs();  
+        }
+		 for (int i = 0; i < OdsTools_jn.fileName.length; i++) {
+			 ftp.download(OdsTools_jn.fileName[i], ConnectFtp.localFile+dateString);
+	        }*/
+		DateFormat format = new SimpleDateFormat("yyyyMMdd");
+		String dateString = format.format(new Date());
+		log.error(dateString+"******************开始下载下发数据压缩包********************");  
+		FTPUtil.download();
+		log.error(dateString+"******************下载下发数据压缩包完成********************");  
+			log.error(dateString+"******************开始解压********************");  
+			String gzFile = FtpUtils.bank_ftp_down_path+dateString;
+			for(int i=0;i<fileName.length;i++){
+				String url1 = gzFile+File.separator+fileName[i];
+				File fileUrl = new File(url1);
+			/*	if(fileUrl.exists()){
+					//连接sftp31
+					SFTPUtil31 csftp = new SFTPUtil31();
+					csftp.connect();  
+					String command = "tar -zxvf "+ gzFile +File.separator+"xdsj.tar.Z "+ "-C " + gzFile;
+					log.info("tar命令:"+command);
+					Runtime.getRuntime().exec(command);
+					//删除压缩包  存在解压未完成 删包的condition
+					//fileUrl.delete();
+					csftp.disconnect();
+				}*/
+				if(fileUrl.exists()){
+					ZipFile zip = new ZipFile(url1);  
+					for(Enumeration entries = zip.getEntries();entries.hasMoreElements();){
+						ZipEntry entry = (ZipEntry)entries.nextElement();  
+						String zipEntryName = entry.getName();  
+						InputStream in = zip.getInputStream(entry);  
+						String outPath = (gzFile+File.separator+zipEntryName).replaceAll("\\*", "/");
+						//判断路径是否存在,不存在则创建文件路径  
+						File file = new File(outPath.substring(0, outPath.lastIndexOf('/')));  
+						if(!file.exists()){  
+							file.mkdirs();  
+						}  
+						//判断文件全路径是否为文件夹,如果是上面已经上传,不需要解压  
+						if(new File(outPath).isDirectory()){  
+							continue;  
+						}  
+						
+						OutputStream out = new FileOutputStream(outPath);  
+						byte[] buf1 = new byte[1024];  
+						int len;  
+						while((len=in.read(buf1))>0){
+							out.write(buf1,0,len);  
+						}  
+						in.close();  
+						out.close();         
+						zip.close();
+					}
+					//删除压缩包
+					fileUrl.delete();
+				}
+			}
+			log.error(dateString+"******************解压完毕********************");  
 		
+	
+	}	 
 }

@@ -204,6 +204,7 @@ public class JnpadPcCustomerController {
 					Map<String, Object> map = new HashMap<String, Object>();
 						String cardid =request.getParameter("cardid");
 						List<LocalImageForm> result=CustomerService.selectUri(cardid);
+						System.out.println(result.get(0).getUri());
 						map.put("result", result);
 						map.put("size", result.size());
 						JsonConfig jsonConfig = new JsonConfig();
