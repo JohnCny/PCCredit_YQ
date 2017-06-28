@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.jxlx.dao.CustomerCoefficientDao">
+
+
+<resultMap type="com.cardpay.pccredit.jxlx.model.COEFFICIENT" id="COEFFICIENT">
+<result property="id" column="id" />
+<result property="userid" column="userid" />
+<result property="code" column="code" />
+<result property="team" column="team" />
+<result property="name" column="name" />
+<result property="orgteam" column="orgteam" />
+</resultMap>
+<resultMap id="SPLITOFINTEREST" type="com.cardpay.pccredit.jxlx.model.SPLITOFINTEREST">
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="year" property="year" jdbcType="VARCHAR" />
+    <result column="cost" property="cost" jdbcType="VARCHAR" />
+    <result column="provision" property="provision" jdbcType="VARCHAR" />
+    <result column="netprofit" property="netprofit" jdbcType="VARCHAR" />
+    <result column="month" property="month" jdbcType="VARCHAR" />
+      <result column="orgteam" property="orgteam" jdbcType="VARCHAR" />
+        <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="team" property="team" jdbcType="VARCHAR" />
+     <result column="name" property="name" jdbcType="VARCHAR" />
+     
+     
+     
+           <result column="lxsr" property="lxsr" jdbcType="VARCHAR" />
+        <result column="htlv" property="htlv" jdbcType="VARCHAR" />
+    <result column="zje" property="zje" jdbcType="VARCHAR" />
+     <result column="qs" property="qs" jdbcType="VARCHAR" />
+  </resultMap>
+    <insert id="insertCoefficient">
+        INSERT INTO COEFFICIENT
+        (id,
+        userid,
+        code,
+        team,
+        orgteam,
+        name
+        )
+        VALUES(
+        #{id},
+        #{userid},
+        #{code},
+        #{team},
+        #{orgteam},
+           #{name}
+        )
+    </insert>
+    <update id="updateCoefficient">
+        update COEFFICIENT
+        set 
+        code=#{code}
+        where 1=1
+        <if test="userid != null and userid != '' ">
+			AND userid= #{userid}
+		</if>
+		<if test="team != null and team != '' ">
+			AND team= #{team}
+		</if>
+		<if test="orgteam != null and orgteam != '' ">
+			AND orgteam= #{orgteam}
+		</if>
+    </update>
+<!-- 查询新的客户经理 -->
+<select id="selectNewManager" resultMap="COEFFICIENT">
+   select s.display_name as name ,o.name as orgteam,s.id as userid ,t.name as team from sys_organization o,sys_department t,sys_dept_user d,sys_user s
+where o.id=t.org_id
+and t.id=d.dept_id
+and d.user_id=s.id
+and s.id  not in （select userid from COEFFICIENT)
+group by o.name,s.id,t.name,s.display_name
+</select>
+
+<!-- 查询所有客户经理的系数值 -->
+<select id="selectallCOEFFICIENT" resultMap="COEFFICIENT">
+    SELECT * FROM
+			(SELECT ROW_.*,ROWNUM ROWNUM_
+				FROM (
+  select * from COEFFICIENT where 1=1
+   <if test="orgteam != null and orgteam != '' ">
+						AND orgteam = #{orgteam}
+					 </if>
+					 <if test="team != null and team != '' ">
+						AND team = #{team}
+					 </if>
+					  <if test="name != null and name != '' ">
+						AND name = #{name}
+					 </if>
+					 
+		 <![CDATA[		
+							) ROW_
+						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
+					WHERE ROWNUM_ > #{limit}*#{page}
+					]]>
+</select>
+
+
+<select id="selectallCOEFFICIENTByUserId" resultMap="COEFFICIENT">
+ 
+  select * from COEFFICIENT where userid=#{userid}
+</select>
+
+<!-- 查询所有客户经理的系数值 -->
+<select id="selectallCOEFFICIENTcount" resultType="int">
+   
+  select count(*) from COEFFICIENT where 1=1
+   <if test="orgteam != null and orgteam != '' ">
+						AND orgteam = #{orgteam}
+					 </if>
+					 <if test="team != null and team != '' ">
+						AND team = #{team}
+					 </if>
+					   <if test="name != null and name != '' ">
+						AND name = #{name}
+					 </if>
+	
+</select>
+<!-- 查询所有的区域 -->
+<select id="selectallOrgteam" resultMap="COEFFICIENT">
+  select distinct orgteam from COEFFICIENT
+</select>
+ <!-- 查询所有的团队 -->
+<select id="selectallTeam" resultMap="COEFFICIENT">
+  select distinct orgteam from COEFFICIENT
+</select>   
+    
+    
+    
+      <insert id="insertSPLITOFINTEREST">
+        INSERT INTO SPLITOFINTEREST
+        (id,
+        year,
+        month,
+        team,
+        orgteam,
+        name,
+        userid
+        )
+        VALUES(
+        #{id},
+        #{year},
+        #{month},
+        #{team},
+        #{orgteam},
+           #{name},
+            #{userid}
+        )
+    </insert>
+    
+    
+    <!-- 查询新的客户经理 -->
+<select id="selectNewManager1" resultMap="SPLITOFINTEREST">
+   select s.display_name as name ,o.name as orgteam,s.id as userid ,t.name as team from sys_organization o,sys_department t,sys_dept_user d,sys_user s
+where o.id=t.org_id
+and t.id=d.dept_id
+and d.user_id=s.id
+and s.id  not in （select userid from SPLITOFINTEREST where year=#{year} and month=#{month})
+group by o.name,s.id,t.name,s.display_name
+</select>
+
+    <!-- 查询不是质押的还款 -->
+<select id="selecthkb" resultMap="SPLITOFINTEREST">
+     select m.REQLMT as zje,m.HTLL as htlv,m.qs as qs,y.yhlx as lxsr from yqhk y,mibusidata m where m.ywbh=y.ywbh
+     and m.DKFS !='004'
+     and m.userid=#{userid}
+</select>
+    <!-- 查询不是质押的还款 -->
+<select id="selecthkb1" resultMap="SPLITOFINTEREST">
+     select m.REQLMT as zje,m.HTLL as htlv,m.qs as qs,y.yhlx as lxsr from yqhk y,mibusidata m where m.ywbh=y.ywbh
+     and m.DKFS ='004'
+       and m.userid=#{userid}
+</select>
+<select id="selectxsByUserId" resultMap="SPLITOFINTEREST">
+     select code from COEFFICIENT where userid=#{userid}
+</select>
+    
+    
+    
+   
+</mapper>

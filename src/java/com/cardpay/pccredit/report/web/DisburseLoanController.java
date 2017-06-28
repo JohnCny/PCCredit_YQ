@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cardpay.pccredit.common.FormatTool;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.report.filter.CustomerMoveFilter;
 import com.cardpay.pccredit.report.filter.ReportFilter;
 import com.cardpay.pccredit.report.model.CustomerMoveForm;
@@ -43,7 +45,8 @@ public class DisburseLoanController extends BaseController{
 	
 	@Autowired
 	private CustomerTransferFlowService customerTransferFlowService;
-	
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	/**
 	 * 已发放贷款统计查询
 	 * @param filter
@@ -56,15 +59,31 @@ public class DisburseLoanController extends BaseController{
 	public AbstractModelAndView queryHaveBeenLoan(@ModelAttribute ReportFilter filter,HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/report/disburseLoan/disburseLoan", request);
 		filter.setRequest(request);
+		List<MonthlyStatisticsModel> resultModel=null;
+		MonthlyStatisticsModel model=new MonthlyStatisticsModel();
+		MonthlyStatisticsModel model1=new MonthlyStatisticsModel();
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String id = user.getId();
 		Integer usertype=user.getUserType();
 		if(usertype==1){
-			filter.setUserId(id);
+			model.setId("0");
+			  resultModel=StatisticsService.findxzz(id);
+			if(resultModel.size()>0){
+				model.setSfzz("1");
+				MonthlyStatisticsModel team=StatisticsService.selectUserOnTeam(id);
+				filter.setTeam(team.getTeam());
+			}else{
+				model.setSfzz("0");
+				filter.setUserId(id);
+			}
+		}else{
+			model.setId("1");
 		}
 	    QueryResult<YffdktjbbForm> result =  customerTransferFlowService.findYffdktjbbFormList(filter);
 		JRadPagedQueryResult<YffdktjbbForm> pagedResult = new JRadPagedQueryResult<YffdktjbbForm>(filter, result);
 		mv.addObject(PAGED_RESULT, pagedResult);
+		mv.addObject("model", resultModel);
+		mv.addObject("model1", model);
 		return mv;
 	}
 	
@@ -161,7 +180,7 @@ public class DisburseLoanController extends BaseController{
 			row.createCell((short) 7).setCellValue(move.getDqrq());
 			row.createCell((short) 8).setCellValue(move.getDkqx());
 			row.createCell((short) 9).setCellValue(move.getDkye());
-			row.createCell((short) 10).setCellValue(move.getCname());
+			row.createCell((short) 10).setCellValue(move.getBusimanager());
 			row.createCell((short) 11).setCellValue(move.getTeam());
 			row.createCell((short) 12).setCellValue(move.getName());
 		}

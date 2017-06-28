@@ -1124,9 +1124,9 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 										ApproveHistoryForm1=new ApproveHistoryForm();
 										ApproveHistoryForm1.setStatusName("审贷决议");
 										if(result.get(a).getZsw()==1){
-											ApproveHistoryForm.setExamineResult("主审"+"审贷拒绝");
+											ApproveHistoryForm1.setExamineResult("主审"+"审贷拒绝");
 										}else if(result.get(a).getZsw()==0){
-											ApproveHistoryForm.setExamineResult("副审"+"审贷拒绝");
+											ApproveHistoryForm1.setExamineResult("副审"+"审贷拒绝");
 										}
 										ApproveHistoryForm1.setDisplayName(result.get(a).getDisplayName());
 										ApproveHistoryForm1.setStartExamineTime(result.get(a).getCreatime());
@@ -1180,53 +1180,55 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 			ProductAttribute producAttribute =  productService.findProductAttributeById(customerApplicationInfo.getProductId());
 			CustomerInfor  customerInfor  = intoPiecesService.findCustomerManager(customerApplicationInfo.getCustomerId());
 			List<AppManagerAuditLog> appManagerAuditLog = productService.findAppManagerAuditLog(appId,"1");
-			if(appManagerAuditLog.size()!=0){
+			if(appManagerAuditLog.size()>0){
 				map.put("appManagerAuditLog", appManagerAuditLog.get(0));
 				List<IntoPieces> result=SdwUserService.findsdh1(id);
-				for(int a=0;a<result.size();a++){
-					if(result.get(a).getStatus().equals("1")){
-						result.get(a).setStatus("通过");
-					}else if(result.get(a).getStatus().equals("2")){
-						result.get(a).setStatus("拒绝");
-					}else if(result.get(a).getStatus().equals("3")){
-						result.get(a).setStatus("退回");
-					}
-				}
-				map.put("result", result);
-				map.put("resultsize", result.size());
-				
-				if(result.size()>=3 && result.get(0).getStatus()=="通过"&& result.get(1).getStatus()=="通过"&& result.get(2).getStatus()=="通过"){
-					if(result.get(0).getSplv()==result.get(1).getSplv() && result.get(0).getSplv()==result.get(2).getSplv()&&
-							result.get(0).getSpqx()==result.get(1).getSpqx() && result.get(0).getSpqx()==result.get(2).getSpqx()&&
-							result.get(0).getDbfs()==result.get(1).getDbfs() && result.get(0).getDbfs()==result.get(2).getDbfs()&&
-							result.get(0).getApplyQuota()==result.get(1).getApplyQuota() && result.get(0).getApplyQuota()==result.get(2).getApplyQuota()){
-					}else{
-						List<IntoPieces>  IntoPieces= SdwUserService.findsph1(id);
-						if(IntoPieces.size()>0){
-							for(int a=0;a<IntoPieces.size();a++){
-								if(IntoPieces.get(a).getApplyQuota()!=null){
-									IntoPieces.get(a).setStatus("通过");
-								}else{
-									if(IntoPieces.get(a).getStatus().equals("nopass") || IntoPieces.get(a).getStatus().equals("refuse")){
-										IntoPieces.get(a).setStatus("拒绝");
-									}else if(IntoPieces.get(a).getStatus().equals("nopass_replenish") || IntoPieces.get(a).getStatus().equals("returnedToFirst")){
-										IntoPieces.get(a).setStatus("退回");
-									}
-								}
-							}
-							map.put("bss", IntoPieces);
-							map.put("bsssize", IntoPieces.size());
-						}else{
-							IntoPieces IntoPieces1=new IntoPieces();
-							IntoPieces1.setStatus("无数据");
-							map.put("bss", IntoPieces1);
+				if(result.size()>0){
+					for(int a=0;a<result.size();a++){
+						if(result.get(a).getStatus().equals("1")){
+							result.get(a).setStatus("通过");
+						}else if(result.get(a).getStatus().equals("2")){
+							result.get(a).setStatus("拒绝");
+						}else if(result.get(a).getStatus().equals("3")){
+							result.get(a).setStatus("退回");
 						}
 					}
+					map.put("result", result);
+					map.put("resultsize", result.size());
+					if(result.size()>=3 && result.get(0).getStatus()=="通过"&& result.get(1).getStatus()=="通过"&& result.get(2).getStatus()=="通过"){
+						if(result.get(0).getSplv()==result.get(1).getSplv() && result.get(0).getSplv()==result.get(2).getSplv()&&
+								result.get(0).getSpqx()==result.get(1).getSpqx() && result.get(0).getSpqx()==result.get(2).getSpqx()&&
+								result.get(0).getDbfs()==result.get(1).getDbfs() && result.get(0).getDbfs()==result.get(2).getDbfs()&&
+								result.get(0).getApplyQuota()==result.get(1).getApplyQuota() && result.get(0).getApplyQuota()==result.get(2).getApplyQuota()){
+						}else{
+							List<IntoPieces>  IntoPieces= SdwUserService.findsph1(id);
+							if(IntoPieces.size()>0){
+								for(int a=0;a<IntoPieces.size();a++){
+									if(IntoPieces.get(a).getApplyQuota()!=null){
+										IntoPieces.get(a).setStatus("通过");
+									}else{
+										if(IntoPieces.get(a).getStatus().equals("nopass") || IntoPieces.get(a).getStatus().equals("refuse")){
+											IntoPieces.get(a).setStatus("拒绝");
+										}else if(IntoPieces.get(a).getStatus().equals("nopass_replenish") || IntoPieces.get(a).getStatus().equals("returnedToFirst")){
+											IntoPieces.get(a).setStatus("退回");
+										}
+									}
+								}
+								map.put("bss", IntoPieces);
+								map.put("bsssize", IntoPieces.size());
+							}else{
+								map.put("bsssize", IntoPieces.size());
+							}
+						}
+					}
+				}else{
+					map.put("resultsize", result.size());
 				}
+				
 			}else{
 					AppManagerAuditLog AppManagerAuditLog=new AppManagerAuditLog();
 					AppManagerAuditLog.setId("0");
-					map.put("appManagerAuditLog", AppManagerAuditLog.getId());
+					map.put("appManagerAuditLog", AppManagerAuditLog);
 				}
 			map.put("customerApplicationInfo", customerApplicationInfo);
 			map.put("producAttribute", producAttribute);

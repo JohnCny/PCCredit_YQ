@@ -47,10 +47,10 @@ public class JnpadImageBrowseService {
 		LocalImage v = commonDao.findObjectById(LocalImage.class, id);
 		if(v!=null){
 			//本地
-			this.downLoadFile(response,v);
+			//this.downLoadFile(response,v);
 			//服务器
 			//SFTPUtil.downloadjn(response,v.getUrl(), v.getFileName()==null?v.getOriginalName():v.getFileName());
-			//JNPAD_SFTPUtil.downloadjn(response,v.getUri(), v.getAttachment());
+			JNPAD_SFTPUtil.downloadjn(response,v.getUri(), v.getAttachment());
 		}
 	}
 	

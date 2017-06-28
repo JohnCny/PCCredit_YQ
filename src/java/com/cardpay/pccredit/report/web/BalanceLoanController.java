@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cardpay.pccredit.common.FormatTool;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.report.filter.CustomerMoveFilter;
 import com.cardpay.pccredit.report.filter.ReportFilter;
 import com.cardpay.pccredit.report.model.DkyetjbbForm;
@@ -42,7 +44,8 @@ public class BalanceLoanController extends BaseController{
 	
 	@Autowired
 	private CustomerTransferFlowService customerTransferFlowService;
-	
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	/**
 	 * 贷款余额统计查询
 	 * @param filter
@@ -55,15 +58,30 @@ public class BalanceLoanController extends BaseController{
 	public AbstractModelAndView queryExpireLoan(@ModelAttribute ReportFilter filter,HttpServletRequest request) {
 		JRadModelAndView mv = new JRadModelAndView("/report/balanceLoan/BalanceLoan", request);
 		filter.setRequest(request);
+		List<MonthlyStatisticsModel> resultModel=null;
+		MonthlyStatisticsModel model=new MonthlyStatisticsModel();
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String id = user.getId();
 		Integer usertype=user.getUserType();
 		if(usertype==1){
-			filter.setUserId(id);
+			model.setId("0");
+			  resultModel=StatisticsService.findxzz(id);
+				if(resultModel.size()>0){
+					model.setSfzz("1");
+					MonthlyStatisticsModel team=StatisticsService.selectUserOnTeam(id);
+					filter.setTeam(team.getTeam());
+				}else{
+					model.setSfzz("0");
+					filter.setUserId(id);
+				}
+		}else{
+			model.setId("1");;
 		}
 		QueryResult<DkyetjbbForm> result =  customerTransferFlowService.findDkyetjbbFormList(filter);
 		JRadPagedQueryResult<DkyetjbbForm> pagedResult = new JRadPagedQueryResult<DkyetjbbForm>(filter, result);
 		mv.addObject(PAGED_RESULT, pagedResult);
+		mv.addObject("model", resultModel);
+		mv.addObject("model1", model);
 		return mv;
 	}
 	

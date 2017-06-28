@@ -2,6 +2,8 @@ package com.cardpay.pccredit.report.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.cardpay.pccredit.customer.filter.FkRankingFilter;
 import com.cardpay.pccredit.report.model.NameValueRecord;
 import com.wicresoft.util.annotation.Mapper;
@@ -55,5 +57,7 @@ public interface StatisticalCommonDao {
 	public List<NameValueRecord> statisticalblorgan();
 	//放款排名
 	public List<FkRankingFilter> queryFkRanking();
+	public NameValueRecord statisticalApplicationStatussum(@Param("status") String status);
+	public NameValueRecord statisticalApplicationStatussum1();;
 	
 }

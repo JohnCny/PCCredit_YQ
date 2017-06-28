@@ -206,7 +206,7 @@ public class ReadWholeAndIncrementService {
 								throw new RuntimeException(e);
 							} 
 						}
-						f.delete();
+						//f.delete();
 						//succ
 						accountManagerParameterService.updBatchTaskFlow("100","incre",dateString);
 				}

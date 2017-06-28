@@ -29,7 +29,7 @@
     (#{id},#{customeryeah},#{customerJanuary},#{customerFebruary},#{customerMarch},#{customerApril},#{customerMay},#{customerJune},#{customerJuly},#{customerAugust},#{customerSeptember},#{customerOctober},#{customerNovember},#{customerDecember},#{totalAmount},#{userId},#{team},#{orgteam})
 </insert>
 <update id="updateMonthlyStatistics">
-    update monthlystatistics set
+     update monthlystatistics set
     customerJanuary=customerJanuary+#{customerJanuary},
     customerFebruary=customerFebruary+#{customerFebruary},
     customerMarch=customerMarch+#{customerMarch},
@@ -48,7 +48,11 @@
        where 
         userId=#{userId}
         and customeryeah=#{customeryeah}
+       
 </update>
+<delete id="deleteAll">
+        truncate   table MONTHLYSTATISTICS
+</delete>
 <select id="selectAllUserId" resultMap="MonthlyStatisticsModel">
      select o.name as orgteam,s.id as userId ,t.name as team from sys_organization o,sys_department t,sys_dept_user d,sys_user s
 where o.id=t.org_id
@@ -79,6 +83,7 @@ group by o.name,s.id,t.name
     ,account_manager_parameter amp
      , sys_user su,
      ( select id from account_manager_parameter where user_id=#{userId}) cc
+   
 
      WHERE   mbm.parent_id =cc.id
      and amp.id = mbm.child_id
@@ -86,19 +91,20 @@ group by o.name,s.id,t.name
 	</select>
 	
 	<select id="selectTeamYear" resultMap="MonthlyStatisticsModel">
-    select sum(customerJanuary)/10000 as customerJanuary,
-    sum(customerFebruary)/10000 as customerFebruary, 
-    sum(customerMarch) /10000 customerMarch, 
-    sum(customerApril)/10000 as customerApril, 
-    sum(customerMay)/10000 as customerMay, 
-    sum(customerJune)/10000 as customerJune, 
-    sum(customerJuly)/10000 as customerJuly, 
-    sum(customerAugust)/10000 as customerAugust, 
-    sum(customerSeptember)/10000 as customerSeptember, 
-    sum(customerOctober)/10000 as customerOctober, 
-    sum(customerNovember)/10000 as customerNovember, 
-    sum(customerDecember)/10000 as customerDecember, 
-    sum(totalAmount)/10000 as totalAmount from MONTHLYSTATISTICS t where 1=1
+	    select 
+    nvl( sum(customerJanuary)/10000,0) as customerJanuary,
+    nvl(sum(customerFebruary)/10000,0) as customerFebruary, 
+    nvl(sum(customerMarch) /10000,0) customerMarch, 
+    nvl(sum(customerApril)/10000,0) as customerApril, 
+    nvl(sum(customerMay)/10000,0) as customerMay, 
+    nvl(sum(customerJune)/10000,0) as customerJune, 
+    nvl(sum(customerJuly)/10000,0) as customerJuly, 
+    nvl(sum(customerAugust)/10000,0) as customerAugust, 
+    nvl(sum(customerSeptember)/10000,0) as customerSeptember, 
+    nvl(sum(customerOctober)/10000,0) as customerOctober, 
+    nvl(sum(customerNovember)/10000,0) as customerNovember, 
+    nvl(sum(customerDecember)/10000,0) as customerDecember, 
+    nvl(sum(totalAmount)/10000,0) as totalAmount from MONTHLYSTATISTICS t where 1=1
     <if test="team != null and team != '' ">
         and team=#{team}
     </if>
@@ -115,5 +121,14 @@ group by o.name,s.id,t.name
 </select>
 <select id="selectAllYear" resultMap="MonthlyStatisticsModel">
   select distinct customeryeah from MONTHLYSTATISTICS    
+</select>
+
+<select id="selectUserOnTeam" resultMap="MonthlyStatisticsModel">
+     select t.name as team from sys_organization o,sys_department t,sys_dept_user d,sys_user s
+where o.id=t.org_id
+and t.id=d.dept_id
+and d.user_id=s.id
+and s.id=#{userId}
+group by o.name,s.id,t.name
 </select>
 </mapper> 

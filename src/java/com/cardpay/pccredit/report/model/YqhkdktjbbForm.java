@@ -19,10 +19,21 @@ public class YqhkdktjbbForm extends BaseForm {
 	   private String  yhlx;			//应还利息
 	   private String  busimanager;     //所属客户经理
 	   private String  instcode;        //所属机构
+	   private String  yhbx; 
    private String  team;	 //所属团队
 	   
 	   
-	   public String getTeam() {
+	   public String getYhbx() {
+	return yhbx;
+}
+
+
+public void setYhbx(String yhbx) {
+	this.yhbx = yhbx;
+}
+
+
+	public String getTeam() {
 		return team;
 	}
 

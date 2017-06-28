@@ -13,7 +13,20 @@ public class ReportFilter extends BaseQueryFilter {
 	private String dkqx;
 	private String team;
 	private String team1;
+	private String yhbx;
 
+	public String getTeam1() {
+		return team1;
+	}
+	public void setTeam1(String team1) {
+		this.team1 = team1;
+	}
+	public String getYhbx() {
+		return yhbx;
+	}
+	public void setYhbx(String yhbx) {
+		this.yhbx = yhbx;
+	}
 	public String getTeam() {
 		return team;
 	}

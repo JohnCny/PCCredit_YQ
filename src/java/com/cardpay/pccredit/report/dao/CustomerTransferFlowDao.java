@@ -65,7 +65,7 @@ public interface CustomerTransferFlowDao {
 	List<AccountManagerParameterForm> findAccountManagerParameterByUserId(@Param("userId") String userId);
 	
 	List<MibusidataForm> findTzJnListByFilter(PostLoanFilter filter);
-	
+	List<DkyetjbbForm>findyxjlls(@Param("cardId") String cardId);
 	/**
 	 * 利息分段统计查询
 	 */

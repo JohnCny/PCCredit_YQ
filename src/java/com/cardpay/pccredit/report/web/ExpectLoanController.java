@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.report.filter.CustomerMoveFilter;
 import com.cardpay.pccredit.report.filter.ReportFilter;
 import com.cardpay.pccredit.report.model.CustomerMoveForm;
@@ -42,7 +44,8 @@ public class ExpectLoanController extends BaseController{
 	
 	@Autowired
 	private CustomerTransferFlowService customerTransferFlowService;
-	
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	/**
 	 * 预期还款贷款统计查询
 	 * @param filter
@@ -56,14 +59,29 @@ public class ExpectLoanController extends BaseController{
 		JRadModelAndView mv = new JRadModelAndView("/report/expect/expectLoan", request);
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+		List<MonthlyStatisticsModel> resultModel=null;
+		MonthlyStatisticsModel model=new MonthlyStatisticsModel();
 		String id = user.getId();
 		Integer usertype=user.getUserType();
 		if(usertype==1){
-			filter.setUserId(id);
+			model.setId("0");
+			  resultModel=StatisticsService.findxzz(id);
+				if(resultModel.size()>0){
+					model.setSfzz("1");
+					MonthlyStatisticsModel team=StatisticsService.selectUserOnTeam(id);
+					filter.setTeam(team.getTeam());
+				}else{
+					model.setSfzz("0");
+					filter.setUserId(id);
+				}
+		}else{
+			model.setId("1");;
 		}
 	    QueryResult<YqhkdktjbbForm> result =  customerTransferFlowService.findYqhkdktjbbFormList(filter);
 		JRadPagedQueryResult<YqhkdktjbbForm> pagedResult = new JRadPagedQueryResult<YqhkdktjbbForm>(filter, result);
 		mv.addObject(PAGED_RESULT, pagedResult);
+		mv.addObject("model", resultModel);
+		mv.addObject("model1", model);
 		return mv;
 	}
 	
@@ -117,18 +135,21 @@ public class ExpectLoanController extends BaseController{
 		cell.setCellValue("距离还款日(日)");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 6);
-		cell.setCellValue("应还本金");
+		cell.setCellValue("应还本息");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 7);
-		cell.setCellValue("应还利息");
+		cell.setCellValue("应还本金");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 8);
-		cell.setCellValue("所属客户经理");
+		cell.setCellValue("应还利息");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 9);
-		cell.setCellValue("所属团队");
+		cell.setCellValue("所属客户经理");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 10);
+		cell.setCellValue("所属团队");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 11);
 		cell.setCellValue("所属机构");
 		cell.setCellStyle(style);
 		
@@ -141,11 +162,12 @@ public class ExpectLoanController extends BaseController{
 			row.createCell((short) 3).setCellValue(move.getProdName());
 			row.createCell((short) 4).setCellValue(move.getMoney());
 			row.createCell((short) 5).setCellValue(move.getHkr());
-			row.createCell((short) 6).setCellValue(move.getHkbj());
-			row.createCell((short) 7).setCellValue(move.getYhlx());
-			row.createCell((short) 8).setCellValue(move.getBusimanager());
-			row.createCell((short) 9).setCellValue(move.getTeam());
-			row.createCell((short) 10).setCellValue(move.getInstcode());
+			row.createCell((short) 6).setCellValue(move.getYhbx());
+			row.createCell((short) 7).setCellValue(move.getHkbj());
+			row.createCell((short) 8).setCellValue(move.getYhlx());
+			row.createCell((short) 9).setCellValue(move.getBusimanager());
+			row.createCell((short) 10).setCellValue(move.getTeam());
+			row.createCell((short) 11).setCellValue(move.getInstcode());
 		}
 		String fileName = "预期还款贷款统计报表";
 		try{

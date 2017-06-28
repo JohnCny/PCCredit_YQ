@@ -59,7 +59,7 @@ import sun.misc.BASE64Encoder;
 
 public class JNPAD_SFTPUtil {
 //	private static String host = "61.34.0.32";//生产
-	private static String host = "10.96.1.12";//测试
+	private static String host = "10.96.1.11";//测试
     private static String username="root";  
     private static String password="qkjr123";  
     private static int port = 22;  
@@ -87,6 +87,7 @@ public class JNPAD_SFTPUtil {
             Channel channel = sshSession.openChannel("sftp");  
             channel.connect();  
             sftp = (ChannelSftp) channel;  
+            System.out.println("1111");
         } catch (Exception e) {  
             e.printStackTrace();  
         }
@@ -347,14 +348,15 @@ public class JNPAD_SFTPUtil {
 		}
 	}
 	
-	public static void downloadjn(HttpServletResponse response,
+	public synchronized static void downloadjn(HttpServletResponse response,
 			String filePath, String fileName) {
 		try {
 			byte[] buff = new byte[2048];
 			int bytesRead;
 			response.setHeader("Content-Disposition", "attachment; filename="+ java.net.URLEncoder.encode(fileName, "UTF-8"));
 			connect();
-			sftp.cd(filePath.substring(0, 36));
+			System.out.println(filePath);
+			sftp.cd(filePath.substring(0, 50));
 			String GIF = "image/gif;charset=GB2312";// 设定输出的类型
 			String JPG = "image/jpeg;charset=GB2312";
 			String BMP = "image/bmp";

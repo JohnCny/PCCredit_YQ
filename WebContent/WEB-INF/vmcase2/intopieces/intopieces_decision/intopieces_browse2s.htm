@@ -148,8 +148,10 @@
 		$("#id_report_button").click(function() {
 			if ($(".checkbox :checked").length == 1) {
 				var rowid = $("input[name='checkbox']:checked").val();
-				if(rowid.split("@")[5]!="融耀卡"){
-				var url = "${contextPath}/customer/customerInfor_wh_ty/report_jy.page?appId=" + rowid.split("@")[2]+"&&cardId="+rowid.split("@")[4]+"&icount=0";
+				var pid=rowid.split("@")[6];
+				var cid=rowid.split("@")[1];
+				var icount="0";
+				var url = "${contextPath}/customer/customerInfor_wh_ty/report_jy.page?appId="+rowid.split("@")[2]+"&pid="+pid+"&cid="+cid+"&icount="+icount;
 				if (opsObj.formObj) {
 	                // 回调URL
 	                var callBackUrlObj = opsObj.formObj.find("div.pagebar div.page a.current");
@@ -164,11 +166,9 @@
 		                    });
 	                	}
 	                }
-	            }
+	            
 				window.location.href = url;
-				}else{
-					Dialog.message("荣耀卡无调查报告")
-					}
+				}
 			}
 			else{
 				Dialog.message("请选择一行!");

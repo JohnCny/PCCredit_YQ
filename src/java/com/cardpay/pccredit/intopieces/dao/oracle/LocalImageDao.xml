@@ -46,7 +46,7 @@
 		<result property="uri" column="uri" />
 	</resultMap>
 	      <select id="selectBycardId" resultMap="ImageMore">
-		select uri as uri from LOCAL_IMAGE where customer_id=
+		select uri as uri ,id as cid from LOCAL_IMAGE where customer_id=
 (select id from BASIC_CUSTOMER_INFORMATION where card_id=#{pid})
 	</select>
 	    <select id="selectBycardIdCount" resultType="int">
@@ -70,7 +70,7 @@
    <!--          	SELECT * FROM
 		(SELECT ROW_.*,ROWNUM ROWNUM_
 		FROM ( -->
-			select uri as uri  from LOCAL_IMAGE 
+			select uri as uri,id as cid  from LOCAL_IMAGE 
 			where CUSTOMER_ID=#{cid}
 			and PRODUCT_ID=#{pid}
 		  <!--  <![CDATA[		

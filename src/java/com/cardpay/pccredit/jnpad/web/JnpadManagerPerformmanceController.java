@@ -156,6 +156,7 @@ public class JnpadManagerPerformmanceController {
 	    	  }
 	    	  from.setOrdteam("");
 	    	  ManagerPerformmanceForm form1=managerPerformmanceService.selectAllTeamYj(from);
+	    	
 	    	  form1.setOrdteam("总计");
 	    	  form1.setTeam(from.getTeam());
 	    	  form1.setName(from.getTeam());
@@ -174,7 +175,7 @@ public class JnpadManagerPerformmanceController {
 			return json.toString();
 		
 	}
-	
+	int ca=0;
 /**
  * 管理员查询全部的业绩进度
  * @param request
@@ -222,6 +223,14 @@ public class JnpadManagerPerformmanceController {
 		form1.setName(result.get(b).getOrdteam());
 		gxperformList.add(count, form1);
 		count+=1;
+	}
+	for(int i=0;i<gxperformList.size();i++){
+		for(int a=gxperformList.size()-1;a>=0;a--){
+			ca=a;
+			if(gxperformList.get(i).getName().equals(gxperformList.get(a).getName()) && !gxperformList.get(i).getName().contains("团队")){
+				gxperformList.remove(a);
+			}
+		}
 	}
 		map.put("form", gxperformList);
 		map.put("formsize", gxperformList.size());

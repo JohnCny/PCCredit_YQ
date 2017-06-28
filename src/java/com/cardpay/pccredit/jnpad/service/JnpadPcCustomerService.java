@@ -55,7 +55,7 @@ public class JnpadPcCustomerService {
 /*	private static String host = "139.196.31.230";//测试
     private static String username="root";  
     private static String password="aDmin945";*/  
-	private static String host = "10.96.1.12";//测试
+	private static String host = "10.96.1.11";//测试
     private static String username="root";  
     private static String password="qkjr123";  
     private static int port = 22;  

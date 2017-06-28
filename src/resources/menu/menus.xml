@@ -39,7 +39,7 @@
 			<menu id="070004" name="retraining" 			title="客户经理培训计划列表" 		url="/manager/retraining/browse.page" 				 img="" operations="create|change|delete|display|browse"/>
  			<menu id="070006" name="performmanceinput" 		title="业绩进度录入" 			url="/manager/performmance/insert.page" 			 img="" operations="checked|display|browse"/>		    
  			<menu id="070007" name="performmancebrowse" 	title="业绩进度查询" 			url="/manager/performmance/selectAllManegerYj.page" 			 img="" operations="checked|display|browse"/>
- 			<menu id="070008" name="managerKhgl" 			title="管辖客户管理" 			url="/manager/khgl/browse.page" 					 img="" operations="checked|display|browse"/>
+ 			<!-- <menu id="070008" name="managerKhgl" 			title="管辖客户管理" 			url="/manager/khgl/browse.page" 					 img="" operations="checked|display|browse"/> -->
  			<menu id="070009" name="model" 					title="四维授信评估模型" 			url="/manager/khgl/dimensionsCreditModel.page" 		 img="" operations="checked|display|browse"/>
  	   		<menu id="070010" name="weeklyaccount" 			title="客户经理周报" 			url="/manager/weeklyaccount/browse.page" 			 img="" operations="change|display|browse"/> 
  	   		<menu id="070011" name="weeklyaccountzuzhang" 	title="所属客户经理周报列表"      	url="/manager/weeklyaccountzuzhang/browse.page" 	 img="" operations="change|display|browse"/>
@@ -59,7 +59,7 @@
 			<menu id="090001" name="trainmessage"        		    title="培训计划通知" url="/notificationmessage/trainmessage/browse.page" 		img="" operations="checked|display|browse"/>
 			<menu id="090002" name="inspectscoremessage" 		    title="风险事项通知" url="/notificationmessage/inspectscoremessage/browse.page" img="" operations="checked|display|browse"/>
 		    <menu id="090003" name="taskmessage" 				    title="每日任务通知" url="/sys/user/selectplan.page" 					 	  	img="" operations="browse|change|create"/>
-		    <menu id="090004" name="monthlyrepaymentremindmessage" 	title="每月还款提醒" url="/postLoan/post/hktxBrowse.page" 						img="" operations="create|change|display|browse"/>
+		   <!--  <menu id="090004" name="monthlyrepaymentremindmessage" 	title="每月还款提醒" url="/postLoan/post/hktxBrowse.page" 						img="" operations="create|change|display|browse"/> -->
 		</menu>
 		
 		<menu id="091000" name="postLoan" title="贷后管理" url="" img="images/icon_sys.gif" operations="">
@@ -68,14 +68,18 @@
 			<menu id="091003" name="postLoan4" title="台帐信息" 	url="/postLoan/post/tzbrowse.page" 	 img="" operations="create|change|display|browse"/>
 			<menu id="091004" name="postLoan3" title="贷后监控管理" url="/postLoan/post/dhbrowse.page"   img="" operations="create|addbatch|change|display|import|approveloguser|approvelog|browse"/>
 			<menu id="091005" name="postLoan5" title="信贷流程跟踪信息" url="/postLoan/post/creditProcess.page"  img="" operations="create|change|display|browse"/>
+			<!-- <menu id="091005" name="postLoan5" title="信贷流程跟踪信息" url="/postLoan/post/creditProcess.page"  img="" operations="create|change|display|browse"/> -->
 		</menu>
-		
+<!-- 		<menu id="093000" name="postLoan" title="特殊贷款管理" url="" img="images/icon_sys.gif" operations="">
+			<menu id="093003" name="postLoan1" title="特殊贷款信息" 	url="/postLoan/post/browse.page" 	 img="" operations="create|change|display|browse"/>
+		</menu> -->
 		<menu id="092000" name="performanceManagement" title="绩效管理" url="" img="images/icon_sys.gif" operations="">
 			 <menu id="092001" name="managerPromotionRule"  title="客户经理绩效工资参数配置" url="/manager/managerPromotionRule/updateJxParam.page"  img="" operations="browse|change|create"/>
 	         <menu id="092002" name="jbxc" 	 			    title="客户经理基本薪酬配置" 	 url="/manager/leveladjustment/browsejnjbxc.page" 		 img="" operations="display|browse"/>
 			 <menu id="092003" name="jxcs"   				title="客户经理绩效每月绩效参数" url="/manager/leveladjustment/browseMonthJx.page" 		 img="" operations="browse|change|create"/>
 		     <menu id="092004" name="dkye"   				title="客户每月日均贷款余额" 	 url="/manager/leveladjustment/browseCustDayBalamt.page" img="" operations="browse|change|create"/>
 		     <menu id="092005" name="dkywjx" 				title="客户经理每月工资信息"    url="/manager/leveladjustment/jnJxbrowse.page" 		 img="" operations="display|browse"/>
+		      <menu id="092006" name="lifxxssz" 				title="利息分拆系数设置"    url="/customer/Coefficient/selectCoefficient.page" 		 img="" operations="display|browse"/>
 	     </menu>
 		
 		<menu id="100000" name="report" title="报表管理" url="" img="images/icon_sys.gif" operations="">
@@ -86,8 +90,8 @@
 			<menu id="100050" name="balanceLoan"  		 title="贷款余额统计报表 "     	url="/balance/loan/queryBalanceLoan.page" 					img="" operations="browse"/>
 			<menu id="100060" name="overLoan"     		 title="逾期贷款统计报表 "     	url="/overdue/loan/queryOverdueLoan.page" 					img="" operations="browse"/>
 			<menu id="100070" name="expectLoan"   		 title="预期还款贷款统计报表 "   	url="/expect/loan/queryExpectLoan.page" 					img="" operations="browse"/>
-			<menu id="100080" name="creditFlow"   		 title="信贷流程统计报表 "        url="/credit/flow/queryCreditFlow.page" 					img="" operations="browse"/>
-			<menu id="100090" name="afterLoancollectAll" title="贷款汇总查询统计报表"  	url="/report/afterLoancollect/browseAll.page"   			img="" operations="browse"/>
+			<!-- <menu id="100080" name="creditFlow"   		 title="信贷流程统计报表 "        url="/credit/flow/queryCreditFlow.page" 					img="" operations="browse"/>
+			<menu id="100090" name="afterLoancollectAll" title="贷款汇总查询统计报表"  	url="/report/afterLoancollect/browseAll.page"   			img="" operations="browse"/> -->
 			<!--<menu id="100100" name="lxtj"         		 title="贷款利息查询统计报表" 		url="/report/afterLoancollect/tzbrowse.page" 				img="" operations="create|change|display|browse"/>
 		 	<menu id="100101" name="lxtjfd"       		 title="贷款利息分段查询统计报表" 	url="/report/afterLoancollect/LxSubsectBrowse.page" 		img="" operations="create|change|display|browse"/>
 			<menu id="100102" name="sxfdcx"       		 title="授信金额分段查询统计报表"   url="/report/afterLoancollect/ContractSubsectBrowse.page" 	img="" operations="create|change|display|browse"/>

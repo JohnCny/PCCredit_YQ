@@ -27,10 +27,16 @@ public interface MonthlyStatisticsDao {
 	List<MonthlyStatisticsModel>findxzz(@Param("userId") String userId);
 	
 	//统计团队月季贷款信息
-	List<MonthlyStatisticsModel>selectTeamYear(MonthlyStatisticsModel MonthlyStatisticsModel);
+	MonthlyStatisticsModel selectTeamYear(MonthlyStatisticsModel MonthlyStatisticsModel);
 	
 	//查询所有的区域以及团队
 	List<MonthlyStatisticsModel>selectAllteam();
 	//查询所有有贷款的年份
 	List<MonthlyStatisticsModel>selectAllYear();
+	
+	//删除月季表中所有信息
+	void deleteAll();
+	
+	//查询当前客户经理所在团队
+	MonthlyStatisticsModel selectUserOnTeam(@Param("userId") String userId);
 }

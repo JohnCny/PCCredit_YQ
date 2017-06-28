@@ -80,6 +80,7 @@ import com.cardpay.pccredit.product.model.AddressAccessories;
 import com.cardpay.pccredit.product.model.AppendixDict;
 import com.cardpay.pccredit.product.model.ProductAttribute;
 import com.cardpay.pccredit.product.service.ProductService;
+import com.cardpay.pccredit.report.model.DkyetjbbForm;
 import com.jcraft.jsch.SftpException;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
@@ -1409,9 +1410,9 @@ public class IntoPiecesControl extends BaseController {
 									ApproveHistoryForm1=new ApproveHistoryForm();
 									ApproveHistoryForm1.setStatusName("审贷决议");
 									if(result.get(a).getZsw()==1){
-										ApproveHistoryForm.setExamineResult("主审"+"审贷拒绝");
+										ApproveHistoryForm1.setExamineResult("主审"+"审贷拒绝");
 									}else if(result.get(a).getZsw()==0){
-										ApproveHistoryForm.setExamineResult("副审"+"审贷拒绝");
+										ApproveHistoryForm1.setExamineResult("副审"+"审贷拒绝");
 									}
 									ApproveHistoryForm1.setDisplayName(result.get(a).getDisplayName());
 									ApproveHistoryForm1.setStartExamineTime(result.get(a).getCreatime());
@@ -1422,9 +1423,9 @@ public class IntoPiecesControl extends BaseController {
 										ApproveHistoryForm2=new ApproveHistoryForm();
 										ApproveHistoryForm2.setStatusName("审贷决议");
 										if(result.get(a).getZsw()==1){
-											ApproveHistoryForm.setExamineResult("主审"+"审贷退回");
+											ApproveHistoryForm2.setExamineResult("主审"+"审贷退回");
 										}else if(result.get(a).getZsw()==0){
-											ApproveHistoryForm.setExamineResult("副审"+"审贷退回");
+											ApproveHistoryForm2.setExamineResult("副审"+"审贷退回");
 										}
 										ApproveHistoryForm2.setDisplayName(result.get(a).getDisplayName());
 										ApproveHistoryForm2.setStartExamineTime(result.get(a).getCreatime());
@@ -1457,7 +1458,7 @@ public class IntoPiecesControl extends BaseController {
 		//客户id
 		String id = request.getParameter("id");
 		if(StringUtils.isNotEmpty(id)){
-			List<MibusidataForm> forms = intoPiecesService.findMibusidataForm(id);
+			List<DkyetjbbForm> forms = intoPiecesService.findyxjlls(id);
 			mv.addObject("forms", forms);
 		}
 		return mv;
@@ -2195,9 +2196,9 @@ public class IntoPiecesControl extends BaseController {
 		public AbstractModelAndView selectAllImageByPcId(@ModelAttribute ImageMore filter,HttpServletRequest request) throws IOException, SftpException {
 			List<String> list=new ArrayList<String>();
 	filter.setLimit(Integer.MAX_VALUE);
-			List<ImageMore> result = addIntoPiecesService.selectAllImageByPcId(filter);
+			List<ImageMore> result = addIntoPiecesService.selectAllImageByPcId1(filter);
 			for(int i=0;i<result.size();i++){
-				list.add(i, result.get(i).getUri());
+				list.add(i, result.get(i).getCid());
 			}
 			JRadModelAndView mv = null;
 			if(request.getParameter("type").equals("1")){
@@ -2230,9 +2231,9 @@ public class IntoPiecesControl extends BaseController {
 			String id = request.getParameter("id");
 			filter.setPid(pid);
 filter.setLimit(Integer.MAX_VALUE);
-			List<ImageMore> result = addIntoPiecesService.selectBycardId(filter);
+			List<ImageMore> result = addIntoPiecesService.selectBycardId1(filter);
 			for(int i=0;i<result.size();i++){
-				list.add(i, result.get(i).getUri());
+				list.add(i, result.get(i).getCid());
 			}
 			JRadModelAndView mv = null;
 			if(request.getParameter("type").equals("1")){
