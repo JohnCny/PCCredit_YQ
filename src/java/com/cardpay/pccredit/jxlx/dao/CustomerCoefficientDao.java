@@ -35,4 +35,10 @@ public interface CustomerCoefficientDao {
 		List<SPLITOFINTEREST>selecthkb(@Param("userid")String userid);
 		//查询是质押的贷款
 				List<SPLITOFINTEREST>selecthkb1(@Param("userid")String userid);
+				
+				//根据团队查询所有团队成员的分拆情况
+				List<SPLITOFINTEREST>selectSpliByTeam(SPLITOFINTEREST SPLITOFINTEREST);
+				
+				//查询整个团队的分拆情况
+				SPLITOFINTEREST selectSumSpliByTeam(SPLITOFINTEREST SPLITOFINTEREST);
 }

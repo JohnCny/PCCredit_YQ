@@ -10,6 +10,7 @@ import com.cardpay.pccredit.dateplan.model.JBUser;
 import com.cardpay.pccredit.jnpad.dao.JnIpadUserLoginDao;
 import com.cardpay.pccredit.jxlx.dao.CustomerCoefficientDao;
 import com.cardpay.pccredit.jxlx.model.COEFFICIENT;
+import com.cardpay.pccredit.jxlx.model.SPLITOFINTEREST;
 import com.wicresoft.jrad.base.database.model.QueryResult;
 
 @Service
@@ -34,6 +35,13 @@ public class CustomerCoefficientService {
 		}
 		public COEFFICIENT selectallCOEFFICIENTByUserId(@Param("userid")String userid){
 			return CoefficientDao.selectallCOEFFICIENTByUserId(userid);
+		}
+		public List<SPLITOFINTEREST>selectSpliByTeam(SPLITOFINTEREST SPLITOFINTEREST){
+			return CoefficientDao.selectSpliByTeam(SPLITOFINTEREST);
+		}
+		public SPLITOFINTEREST selectSumSpliByTeam(SPLITOFINTEREST SPLITOFINTEREST){
+			return CoefficientDao.selectSumSpliByTeam(SPLITOFINTEREST);
+			
 		}
 
 }

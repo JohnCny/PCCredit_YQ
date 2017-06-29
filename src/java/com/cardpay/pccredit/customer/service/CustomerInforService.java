@@ -4992,9 +4992,6 @@ public class CustomerInforService {
 	
 	
 	public void insertSPLITOFINTERESTB(){
-		double cost=0.00;
-		double provision=0.00;
-		double netprofit=0.00;
 		log.info("******************根据年月查询没有进入利息分叉表的客户经理********************");
 		 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
 	        Date date = new Date();
@@ -5005,17 +5002,37 @@ public class CustomerInforService {
 		List<SPLITOFINTEREST> result=CoefficientDao.selectNewManager1(st);
 		log.info("******************没有进入利息分叉表的客户经理到利息分叉表********************"); 
 		for(int i=0;i<result.size();i++){
+			double cost=0.00;
+			double provision=0.00;
+			double netprofit=0.00;
+			
+			double cost1=0.00;
+			double netprofit1=0.00;
 			//查询客户经理的系数值
 			COEFFICIENT code= CoefficientDao.selectallCOEFFICIENTByUserId(result.get(i).getUserid());
 			//查询当前客户经理不是质押的还款
 			List<SPLITOFINTEREST> lst=CoefficientDao.selecthkb(result.get(i).getUserid());
 			for(int i1=0;i1<lst.size();i1++){
 				//融资成本
-				cost=cost+Double.parseDouble(lst.get(i1).getLxsr())*(code.getCode()/Double.parseDouble(lst.get(i1).getHtlv()));
+				double cost2=Double.parseDouble(lst.get(i1).getLxsr())*(code.getCode()/Double.parseDouble(lst.get(i1).getHtlv()));
 				//拨备
-				provision=provision+(Double.parseDouble(lst.get(i1).getZje())*0.02)/Double.parseDouble(lst.get(i1).getQs());
+				double provision2=(Double.parseDouble(lst.get(i1).getZje())*0.02)/Double.parseDouble(lst.get(i1).getQs());
 				//净利润
-				netprofit=netprofit+(Double.parseDouble(lst.get(i1).getLxsr())-cost-provision);
+				double netprofit2=(Double.parseDouble(lst.get(i1).getLxsr())-cost2-provision2);
+				cost=+cost2;
+				provision=+provision2;
+				netprofit=+netprofit2;
+			}
+			
+			List<SPLITOFINTEREST> lst1=CoefficientDao.selecthkb1(result.get(i).getUserid());
+			for(int i1=0;i1<lst1.size();i1++){
+				//融资成本
+				double cost3=Double.parseDouble(lst1.get(i1).getLxsr())*(code.getCode()/Double.parseDouble(lst1.get(i1).getHtlv()));
+				//净利润
+				double netprofit3=(Double.parseDouble(lst1.get(i1).getLxsr())-cost3);
+				
+				cost1=+cost3;
+				netprofit1=+netprofit3;
 			}
 			SPLITOFINTEREST c=new SPLITOFINTEREST();
 			c.setId(IDGenerator.generateID());
@@ -5025,6 +5042,9 @@ public class CustomerInforService {
 			c.setUserid(result.get(i).getUserid());
 			c.setYear(datime.substring(0, 4));
 			c.setMonth(datime.substring(4, 6));
+			c.setCost(cost+cost1);
+			c.setProvision(provision);
+			c.setNetprofit(netprofit1+netprofit);
 			CoefficientDao.insertSPLITOFINTEREST(c);
 		}
 		log.info("******************结束********************");  

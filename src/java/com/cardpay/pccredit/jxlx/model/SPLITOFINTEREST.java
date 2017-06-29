@@ -3,9 +3,9 @@ package com.cardpay.pccredit.jxlx.model;
 public class SPLITOFINTEREST {
 	private String id;
 	private String year;
-	private String cost;
-	private String provision;
-	private String netprofit;
+	private double cost;
+	private double provision;
+	private double netprofit;
 	private String month;
 	private String userid;
 	private String team;
@@ -57,22 +57,23 @@ public class SPLITOFINTEREST {
 	public void setYear(String year) {
 		this.year = year;
 	}
-	public String getCost() {
+
+	public double getCost() {
 		return cost;
 	}
-	public void setCost(String cost) {
+	public void setCost(double cost) {
 		this.cost = cost;
 	}
-	public String getProvision() {
+	public double getProvision() {
 		return provision;
 	}
-	public void setProvision(String provision) {
+	public void setProvision(double provision) {
 		this.provision = provision;
 	}
-	public String getNetprofit() {
+	public double getNetprofit() {
 		return netprofit;
 	}
-	public void setNetprofit(String netprofit) {
+	public void setNetprofit(double netprofit) {
 		this.netprofit = netprofit;
 	}
 	public String getMonth() {

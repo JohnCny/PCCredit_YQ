@@ -1,0 +1,175 @@
+#parse ("common/iframe_page_header.htm")
+ <link rel="stylesheet" type="text/css" href="${uicasePath}/css/specialtab.css" />
+<body class="whitebg">
+	<div class="content_main">
+		<div class="contentinner">
+			<div class="place">
+				<div class="title">$!sp1.year年$!sp1.month月客户经理利息拆分总览</div>
+			</div>
+			<div class="search">
+           <form id="submitForm" >
+            <ul>
+        <li>
+               <span>客户名称：<input type="text" id="name" name="name"  /></span>
+              </li>
+            
+              <li>
+                 <span>所属团队：<select id="team" name="team"><option value="0">请选择</option>
+               #dict("DEM","")
+                 </select></span>
+              </li>
+                <li>
+                 <span>所属机构：<select id="orgteam" name="orgteam"><option value="0">请选择</option>
+                 #dict("Organizations","")
+                 </select></span>
+              </li>
+                <li>
+                 <span>年份：<select id="year" name="year"><option value="">请选择</option>
+                 <option value="2017">2017</option>
+                 </select></span>
+              </li>
+               <li>
+                 <span>月份：<select id="month" name="month"><option value="">请选择</option>
+                 <option value="01">一月</option>
+                   <option value="02">二月</option>
+                     <option value="03">三月</option>
+                       <option value="04">四月</option>
+                         <option value="05">五月</option>
+                           <option value="06">六月</option>
+                             <option value="07">七月</option>
+                               <option value="08">八月</option>
+                                 <option value="09">九月</option>
+                                   <option value="10">十月</option>
+                                     <option value="11">十一月</option>
+                                       <option value="12">十二月</option>
+                 </select></span>
+              </li>
+              <li class="search_button">
+                <input id="export_button" type="button" value="导出Excel" class="search_button_inquiry"
+                  title="导出Excel" style="height: 26px; line-height: 24px;" />
+              </li>
+              <li class="search_button">
+                <input id="selectUser" type="button" value="筛选" class="search_button_inquiry"
+                  title="筛选" style="height: 26px; line-height: 24px;" />
+              </li>
+            </ul>
+          </form> 
+        </div>
+			<form id="id_module_form"
+				action="${contextPath}/manager/performmance/update.json" />
+			
+				<table cellpadding="0" cellspacing="0" class="table-bd" border="1"
+					bordercolor="#cccccc" style="width: 100%">
+						<tr>
+				
+						</tr>
+					<colgroup>
+					
+						<col width="10%" />
+						<col width="10%" />
+						<col width="10%" />
+						<col width="10%" />
+						<col width="10%" />
+						<col width="10%" />
+						
+						
+					</colgroup>
+					<tr>
+			
+						<td class="titlefc3"><label for="creditcount">区域:</label></td>
+						<td class="titlefc3"><label for="creditcount">团队:</label></td>
+						<td class="titlefc3"><label for="visitcount">客户经理:</label></td>
+						<td class="titlefc3"><label for="visitcount">融资成本:</label></td>
+						<td class="titlefc3"><label for="applycount">拨备:</label></td>
+						<td class="titlefc3"><label for="applyrefuse">净利润:</label></td>
+						</tr>
+						 #foreach($gxperformList in $!gxperformList)
+						 #if($gxperformList.orgteam=="累计" || $gxperformList.team=="累计" || $gxperformList.orgteam=="总计" || $gxperformList.team=="总计" || $gxperformList.orgteam=="汇总" || $gxperformList.team=="汇总")
+		
+						<td class="titlefc3">$gxperformList.orgteam</td>
+						<td class="titlefc3">$gxperformList.team</td>
+						<td class="titlefc3">$gxperformList.name</td>
+						<td class="titlefc3">$gxperformList.cost</td>
+						<td class="titlefc3">$gxperformList.provision</td>
+						<td class="titlefc3">$gxperformList.netprofit</td>
+						
+						#else
+				
+						<td >$gxperformList.orgteam</td>
+						<td >$gxperformList.team</td>
+						<td >$gxperformList.name</td>
+						<td >$gxperformList.cost</td>
+						<td >$gxperformList.provision</td>
+						<td >$gxperformList.netprofit</td>
+						
+						#end
+					</tr>
+					#end
+				</table>
+			</form>
+			 <div class="submit" style="text-align: left;">
+				<!-- <input id="id_save_button" type="button"
+					value="修改业绩进度" class="current" />
+					<a class="btn_g" href="${contextPath}/manager/performmance/performUpdate.page" title="修改业绩进度" 
+					>修改业绩进度</a>
+				 <a class="btn_g" href="${contextPath}/manager/performmance/performMakeRates.page" title="查看转化率" 
+					>查看转化率</a>
+				 <a class="btn_g" href="${contextPath}/manager/performmance/performRanking.page" title="查看排名状况" 
+					>查看排名状况</a>
+                <input id="export_button" type="button" value="导出Excel" class="search_button_inquiry"
+                  title="导出Excel" style="height: 26px; line-height: 24px;" /> -->
+			</div> 
+		</div>
+	</div>
+</body>
+ <script type="text/javascript">
+ $(document).ready(function() {
+ $("#id_browse_button").click(function() {
+     var url = "${contextPath}/manager/performmance/browse.page";
+     document.getElementById("submitForm").action = url;
+     document.getElementById("submitForm").submit();
+ });
+$("#export_button").click(function() {
+	 var team=$("#team").val();
+	 var ordteam=$("#ordteam").val();
+	 var exporturl="";
+	 if(team=="" && ordteam==""){
+		  exporturl = "${contextPath}/manager/performmance/performexport.json"
+	 }else{
+		 exporturl = "${contextPath}/manager/performmance/portselectTeamName.json?orgteam="+ordteam+"&team="+team;
+	 }
+     window.location.href = exporturl;
+
+ });
+
+ $("#selectUser").click(function() {
+	 var team=$("#team").val();
+	 var ordteam=$("#ordteam").val();
+	 var year=$("#year").val();
+	 var month=$("#month").val();
+	 var name=$("#name").val();
+	 if(year=="0" || month=="0"){
+		 Dialog.message("请选择年份或月份!");
+	 }else if(ordteam=="0"&& month=="0" && name==""){
+		 Dialog.message("请选择区域或团队或填写客户经理!");
+	 }else{
+		 if(name==""){
+			 name="0";
+		 }
+		 var exporturl = "${contextPath}/customer/Coefficient/selectByUserOrByTeam.page?orgteam="+ordteam+"&team="+team+"&year="+year+"&month="+month+"&name="+name;
+		 window.location.href = exporturl;
+	 }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	
+
+ });
+ 
+ })
+ </script>
+#parse ("common/iframe_page_footer.htm")
