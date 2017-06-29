@@ -136,7 +136,10 @@ group by o.name,s.id,t.name,s.display_name
         team,
         orgteam,
         name,
-        userid
+        userid,
+        cost,
+        provision,
+        netprofit
         )
         VALUES(
         #{id},
@@ -145,7 +148,10 @@ group by o.name,s.id,t.name,s.display_name
         #{team},
         #{orgteam},
            #{name},
-            #{userid}
+            #{userid},
+            #{cost},
+            #{provision},
+            #{netprofit}
         )
     </insert>
     
@@ -176,7 +182,36 @@ group by o.name,s.id,t.name,s.display_name
      select code from COEFFICIENT where userid=#{userid}
 </select>
     
-    
+    <select id="selectSpliByTeam" resultMap="SPLITOFINTEREST">
+     select * from SPLITOFINTEREST where 1=1 
+      <if test="team != null and team != '' ">
+						AND team = #{team}
+					 </if>
+					 <if test="orgteam != null and orgteam != '' ">
+						AND orgteam = #{orgteam}
+					 </if>
+					  <if test="year != null and year != '' ">
+						AND year = #{year}
+					 </if>
+					   <if test="month != null and month != '' ">
+						AND month = #{month}
+					 </if>
+</select>
+ <select id="selectSumSpliByTeam" resultMap="SPLITOFINTEREST">
+     select sum(cost)as cost,sum(provision)as provision,sum(netprofit)as netprofit from SPLITOFINTEREST where 1=1 
+     <if test="team != null and team != '' ">
+						AND team = #{team}
+					 </if>
+					 <if test="orgteam != null and orgteam != '' ">
+						AND orgteam = #{orgteam}
+					 </if>
+					  <if test="year != null and year != '' ">
+						AND year = #{year}
+					 </if>
+					   <if test="month != null and month != '' ">
+						AND month = #{month}
+					 </if>
+</select>
     
    
 </mapper>
