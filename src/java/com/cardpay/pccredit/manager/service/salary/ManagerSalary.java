@@ -11,14 +11,13 @@ import java.util.List;
 /**
  * Created by Johnny on 2017/7/6 0006.
  */
-public class manager extends employee {
-
+public class ManagerSalary extends EmployeeSalary {
+    private String userId;
     @Override
-    int calculateSalary(String userId) {
+    int calculateSalary(String YM) {
         SalaryRecordDao salaryRecordDao=new SalaryRecordDao();
 
-        String YM=getLastMonth();//获得上月
-        List<SalaryRecord> salary = salaryRecordDao.getSalary(userId, YM);
+        List<SalaryRecord> salary = salaryRecordDao.getSalary(this.userId, YM);
 
         if(salary.isEmpty())
             return 0;
@@ -32,7 +31,7 @@ public class manager extends employee {
     /**
      * 获得上个月 todo:可提炼到工具类
      * @return 返回上个月的yyyyMM
-     */
+     *
     private String getLastMonth() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
         return sdf.format(getLastDate());
@@ -44,10 +43,10 @@ public class manager extends employee {
         cal.setTime(date);
         cal.add(Calendar.MONTH, -1);
         return cal.getTime();
-    }
+    }*/
     @Override
-    int calculateMargin(String userId) {
-        int salary=calculateSalary(userId);
+    int calculateMargin(String YM) {
+        int salary=calculateSalary(YM);
         //数字*100倍计算
         if(salary>10000*100) return (salary-10000*100)*40+3050;
         else if (salary>5000*100) return (salary-5000*100)*35+1300;
