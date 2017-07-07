@@ -194,6 +194,7 @@ public class ReadWholeAndIncrementService {
 										//+File.separator
 										customerInforService.saveLSZDataFile(gzFile+File.separator+fn,dateString);
 									}else if(fn.startsWith("kdk_tkmx")){
+									
 										log.info("*****************借据表信息********************");  
 										customerInforService.saveTKMXDataFile(gzFile+File.separator+fn,dateString);
 									}

@@ -457,7 +457,7 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 		SJ,DZYX,GJ,MZ,ZZMM,XL,XW,JKZK,HYZK,
 		XYDJ,XYDJSXRQ,XYDJDQRQ,SFXYH,SXED,SXJZRQ,YXYE,BLDKYE,NNJHSXED,
 		JHYSSXED,ZYYW,CSHY,SFBHZG,SFGD,SFGJGZRY,SFHZ,POXM,POSFZH,
-		PODH,POGZDW,GHJL,ZBJG,DJRY,DJRQ,ZHXGRY,ZHXGSJ,KHJL) values
+		PODH,POGZDW,GHJL,ZBJG,DJRY,DJRQ,ZHXGRY,ZHXGSJ,KHJL,DBSXED) values
 		(#{id,jdbcType=VARCHAR},#{createTime,jdbcType=VARCHAR},#{khnm,jdbcType=VARCHAR},
 		#{khmc,jdbcType=VARCHAR}, #{khh,jdbcType=VARCHAR},
 		#{rh,jdbcType=VARCHAR}, #{khlx,jdbcType=VARCHAR},
@@ -487,7 +487,7 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 		#{podh,jdbcType=VARCHAR}, #{pogzdw,jdbcType=VARCHAR},
 		#{ghjl,jdbcType=VARCHAR},
 		#{zbjg,jdbcType=VARCHAR}, #{djry,jdbcType=VARCHAR}, #{djrq,jdbcType=VARCHAR},
-		#{zhxgry,jdbcType=VARCHAR}, #{zhxgsj,jdbcType=VARCHAR}, #{khjl,jdbcType=VARCHAR})
+		#{zhxgry,jdbcType=VARCHAR}, #{zhxgsj,jdbcType=VARCHAR}, #{khjl,jdbcType=VARCHAR}, #{dbsxed,jdbcType=VARCHAR})
 
 	</insert>
 
@@ -507,7 +507,7 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 		CSHY=#{cshy,jdbcType=VARCHAR},SFBHZG=#{sfbhzg,jdbcType=VARCHAR},SFGD=#{sfgd,jdbcType=VARCHAR},SFGJGZRY=#{sfgjgzry,jdbcType=VARCHAR},
 		SFHZ=#{sfhz,jdbcType=VARCHAR},POXM=#{poxm,jdbcType=VARCHAR},POSFZH=#{posfzh,jdbcType=VARCHAR},PODH=#{podh,jdbcType=VARCHAR},
 		POGZDW=#{pogzdw,jdbcType=VARCHAR},GHJL=#{ghjl,jdbcType=VARCHAR},ZBJG=#{zbjg,jdbcType=VARCHAR},DJRY=#{djry,jdbcType=VARCHAR},
-		DJRQ=#{djrq,jdbcType=VARCHAR},ZHXGRY=#{zhxgry,jdbcType=VARCHAR},ZHXGSJ=#{zhxgsj,jdbcType=VARCHAR},KHJL=#{khjl,jdbcType=VARCHAR}
+		DJRQ=#{djrq,jdbcType=VARCHAR},ZHXGRY=#{zhxgry,jdbcType=VARCHAR},ZHXGSJ=#{zhxgsj,jdbcType=VARCHAR},KHJL=#{khjl,jdbcType=VARCHAR},,DBSXED=#{dbsxed,jdbcType=VARCHAR}
 		where
 		KHNM=#{khnm,jdbcType=VARCHAR}
 	</update>

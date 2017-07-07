@@ -24,17 +24,51 @@
 		<result property="YWJG" column="YWJG" />
 		<result property="TEAM" column="TEAM" />
 		<result property="SFZD" column="SFZD" />
+			<result property="time" column="time" />
+				<result property="DBSXED" column="DBSXED" />
+	</resultMap>
+	<resultMap id="MonthlyStatisticsModel"
+		type="com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel">
+		<result property="id" column="ID" />
+		<result property="customeryeah" column="customeryeah" />
+		<result property="customerJanuary" column="PURPOSE_LOAN" />
+		<result property="customerFebruary" column="customerFebruary" />
+		<result property="customerMarch" column="customerMarch" />
+		<result property="customerApril" column="customerApril" />
+		<result property="customerMay" column="customerMay" />
+		<result property="customerJune" column="customerJune" />
+		<result property="customerJuly" column="customerJuly" />
+		<result property="customerAugust" column="customerAugust" />
+		<result property="customerSeptember" column="customerSeptember" />
+		<result property="customerOctober" column="customerOctober" />
+		<result property="customerNovember" column="customerNovember" />
+		<result property="customerDecember" column="customerDecember" />
+		<result property="totalAmount" column="totalAmount" />
+		<result property="userId" column="userId" />
+		<result property="orgteam" column="orgteam" />
+		<result property="name" column="name" />
+			<result property="loandate" column="loandate" />
+		<result property="team" column="team" />
 	</resultMap>
 	<insert id="insertCustomerTsdk">
-	    insert into CUSTOMER_TSDKMX (YWBH,KHNM,REQLMT,KHMC,ZJHM,SJ,SXED,LOANDATE,DQRQ,DKQX,JZLL,HTLL,DKYE,PRODUCT_NAME,BNQX,BWQX,YXYE,USERID,DISPLAY_NAME,YWJG,TEAM,SFZD)
+	    insert into CUSTOMER_TSDKMX (YWBH,KHNM,REQLMT,KHMC,ZJHM,SJ,SXED,LOANDATE,DQRQ,DKQX,JZLL,HTLL,DKYE,PRODUCT_NAME,BNQX,BWQX,YXYE,USERID,DISPLAY_NAME,YWJG,TEAM,SFZD,time)
 	    values (#{YWBH},#{KHNM},#{REQLMT},#{KHMC},#{ZJHM},#{SJ},#{SXED},#{LOANDATE},#{DQRQ},#{DKQX},
-	    #{JZLL},#{HTLL},#{DKYE},#{PRODUCT_NAME},#{BNQX},#{BWQX},#{YXYE},#{USERID},#{DISPLAY_NAME},#{YWJG},#{TEAM},#{SFZD})
+	    #{JZLL},#{HTLL},#{DKYE},#{PRODUCT_NAME},#{BNQX},#{BWQX},#{YXYE},#{USERID},#{DISPLAY_NAME},#{YWJG},#{TEAM},#{SFZD},#{time})
 	</insert>
 	
-	<select id="selectMaxLOANDATE" resultMap="ResultMap1">
-	    select max(LOANDATE) from CUSTOMER_TSDKMX where USERID=#{userId}
+	<select id="selectMaxLOANDATE" resultMap="MonthlyStatisticsModel">
+	      select REQLMT as totalAmount,LOANDATE as loandate from zydk where userid=#{userId}
 	</select>
-	<select id="selectCustomerTsdk">
-	      select * from CUSTOMER_TSDKMX where USERID=#{userId} and LOANDATE>#{LOANDATE}
+	<select id="selectCustomerTsdk" resultMap="MonthlyStatisticsModel">
+	        select sxed as totalAmount,LOANDATE as loandate from CUSTOMER_TSDKMX where userid=#{userId}
+	</select>
+	
+		<select id="selectCustomerByDkfs" resultMap="ResultMap1">
+		  
+	     select * from aaaa where ywbh not in (select ywbh from MIBUSIDATA ) and dkfs='001' 
+	</select>
+	
+		<select id="selectCustomerByDkfsCount" resultType="int">
+	      select count(KHNM) from CUSTOMER_TSDKMX where  khnm=#{KHNM} and sxed=#{SXED} and ZJHM=#{ZJHM}
 	</select>
 </mapper>
