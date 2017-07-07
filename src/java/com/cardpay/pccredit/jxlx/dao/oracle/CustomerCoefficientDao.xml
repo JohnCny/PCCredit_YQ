@@ -181,6 +181,15 @@ group by o.name,s.id,t.name,s.display_name
 <select id="selectxsByUserId" resultMap="SPLITOFINTEREST">
      select code from COEFFICIENT where userid=#{userid}
 </select>
+
+
+
+
+
+
+
+
+
     
     <select id="selectSpliByTeam" resultMap="SPLITOFINTEREST">
      select * from SPLITOFINTEREST where 1=1 
@@ -196,6 +205,9 @@ group by o.name,s.id,t.name,s.display_name
 					   <if test="month != null and month != '' ">
 						AND month = #{month}
 					 </if>
+					 <if test="name != null and name != '' ">
+						AND name = #{name}
+					 </if>
 </select>
  <select id="selectSumSpliByTeam" resultMap="SPLITOFINTEREST">
      select sum(cost)as cost,sum(provision)as provision,sum(netprofit)as netprofit from SPLITOFINTEREST where 1=1 
@@ -210,6 +222,9 @@ group by o.name,s.id,t.name,s.display_name
 					 </if>
 					   <if test="month != null and month != '' ">
 						AND month = #{month}
+					 </if>
+					  <if test="name != null and name != '' ">
+						AND name = #{name}
 					 </if>
 </select>
     

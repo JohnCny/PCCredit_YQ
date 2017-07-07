@@ -218,7 +218,7 @@
         </property>
       <!--   cron表达式 -->
         <property name="cronExpression">
-            <value>0 10 08 ? * *</value><!-- 时间定在周六  -->
+            <value>0 10 09 ? * *</value><!-- 时间定在周六  -->
         </property>
     </bean> 
     <!-- ODS增量数据  end -->
@@ -374,7 +374,7 @@
         </property>
         <!-- cron表达式 -->
         <property name="cronExpression">
-            <value>0 40 08 ? * *</value>
+            <value>0 31 15 ? * *</value>
         </property>
     </bean>
     <!-- 客户经理业绩信息更新  end -->
@@ -400,7 +400,7 @@
         </property>
         <!-- cron表达式 -->
         <property name="cronExpression">
-            <value>0 45 08 ? * *</value>
+            <value>0 38 14 ? * *</value>
         </property>
     </bean>
     <!-- 客户经理贷款信息更新  end -->
@@ -477,10 +477,34 @@
          <!-- <property name="startDelay" value="0"/>
         <property name="repeatInterval" value="60000" /> -->
          <property name="cronExpression">
-            <value>0 58 13 ? * *</value>
+            <value>0 33 16 ? * *</value>
         </property> 
     </bean>
     <!-- 每日加载利息分拆表end-->
+    
+     <!-- 每日加载随借随还贷款 start-->
+       <bean id="addCustomerTsdkmx" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 调用的类 -->
+        <property name="targetObject">
+            <ref bean="customerInforService"/>
+        </property>
+        <!-- 调用类中的方法 -->
+        <property name="targetMethod">
+            <value>selectCustomerByDkfs</value>
+        </property>
+    </bean>
+     <bean id="dailyaddaddCustomerTsdkmxTigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="addCustomerTsdkmx"/>
+        </property>
+        <!-- cron表达式 每月1号1点执行 0 0 1 1 * ? -->
+         <!-- <property name="startDelay" value="0"/>
+        <property name="repeatInterval" value="60000" /> -->
+         <property name="cronExpression">
+            <value>0 06 10 ? * *</value>
+        </property> 
+    </bean>
+    <!-- 每日加载随借随还贷款 end-->
     
     <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
     <bean id="scheduler" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
@@ -502,6 +526,7 @@
                    <ref bean="dailyaddaddCoefficientTigger"/>
                    <ref bean="dailyaddaddSPLITOFINTERESTTigger"/>
                    <ref bean="addBaseTigger"/>
+                       <ref bean="dailyaddaddCustomerTsdkmxTigger"/>
                    <ref bean="dailyaddtymibusidataTigger"/>   <!-- 添加mibusidata任务-->
             </list>
         </property>
