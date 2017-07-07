@@ -27,7 +27,9 @@ public class SalaryRecordDao {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("USERID",userId);
         params.put("YM",YM);
-        String sql="SELECT * FROM SALARY_RECORD WHERE USERID=#{USERID} AND YM=#{YM}";
+        String sql="SELECT SUM(ADDLOAN) addedLoan,SUM(LOANBALANCE) loanBalance,SUM(MANAGEMENT) management," +
+                "SUM(ASSISTLOAN) assistLoan,SUM(OVERDUELOAN) overdueLoan FROM SALARY_RECORD " +
+                "WHERE USERID=#{USERID} AND YM=#{YM}";
         List<SalaryRecord> salaryRecord=  commonDao.queryBySql(SalaryRecord.class,sql,params);
 
         return salaryRecord;

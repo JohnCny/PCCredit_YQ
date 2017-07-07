@@ -27,17 +27,26 @@ public abstract class EmployeeSalary {
     /**
     按月计算用户绩效
     */
-    abstract int calculateSalary(String YM);
+    abstract float calculateSalary(String YM);
 
     /**
     计算保证金金额
      */
-    abstract int calculateMargin(String YM);
+    abstract float calculateMargin(String YM);
 
-    /*
+    /**
     计算用户实际应得绩效
+     计算细节在子类中实现，这里只处理罚款（不含逾期）
      */
-    int calculateRealSalary(String YM){
+    float calculateRealSalary(String YM){
         return calculateSalary(YM)-getFine(YM)+getReturnedMargin(YM)-calculateMargin(YM);
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 }

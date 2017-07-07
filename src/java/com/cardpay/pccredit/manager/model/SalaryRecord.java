@@ -13,35 +13,32 @@ public class SalaryRecord extends BusinessModel {
     /**
      *当月新增贷款收入
      */
-    private int  addedLoan;
+    private float  addedLoan;
 
     /**
      *当月贷款余额收入
      */
-    private int  loanBalance;
+    private float  loanBalance;
 
     /**
      *当月有效管户收入
      */
-    private int  management;
+    private float  management;
 
     /**
      *当月辅调收入
      */
-    private int  assistLoan;
+    private float  assistLoan;
 
     /**
      *当月逾期扣款
      */
-    private int  overdueLoan;
+    private float  overdueLoan;
 
-    public int getOverdueLoan() {
-        return overdueLoan;
-    }
-
-    public void setOverdueLoan(int overdueLoan) {
-        this.overdueLoan = overdueLoan;
-    }
+    /**
+     *当月贷款审查
+     */
+    private float  reviewLoan;
 
     /**
      *当前年月
@@ -56,38 +53,54 @@ public class SalaryRecord extends BusinessModel {
     /**
      *用户ID
      */
-    private int  userId;
+    private String   userId;
 
-    public int getAddedLoan() {
+    public float getAddedLoan() {
         return addedLoan;
     }
 
-    public void setAddedLoan(int addedLoan) {
+    public void setAddedLoan(float addedLoan) {
         this.addedLoan = addedLoan;
     }
 
-    public int getLoanBalance() {
+    public float getLoanBalance() {
         return loanBalance;
     }
 
-    public void setLoanBalance(int loanBalance) {
+    public void setLoanBalance(float loanBalance) {
         this.loanBalance = loanBalance;
     }
 
-    public int getManagement() {
+    public float getManagement() {
         return management;
     }
 
-    public void setManagement(int management) {
+    public void setManagement(float management) {
         this.management = management;
     }
 
-    public int getAssistLoan() {
+    public float getAssistLoan() {
         return assistLoan;
     }
 
-    public void setAssistLoan(int assistLoan) {
+    public void setAssistLoan(float assistLoan) {
         this.assistLoan = assistLoan;
+    }
+
+    public float getOverdueLoan() {
+        return overdueLoan;
+    }
+
+    public void setOverdueLoan(float overdueLoan) {
+        this.overdueLoan = overdueLoan;
+    }
+
+    public float getReviewLoan() {
+        return reviewLoan;
+    }
+
+    public void setReviewLoan(float reviewLoan) {
+        this.reviewLoan = reviewLoan;
     }
 
     public String getYm() {
@@ -106,11 +119,11 @@ public class SalaryRecord extends BusinessModel {
         this.loanId = loanId;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 }
