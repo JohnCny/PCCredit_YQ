@@ -1,5 +1,14 @@
 package com.cardpay.pccredit.customer.web;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import com.cardpay.pccredit.customer.constant.CustomerInforConstant;
 import com.cardpay.pccredit.customer.model.CustomerFirsthendBaseLocal;
@@ -1643,7 +1653,21 @@ public class CustomerInfo_wh_TY_Controller extends BaseController {
 		return null;
 	}
 	
-	
+	//下载合同信息
+		@ResponseBody
+		@RequestMapping(value = "downLoadht.json",method = { RequestMethod.GET })
+		@JRadOperation(JRadOperation.EXPORT)
+		public AbstractModelAndView downLoadht(HttpServletRequest request,HttpServletResponse response){
+			try {
+				String id = request.getParameter("id");
+			
+				//下载调查模板
+				addIntoPiecesService.downLoadDcmb1(response,id);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
 	//下载影像资料
 	@ResponseBody
 	@RequestMapping(value = "downLoadYxzlJn.json",method = { RequestMethod.GET })
@@ -1707,6 +1731,66 @@ public class CustomerInfo_wh_TY_Controller extends BaseController {
     	return null; 
     	} 
 	} 
+	
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "downLoadYxzlJnaaaaa.json",method = { RequestMethod.GET })
+	@JRadOperation(JRadOperation.EXPORT)
+	public String downLoadYxzlJnaaaaa(HttpServletRequest request,HttpServletResponse response){
+		 String base64String = getPDFBinary(new File("C:/Users/maoya/Desktop/转正申请/aaaaa.pdf"));
+			JRadModelAndView mv = new JRadModelAndView("/customer/customerInfor_wh_ty/report_dbr", request);
+		return base64String; 
+	}
+	 static String getPDFBinary(File file) {  
+		 BASE64Encoder encoder = new sun.misc.BASE64Encoder();      
+         BASE64Decoder decoder = new sun.misc.BASE64Decoder();      
+	        FileInputStream fin =null;  
+	        BufferedInputStream bin =null;  
+	        ByteArrayOutputStream baos = null;  
+	        BufferedOutputStream bout =null;  
+	        try {  
+	            //建立读取文件的文件输出流  
+	            fin = new FileInputStream(file);  
+	            //在文件输出流上安装节点流（更大效率读取）  
+	            bin = new BufferedInputStream(fin);  
+	            // 创建一个新的 byte 数组输出流，它具有指定大小的缓冲区容量  
+	            baos = new ByteArrayOutputStream();  
+	            //创建一个新的缓冲输出流，以将数据写入指定的底层输出流  
+	            bout = new BufferedOutputStream(baos);  
+	            byte[] buffer = new byte[1024];  
+	            int len = bin.read(buffer);  
+	            while(len != -1){  
+	                bout.write(buffer, 0, len);  
+	                len = bin.read(buffer);  
+	            }  
+	            //刷新此输出流并强制写出所有缓冲的输出字节，必须这行代码，否则有可能有问题  
+	            bout.flush();  
+	             byte[] bytes = baos.toByteArray();  
+	             //sun公司的API  
+	             return encoder.encodeBuffer(bytes).trim();    
+	             //apache公司的API  
+	             //return Base64.encodeBase64String(bytes);  
+	              
+	        } catch (FileNotFoundException e) {  
+	            e.printStackTrace();  
+	        } catch (IOException e) {  
+	            e.printStackTrace();  
+	        }finally{  
+	            try {  
+	                fin.close();  
+	                bin.close();  
+	                //关闭 ByteArrayOutputStream 无效。此类中的方法在关闭此流后仍可被调用，而不会产生任何 IOException  
+	                //baos.close();  
+	                bout.close();  
+	            } catch (IOException e) {  
+	                e.printStackTrace();  
+	            }  
+	        }  
+	        return null;  
+	    }  
+	          
+	  
 }
 
 	

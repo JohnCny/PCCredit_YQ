@@ -241,8 +241,8 @@ select * from
 </insert>
 
 <insert id="insertCsJl" parameterType="java.lang.Integer" >
-   insert into T_APP_MANAGER_AUDIT_LOG (id,APPLICATION_ID,AUDIT_TYPE,USER_ID_1,USER_ID_2,USER_ID_3,EXAMINE_AMOUNT,EXAMINE_LV,qx,USER_ID_4,dbfs) 
-			values (#{id},#{applicationId},#{auditType},#{userId_1},#{userId_2},#{userId_3},#{examineAmount},#{examineLv},#{qx},#{userId_4},#{dbfs})
+   insert into T_APP_MANAGER_AUDIT_LOG (id,APPLICATION_ID,AUDIT_TYPE,USER_ID_1,USER_ID_2,USER_ID_3,EXAMINE_AMOUNT,EXAMINE_LV,qx,USER_ID_4,dbfs,CREATED_TIME) 
+			values (#{id},#{applicationId},#{auditType},#{userId_1},#{userId_2},#{userId_3},#{examineAmount},#{examineLv},#{qx},#{userId_4},#{dbfs},#{createdTime})
 </insert>
 
 <select id="selectaId" resultMap="selectAUDITLOG">

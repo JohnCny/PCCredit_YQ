@@ -112,7 +112,14 @@
               <col width="10%" />
               <col width="30%" />
             </colgroup>
-              <tr><td class="titlec" colspan="4" style="text-align: center;">初审结论</td></tr>
+             <tr><td class="titlec" colspan="4" style="text-align: center;">资料评估结论</td></tr>
+               <tr>
+			  <td class="titlefc3"><label for="csAmount">评估结论:</label></td>
+              <td><input  type="text" class="rinpsty" name="csAmount" id="csAmount" value="通过" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="examineLv">评估时间:</label></td>
+              <td><input type="text" class="rinpsty" name="csexamineLv" id="csexamineLv" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!appManagerAuditLog)" disabled="disabled"/></td>
+            </tr>
+            <!--   <tr><td class="titlec" colspan="4" style="text-align: center;">初审结论</td></tr>
             <tr>
 			  <td class="titlefc3"><label for="csAmount">初审额度(元):</label></td>
               <td><input  type="text" class="rinpsty" name="csAmount" id="csAmount" value="$!appManagerAuditLog.examineAmount" disabled="disabled"/></td>
@@ -134,7 +141,7 @@
             <tr>
 			  <td class="titlefc3"><label for="csAmount">辅调客户经理:</label></td>
               <td><input  type="text" class="rinpsty" name="chu_fdUser" id="chu_fdUser" value="$!appManagerAuditLog.userId_3" disabled="disabled"/></td>
-              </tr>
+              </tr> -->
           </table>
          </div>
            #foreach($bs in $!result)

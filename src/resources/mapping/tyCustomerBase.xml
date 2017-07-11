@@ -122,5 +122,6 @@
 	<result column="ZHXGSJ" jdbcType="VARCHAR" index="39" />
 	
 	<result column="KHJL" jdbcType="VARCHAR" index="30" />
+	<result column="DBSXED" jdbcType="VARCHAR" index="83" />
 
 </resultMap>

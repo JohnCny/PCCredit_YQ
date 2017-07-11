@@ -398,6 +398,34 @@ public class AddIntoPiecesService {
 		
 		commonDao.insertObject(localImage);
 	}
+	
+	
+	public void wordImport(MultipartFile file, String productId,
+			String customerId,String applicationId) {
+		Map<String, String> map  = new HashMap<String, String>();
+		if(ServerSideConstant.IS_SERVER_SIDE_TRUE.equals("0")){
+			//本地测试
+			map = UploadFileTool.uploadYxzlFileBySpring(file,customerId);
+		}else{
+			//指定服务器上传
+			map = SFTPUtil.uploadJn(file, customerId);
+		}
+		String fileName = map.get("fileName");
+		String url = map.get("url");
+		LocalExcelForm localImage = new LocalExcelForm();
+		localImage.setProductId(productId);
+		localImage.setCustomerId(customerId);
+		localImage.setTime(new Date());
+		localImage.setApplicationId(applicationId);
+		if (StringUtils.trimToNull(url) != null) {
+			localImage.setUri(url);
+		}
+		if (StringUtils.trimToNull(fileName) != null) {
+			localImage.setAttachment(fileName);
+		}
+		
+		localExcelDao.insertWord(localImage);
+	}
 
 	public void addIntopieces(AddIntoPiecesForm addIntoPiecesForm,String userId) {
 		// TODO Auto-generated method stub
@@ -1216,6 +1244,26 @@ public class AddIntoPiecesService {
 			}
 		}
 	}
+	
+	//调查模板下载
+		public void downLoadDcmb1(HttpServletResponse response,String custId) throws Exception{
+			LocalExcelForm v=localExcelDao.findWordCustomer(custId);
+			if(v!=null){
+				if(ServerSideConstant.IS_SERVER_SIDE_TRUE.equals("0")){
+					//本地测试
+					UploadFileTool.downLoadFile(response, v.getUri(), v.getAttachment());
+					String url = v.getUri();
+					if(url.contains("pccreditFile")){
+						UploadFileTool.downLoadFile(response, v.getUri(), v.getAttachment());
+					}else{
+						SFTPUtil.download(response, v.getUri(), v.getAttachment());
+					}
+				}else{
+					//服务器
+					SFTPUtil.download(response, v.getUri(), v.getAttachment());
+				}
+			}
+		}
 	public int selectAllImageByPcIdCount(@Param("pid") String pid,@Param("cid") String cid){
 		return localImageDao.selectAllImageByPcIdCount(pid, cid);
 		

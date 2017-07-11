@@ -19,5 +19,7 @@ public interface LocalExcelDao {
 	public LocalExcel findByApplication(@Param("icount") Integer icount,@Param("pid") String pid,@Param("cid") String cid);
 	public List<LocalExcel> findAllTimeById(@Param("pid") String pid,@Param("cid") String cid);
 	public LocalExcel findByApplication1(@Param("applicationId") String applicationId);
+	public void insertWord(LocalExcelForm LocalExcelForm);
+	public LocalExcelForm findWordCustomer(@Param("id") String id);
 	
 }

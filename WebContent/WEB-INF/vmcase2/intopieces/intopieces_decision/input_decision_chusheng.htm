@@ -5,7 +5,7 @@
   <div class="content_main">
     <div class="contentinner">
       <div class="place">
-        <div class="title">填写初审结论>初审结论</div>
+        <div class="title">填写评估结论>评估结论</div>
       </div>
        
       <form id="id_module_form" action="${contextPath}/intopieces/intopiecesdecision/updateAll.json"/>
@@ -113,14 +113,14 @@
               <col width="10%" />
               <col width="30%" />
             </colgroup>
-              <tr><td class="titlec" colspan="4" style="text-align: center;">初审结论</td></tr>
+              <tr><td class="titlec" colspan="4" style="text-align: center;">客户资料审核</td></tr>
             <tr>
-              <td  class="titlefc3"><label for="status">初审结论:</label></td>
+              <td  class="titlefc3"><label for="status">审核结论:</label></td>
               <td><select id="status" name="status" style="width: 150px;" onChange="changeDecisionRefusereason();">
-                  	#dict("intopieces_decision_chusheng",$!customerApplicationInfo.status)
+                  	#dict("intopieces_decision_chusheng1","")
                   </select></td>
             </tr>
-            <tr>
+         <!--    <tr>
 			  <td class="titlefc3"><label for="decisionAmount">初审额度(元):</label></td>
               <td><input  type="text" class="rinpsty" name="decisionAmount" id="decisionAmount" style="width: 150px;"/></td>
               <td class="titlefc3"><label for="decisionRate">利率(%):</label></td>
@@ -164,7 +164,7 @@
                  #end
                   </select>
               </td>
-            </tr>
+            </tr> -->
             <tr style="display :none">
               <td  class="titlefc3"><label id ="reason" for=reason>原因:</label></td>
               <td><textarea name="decisionRefusereason" id="decisionRefusereason">$!customerApplicationInfo.decisionRefusereason</textarea></td>
@@ -232,7 +232,7 @@
 			$(".myerror").remove();
 			var status = $("select[name=status]").val();
 			
-			if( status == "APPROVE"){
+		 	if( status == "APPROVE"){
 				if($("#decisionAmount").val() == ""){
 					 $("#decisionAmount").after("<label class='error myerror' generated='true' >金额不能为空</label>");  
 					 return;
@@ -240,7 +240,7 @@
 				if($("#decisionRate").val() == ""){
 					 $("#decisionRate").after("<label class='error myerror'generated='true' >利率不能为空</label>");  
 					 return;
-				} 
+				}  
 				//判断金额必须在产品的授信区间内
 				var decisionAmout = $("#decisionAmount").val();
 				var str = $("#prodCreditRange").val();
@@ -324,7 +324,11 @@
 			
 			var status = $("select[name=status]").val();
 			if( status == "APPROVE"){
-				$("tr:eq(19)").show();
+				$("tr:eq(13)").hide();
+				$("tr:eq(14)").show();
+				$("tr:eq(15)").show();
+				$("tr:eq(16)").show();
+				/* $("tr:eq(19)").show();
 				$("tr:eq(20)").show();
 				$("tr:eq(14)").show();
 				$("tr:eq(13)").show();
@@ -335,7 +339,7 @@
 				}
 				if($("input[name=decision_rate]").val() == ""){
 					 $("input[name='decision_rate']").after("<label class='error myerror'generated='true' >利率不能为空</label>");   
-				}
+				} */
 			}
 			
 			if( status == "REJECTAPPROVE"){
@@ -351,12 +355,16 @@
 			}
 			
 			if( status == "RETURNAPPROVE"){
-				$("tr:eq(19)").hide();
+				$("tr:eq(13)").show();
+				$("tr:eq(14)").hide();
+				$("tr:eq(15)").hide();
+				$("tr:eq(16)").hide();
+				/* $("tr:eq(19)").hide();
 				$("tr:eq(20)").hide();
 				$("tr:eq(14)").hide();
 				$("tr:eq(13)").hide();
 				$("tr:eq(18)").hide();
-				$("tr:eq(17)").show();
+				$("tr:eq(17)").show(); */
 			}
 			
 			if(status =='RETURNAPPROVE'){

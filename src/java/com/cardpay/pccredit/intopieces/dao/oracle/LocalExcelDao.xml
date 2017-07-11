@@ -35,7 +35,12 @@
     <result column="SHEET_LSFX" property="sheetLsfx" jdbcType="VARCHAR" />
     <result column="APPROVE_VALUE" property="approveValue" jdbcType="VARCHAR" />
   </resultMap>
-  
+  <insert id="insertWord">
+      insert into LOCAL_WORD (id,cid,pid,name,url,time,aid) values(#{id},#{customerId},#{productId},#{attachment},#{uri},#{time},#{applicationId})
+  </insert> 
+   <select id="findWordCustomer" resultMap="BaseResultMap">
+       select url as uri,name as attachment from LOCAL_WORD where aid=#{id}
+       </select>
   <select id="findByProductAndCustomer" resultMap="BaseResultMap">
       SELECT * FROM
 		(SELECT ROW_.*,ROWNUM ROWNUM_
