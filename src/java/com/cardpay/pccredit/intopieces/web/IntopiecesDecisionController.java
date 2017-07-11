@@ -191,7 +191,7 @@ public class IntopiecesDecisionController extends BaseController {
 		mv.addObject("producAttribute", producAttribute);
 		mv.addObject("custManagerId", customerInfor.getUserId());
 		mv.addObject("SqInfo", SqInfo);
-		mv.addObject("appManagerAuditLog", appManagerAuditLog.get(0));
+		mv.addObject("appManagerAuditLog", appManagerAuditLog.get(0).getCreatedTime());
 		mv.addObject("sdwinfo1", sdwinfo1);
 		mv.addObject("sdwinfo2", sdwinfo2);
 		mv.addObject("sdwinfo3", sdwinfo3);
@@ -274,15 +274,15 @@ public class IntopiecesDecisionController extends BaseController {
 		ProductAttribute producAttribute =  productService.findProductAttributeById(customerApplicationInfo.getProductId());
 		List<AppManagerAuditLog> appManagerAuditLog = productService.findAppManagerAuditLog(appId,"1");
 		CustomerInfor  customerInfor  = intoPiecesService.findCustomerManager(customerApplicationInfo.getCustomerId());
-		AppManagerAuditLog result=SdwUserService.selectCSJLAPC(appId,uId);
+		//AppManagerAuditLog result=SdwUserService.selectCSJLAPC(appId,uId);
 		JnpadCsSdModel sdwinfo=SdwUserService.findCsSds(appId,uId);
 		JRadModelAndView mv = new JRadModelAndView("/intopieces/intopieces_decision/input_decision", request);
 		mv.addObject("customerApplicationInfo", customerApplicationInfo);
 		mv.addObject("producAttribute", producAttribute);
 		mv.addObject("customerApplicationProcess", processForm);
-		mv.addObject("appManagerAuditLog", appManagerAuditLog.get(0));
+		mv.addObject("appManagerAuditLog", appManagerAuditLog.get(0).getCreatedTime());
 		mv.addObject("custManagerId", customerInfor.getUserId());
-		mv.addObject("result", result);
+		//mv.addObject("result", result);
 		mv.addObject("SqInfo", SqInfo);
 		mv.addObject("sdwinfo", sdwinfo);
 		mv.addObject("IntoPiecesFilters", IntoPiecesFilters);
@@ -512,6 +512,10 @@ public class IntopiecesDecisionController extends BaseController {
 			mv.addObject(PAGED_RESULT, pagedResult);
 			return mv;
 		}
+		
+		
+		
+		
 }
 
 	

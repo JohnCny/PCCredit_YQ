@@ -99,71 +99,10 @@ public class IntoPiecesService {
 				queryResult.getItems().get(i).setStatusName("已退回");
 			}
 		}
-		//List<IntoPieces> queryResult = intoPiecesComdao.findintoPiecesListByFilter(filter);
 		int sum = intoPiecesComdao.findintoPiecesByFilterCount(filter);
 		QueryResult<IntoPieces> qs = new QueryResult<IntoPieces>(sum, queryResult.getItems());
-		/*List<IntoPieces> intoPieces = qs.getItems();
-		for(IntoPieces pieces : intoPieces){
-			if(pieces.getStatus()==null){
-				pieces.setNodeName("未提交申请");
-			}
-			else{
-				if(pieces.getStatus().equals(Constant.SAVE_INTOPICES)){
-					pieces.setNodeName("未提交申请");
-				}else if(pieces.getStatus().equals(Constant.APPROVE_INTOPICES)){
-					//String nodeName = intoPiecesComdao.findAprroveProgress(pieces.getId());
-					String nodeName = intoPiecesComdao.findNodeName(pieces.getId());
-					if(StringUtils.isNotEmpty(nodeName)){
-						pieces.setNodeName(nodeName);
-					} else {
-						pieces.setNodeName("不在审批中");
-					}
-				}else if(pieces.getStatus().equals(Constant.REFUSE_INTOPICES)||pieces.getStatus().equals("returnedToFirst")){
-					List<HashMap<String, Object>> list = intoPiecesComdao.findNodeNameJN(pieces.getId());
-					String refusqlReason ="";
-					String fallBackReason ="";
-					if(list != null && list.size() > 0){
-						HashMap<String, Object> map = list.get(0);
-						refusqlReason = (String) map.get("REFUSAL_REASON");
-						fallBackReason =(String) map.get("FALLBACK_REASON");
-					}
-					pieces.setNodeName("审批结束");
-					pieces.setRefusqlReason(refusqlReason);
-					pieces.setFallBackReason(fallBackReason);
-				}else {
-					pieces.setNodeName("审批结束");
-				}
-			}
-		}*/
+	
 		return qs;
-	/*	//QueryResult<IntoPieces> queryResult = intoPiecesComdao.findintoPiecesByFilter(filter);
-		List<IntoPieces> plans = intoPiecesDao.findIntoPiecesList(filter);
-		int size = intoPiecesDao.findIntoPiecesCountList(filter);
-		QueryResult<IntoPieces> queryResult = new QueryResult<IntoPieces>(size,plans);
-		
-		List<IntoPieces> intoPieces = queryResult.getItems();
-		for(IntoPieces pieces : intoPieces){
-			if(pieces.getStatus().equals(Constant.SAVE_INTOPICES)){
-				pieces.setNodeName("未提交申请");
-			} else if(pieces.getStatus().equals(Constant.APPROVE_INTOPICES)){
-				String nodeName = intoPiecesComdao.findAprroveProgress(pieces.getId());
-				if(StringUtils.isNotEmpty(nodeName)){
-					pieces.setNodeName(nodeName);
-				} else {
-					pieces.setNodeName("不在审批中");
-				}
-			} else {
-				pieces.setNodeName("审批通过");
-			}
-			//获取客户经理组长
-			String userId = pieces.getUserId();
-			String sql = "select d.* from account_manager_parameter c,sys_user d where c.user_id=d.id and c.id in (select a.parent_id from manager_belong_map a,account_manager_parameter b where a.child_id=b.id and b.user_id='"+userId+"')";
-			List<SystemUser> list = commonDao.queryBySql(SystemUser.class, sql, null);
-			if(list.size()>0){
-				pieces.setGroupName(list.get(0).getDisplayName());
-			}
-		}
-		return queryResult;*/
 	}
 	
 	/*

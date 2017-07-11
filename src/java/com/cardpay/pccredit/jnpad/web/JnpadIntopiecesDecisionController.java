@@ -446,6 +446,7 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 			AppManagerAuditLog.setUserId_3(request.getParameter("fdUser"));
 			AppManagerAuditLog.setUserId_4(userId);
 			AppManagerAuditLog.setDbfs(request.getParameter("dbfs"));
+			AppManagerAuditLog.setCreatedTime(new Date());
 			SdwUserService.insertCsJl(AppManagerAuditLog);
 			//初审通过状态
 			String applicationId=result.getApplicationId();
@@ -532,14 +533,14 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 			ProductAttribute producAttribute =  productService.findProductAttributeById(customerApplicationInfo.getProductId());
 			List<AppManagerAuditLog> appManagerAuditLog = productService.findAppManagerAuditLog(appId,"1");
 			CustomerInfor  customerInfor  = intoPiecesService.findCustomerManager(customerApplicationInfo.getCustomerId());
-			AppManagerAuditLog result=SdwUserService.selectCSJLAPC(appId,uId);
+			//AppManagerAuditLog result=SdwUserService.selectCSJLAPC(appId,uId);
 			JnpadCsSdModel sdwinfo=SdwUserService.findCsSds(appId,uId);
 			map.put("customerApplicationInfo", customerApplicationInfo);
 			map.put("producAttribute", producAttribute);
 			map.put("customerApplicationProcess", processForm);
-			map.put("appManagerAuditLog", appManagerAuditLog.get(0));
+			map.put("appManagerAuditLog", appManagerAuditLog.get(0).getCreatedTime());
 			map.put("custManagerId", customerInfor.getUserId());
-			map.put("result", result);
+			//map.put("result", result);
 			map.put("SqInfo", SqInfo);
 			map.put("sdwinfo", sdwinfo);
 			map.put("IntoPiecesFilters", IntoPiecesFilters);
@@ -773,7 +774,7 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 			map.put("producAttribute", producAttribute);
 			map.put("custManagerId", customerInfor.getUserId());
 			map.put("SqInfo", SqInfo);
-			map.put("appManagerAuditLog", appManagerAuditLog.get(0));
+			map.put("appManagerAuditLog", appManagerAuditLog.get(0).getCreatedTime());
 			map.put("sdwinfo1", sdwinfo1);
 			map.put("sdwinfo2", sdwinfo2);
 			map.put("sdwinfo3", sdwinfo3);
@@ -954,27 +955,27 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 				IntoPieces IP=SdwUserService.findsph2(id);
 				if(IP.getApplyQuota()==null && !IP.getStatus().equals("audit")){
 					ApproveHistoryForm5=new ApproveHistoryForm();
-					ApproveHistoryForm5.setStatusName("进件初审");
+					ApproveHistoryForm5.setStatusName("进件资料审核");
 					if(IP.getStatus().equals("nopass") || IP.getStatus().equals("refuse")){
 						ApproveHistoryForm5.setDisplayName(IP.getDisplayName());
 						ApproveHistoryForm5.setStartExamineTime(IP.getCreatime1());
-						ApproveHistoryForm5.setExamineResult("初审拒绝");
+						ApproveHistoryForm5.setExamineResult("进件资料审核拒绝");
 						historyForms.add(0, ApproveHistoryForm5);
 					}
 					else if(IP.getStatus().equals("nopass_replenish") || IP.getStatus().equals("returnedToFirst")){
 						ApproveHistoryForm5.setDisplayName(IP.getDisplayName());
 						ApproveHistoryForm5.setStartExamineTime(IP.getCreatime1());
-						ApproveHistoryForm5.setExamineResult("初审退回");
+						ApproveHistoryForm5.setExamineResult("审核不通过");
 						historyForms.add(0, ApproveHistoryForm5);
 					}
 				}
 				 try {
 					if(IP.getApplyQuota()!=null){
 						ApproveHistoryForm4=new ApproveHistoryForm();
-						ApproveHistoryForm4.setExamineResult("初审通过");
+						ApproveHistoryForm4.setExamineResult("审核通过");
 						ApproveHistoryForm4.setDisplayName(IP.getDisplayName());
-						ApproveHistoryForm4.setStatusName("进件初审");
-						ApproveHistoryForm4.setExamineAmount(IP.getApplyQuota());
+						ApproveHistoryForm4.setStatusName("进件资料审核");
+						ApproveHistoryForm4.setExamineAmount("");
 						ApproveHistoryForm4.setStartExamineTime(IP.getCreatime());
 						historyForms.add(0, ApproveHistoryForm4);
 						//查询审贷
@@ -1181,7 +1182,7 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 			CustomerInfor  customerInfor  = intoPiecesService.findCustomerManager(customerApplicationInfo.getCustomerId());
 			List<AppManagerAuditLog> appManagerAuditLog = productService.findAppManagerAuditLog(appId,"1");
 			if(appManagerAuditLog.size()>0){
-				map.put("appManagerAuditLog", appManagerAuditLog.get(0));
+				map.put("appManagerAuditLog", appManagerAuditLog.get(0).getCreatedTime());
 				List<IntoPieces> result=SdwUserService.findsdh1(id);
 				if(result.size()>0){
 					for(int a=0;a<result.size();a++){

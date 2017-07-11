@@ -202,7 +202,9 @@ public class JnpadAddIntoPiecesService {
 			localExcel.setIcount(b+1);
 			if(b!=0){
 				CUSTORMERINFOUPDATE info=customerInforDao.selectExclApplicationId(customerId, productId);
-				localExcel.setApplicationId(info.getId());
+				if(info!=null){
+					localExcel.setApplicationId(info.getId());
+				}
 			}
 			//添加模板
 			customerInforDao.insertExcal(localExcel);

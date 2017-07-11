@@ -72,6 +72,7 @@ public class JnpadCustormerSdwUserController {
 		AppManagerAuditLog.setUserId_2(request.getParameter("cyUser2"));
 		AppManagerAuditLog.setUserId_3(request.getParameter("fdUser"));
 		AppManagerAuditLog.setUserId_4(user.getId());
+		AppManagerAuditLog.setCreatedTime(new Date());
 		AppManagerAuditLog.setDbfs(request.getParameter("dbfs"));
 		SdwUserService.insertCsJl(AppManagerAuditLog);
 		//初审通过状态

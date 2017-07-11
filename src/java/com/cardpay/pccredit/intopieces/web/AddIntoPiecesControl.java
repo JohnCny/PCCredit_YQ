@@ -174,7 +174,6 @@ public class AddIntoPiecesControl extends BaseController {
 		JRadPagedQueryResult<LocalExcelForm> pagedResult = new JRadPagedQueryResult<LocalExcelForm>(filter, result);
 		JRadModelAndView mv = new JRadModelAndView("/intopieces/report_import",request);
 		mv.addObject(PAGED_RESULT, pagedResult);
-		
 		return mv;
 	}
 	
@@ -236,6 +235,44 @@ public class AddIntoPiecesControl extends BaseController {
 			String productId = request.getParameter("productId");
 			String customerId = request.getParameter("customerId");
 			addIntoPiecesService.importImage(file,productId,customerId,null);
+			map.put(JRadConstants.SUCCESS, true);
+			map.put(JRadConstants.MESSAGE, CustomerInforConstant.IMPORTSUCCESS);
+			JSONObject obj = JSONObject.fromObject(map);
+			response.getWriter().print(obj.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put(JRadConstants.SUCCESS, false);
+			map.put(JRadConstants.MESSAGE, "上传失败:"+e.getMessage());
+			JSONObject obj = JSONObject.fromObject(map);
+			response.getWriter().print(obj.toString());
+		}
+		return null;
+	}
+	
+	/**
+	 * 上传合同
+	 * @param file
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "wordImport.json")
+	public Map<String, Object> wordImport(@RequestParam(value = "file", required = false) MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws Exception {        
+		response.setContentType("text/html;charset=gbk");
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			if(file==null||file.isEmpty()){
+				map.put(JRadConstants.SUCCESS, false);
+				map.put(JRadConstants.MESSAGE, CustomerInforConstant.IMPORTEMPTY);
+				return map;
+			}
+			String productId = request.getParameter("productId");
+			String customerId = request.getParameter("customerId");
+			String id = request.getParameter("id");
+			
+			addIntoPiecesService.wordImport(file,productId,customerId,id);
 			map.put(JRadConstants.SUCCESS, true);
 			map.put(JRadConstants.MESSAGE, CustomerInforConstant.IMPORTSUCCESS);
 			JSONObject obj = JSONObject.fromObject(map);
