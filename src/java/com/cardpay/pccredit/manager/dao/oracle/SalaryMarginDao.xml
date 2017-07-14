@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.manager.dao.SalaryMarginDao">
+    <resultMap id="SalaryMarginMap" type="com.cardpay.pccredit.manager.model.SalaryMargin">
+        <result property="amount" column="AMOUNT" />
+        <result property="ym" column="YM" />
+        <result property="userId" column="USER_ID" />
+    </resultMap>
+
+
+    <select id="findSalaryMargin" resultMap="SalaryMarginMap" >
+        SELECT *
+        FROM
+        SALARY_MARGIN t
+        WHERE
+        1 = 1
+        AND t.YM=#{YM}
+        AND t.USER_ID=#{user_id}
+    </select>
+
+</mapper>

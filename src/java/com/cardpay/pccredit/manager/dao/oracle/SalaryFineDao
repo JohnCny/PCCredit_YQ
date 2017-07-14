@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.manager.dao.SalaryFineDao">
+    <resultMap id="SalaryFineMap" type="com.cardpay.pccredit.manager.model.SalaryFine">
+        <result property="fineAmount" column="FINE_AMOUT" />
+        <result property="fineType" column="FINE_TYPE" />
+        <result property="fineDescribe" column="FINE_DESCRIBE" />
+        <result property="ym" column="YM" />
+        <result property="createUser" column="CREATE_USER" />
+        <result property="userId" column="USER_ID" />
+    </resultMap>
+
+    <resultMap id="SalaryFineMapSum" type="com.cardpay.pccredit.manager.model.SalaryFine">
+        <result property="fineAmount" column="FINE_AMOUT" />
+    </resultMap>
+
+    <select id="getSumSalaryFine" resultMap="SalaryFineMapSum" >
+        SELECT SUM(FINE_AMOUNT) AS FINE_AMOUNT
+        FROM
+        SALARY_FINE t
+        WHERE
+        1 = 1
+        AND t.YM=#{YM}
+        AND t.USER_ID=#{user_id}
+    </select>
+
+    <select id="getSalaryFine" resultMap="SalaryFineMap" >
+        SELECT *
+        FROM
+        SALARY_FINE t
+        WHERE
+        1 = 1
+        AND t.YM=#{YM}
+        AND t.USER_ID=#{user_id}
+    </select>
+</mapper>
