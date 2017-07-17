@@ -435,7 +435,7 @@ group by o.name,s.id,t.name
 </insert>
 <!-- 查询客户经理的基本业绩 -->
 <select id="selectManagerYj" resultMap="resultsum">
-     select 0 as creditcount,0 as creditrefuse,0 as realycount,b as reportcount,0 as signcount,a as visitcount,b as applycount,c as applyrefuse,b as internalcount,b as meetingcout,d as passcount,e as givemoneycount, f as money
+     select 0 as creditcount,0 as creditrefuse,0 as realycount,b as reportcount,0 as signcount,a as visitcount,b as applycount,c as applyrefuse,b as internalcount,b as meetingcout,d as passcount,(e+g+k) as givemoneycount, (f+g1+k1) as money
       from
     --通过
     ( select count(*) as d from sys_user s,basic_customer_information b,customer_application_info c
@@ -463,8 +463,13 @@ group by o.name,s.id,t.name
     ( select count(*)as e from mibusidata
     where userid=#{id})e,
             --放宽总额
-     (select sum(REQLMT)as f from mibusidata
-    where userid=#{id})f
+     (select nvl(sum(REQLMT),0)as f from mibusidata
+    where userid=#{id})f,
+     (  select count(*) as g from CUSTOMER_TSDKMX where userid=#{id})g,
+     (   select count(*) as k from zydk where userid=#{id})k,
+     
+     (  select nvl(sum(sxed),0) as g1 from CUSTOMER_TSDKMX where userid=#{id})g1,
+     (   select nvl(sum(reqlmt),0)as k1  from zydk where userid=#{id})k1
 </select>
 <!-- 查询所有客户经理团队以及区域 -->
 <select id="selectAllManager" resultMap="resultsum">

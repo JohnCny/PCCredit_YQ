@@ -33,9 +33,15 @@ public class IntoPiecesFilter extends BusinessFilter{
 	 
 	 private String custManagerId;
 	 private String organName;
-	 
+	 private Integer code=0;
 	 
     
+	public Integer getCode() {
+		return code;
+	}
+	public void setCode(Integer code) {
+		this.code = code;
+	}
 	public String getOrganName() {
 		return organName;
 	}

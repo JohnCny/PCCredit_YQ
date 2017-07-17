@@ -115,7 +115,9 @@ public class IntoPiecesComdao {
 				sql.append(" and chinese_name like '%'||#{chineseName}||'%' ");
 			}
 		}
-		
+		if(filter.getCode()==1){
+			sql.append(" and id not in (select aid from LOCAL_WORD) ");
+		}
 		//sql.append(" order by id asc");
 		sql.append(" order by created_time desc");
 		return commonDao.queryBySqlInPagination(IntoPieces.class, sql.toString(), params,

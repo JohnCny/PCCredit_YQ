@@ -11,6 +11,7 @@
     <result column="ATTACHMENT" property="attachment" jdbcType="VARCHAR" />
     <result column="URI" property="uri" jdbcType="VARCHAR" />
     <result column="CREATED_TIME" property="createdTime" jdbcType="VARCHAR" />
+      <result column="ICOUNT" property="icount" />
   </resultMap>
   <resultMap id="BaseResultMap1" type="com.cardpay.pccredit.intopieces.model.LocalExcel" >
     <id column="ID" property="id" jdbcType="VARCHAR" />
@@ -35,7 +36,12 @@
     <result column="SHEET_LSFX" property="sheetLsfx" jdbcType="VARCHAR" />
     <result column="APPROVE_VALUE" property="approveValue" jdbcType="VARCHAR" />
   </resultMap>
-  
+  <insert id="insertWord">
+      insert into LOCAL_WORD (id,cid,pid,name,url,time,aid) values(#{id},#{customerId},#{productId},#{attachment},#{uri},#{time},#{applicationId})
+  </insert> 
+   <select id="findWordCustomer" resultMap="BaseResultMap">
+       select url as uri,name as attachment from LOCAL_WORD where aid=#{id}
+       </select>
   <select id="findByProductAndCustomer" resultMap="BaseResultMap">
       SELECT * FROM
 		(SELECT ROW_.*,ROWNUM ROWNUM_
@@ -71,6 +77,8 @@
 		    left join PRODUCT_ATTRIBUTE pa on t.product_id = pa.id
 		    where 
 		    product_id=#{productId} and customer_id=#{customerId}
+		    and icount=(select max(icount) from local_excel  where 
+		    product_id=#{productId} and customer_id=#{customerId})
 		    
 		    <![CDATA[		
 							) ROW_

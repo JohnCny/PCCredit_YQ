@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,8 @@ import com.cardpay.pccredit.intopieces.model.LocalExcel;
 import com.cardpay.pccredit.intopieces.model.MakeCard;
 import com.cardpay.pccredit.intopieces.service.AddIntoPiecesService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
+import com.cardpay.pccredit.ipad.util.JsonDateValueProcessor;
+import com.cardpay.pccredit.jnpad.service.JnpadImageBrowseService;
 import com.cardpay.pccredit.product.filter.ProductFilter;
 import com.cardpay.pccredit.product.model.AddressAccessories;
 import com.cardpay.pccredit.product.model.AppendixDict;
@@ -84,6 +87,7 @@ import com.cardpay.pccredit.product.model.ProductAttribute;
 import com.cardpay.pccredit.product.service.ProductService;
 import com.cardpay.pccredit.product.web.ProductAttributeForm;
 import com.cardpay.pccredit.riskControl.model.RiskCustomer;
+import com.jcraft.jsch.SftpException;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
@@ -110,7 +114,9 @@ import com.wicresoft.util.web.RequestHelper;
 @RequestMapping("/intopieces/addIntopieces/*")
 @JRadModule("intopieces.addIntopieces")
 public class AddIntoPiecesControl extends BaseController {
-
+	
+	@Autowired
+	private JnpadImageBrowseService jnpadImageBrowseService ;
 	@Autowired
 	private IntoPiecesService intoPiecesService;
 
@@ -174,7 +180,6 @@ public class AddIntoPiecesControl extends BaseController {
 		JRadPagedQueryResult<LocalExcelForm> pagedResult = new JRadPagedQueryResult<LocalExcelForm>(filter, result);
 		JRadModelAndView mv = new JRadModelAndView("/intopieces/report_import",request);
 		mv.addObject(PAGED_RESULT, pagedResult);
-		
 		return mv;
 	}
 	
@@ -206,18 +211,83 @@ public class AddIntoPiecesControl extends BaseController {
 		}
 		return null;
 	}
+	/**
+	 * pc上传分类照片
+	 * @param addIntoPiecesForm
+	 * @param request
+	 * @return
+	 * @throws SftpException 
+	 * @throws IOException 
+	 */
+	@ResponseBody
+	@RequestMapping(value = "addImageByType.json", method = { RequestMethod.GET })
+	public JRadReturnMap addImageByType(HttpServletRequest request) throws SftpException, IOException {
+		JRadReturnMap returnMap = new JRadReturnMap();
+		String cid=request.getParameter("cid").trim();
+		String pid=request.getParameter("pid").trim();
+		String type=request.getParameter("type").trim();
+		IntoPieces cardId=intoPiecesService.selectCardId(request.getParameter("cid"));
+
+			int a=addIntoPiecesService.importImagesType(pid, cid, cardId.getCardId(), type);
+			if(a>0){
+				returnMap.put("message","上传"+a+"张照片成功!!");
+			}else{
+				returnMap.put("message","此文件类无照片");
+			}
+		
+		return returnMap;
+		
+	}
+	
+	
+	
+	
+	
+	
 	
 	//上传影像资料
 	@ResponseBody
 	@RequestMapping(value = "imageImport.page", method = { RequestMethod.GET })
 	@JRadOperation(JRadOperation.BROWSE)
-	public AbstractModelAndView imageImport(@ModelAttribute AddIntoPiecesFilter filter,HttpServletRequest request) {
+	public AbstractModelAndView imageImport(@ModelAttribute AddIntoPiecesFilter filter,HttpServletRequest request) throws IOException, SftpException {
 		filter.setRequest(request);
 		QueryResult<LocalImageForm> result = addIntoPiecesService.findLocalImageByProductAndCustomer(filter);
 		JRadPagedQueryResult<LocalImageForm> pagedResult = new JRadPagedQueryResult<LocalImageForm>(filter, result);
 		JRadModelAndView mv = new JRadModelAndView("/intopieces/image_import",request);
+		List<LocalImageForm> imagerList1 = jnpadImageBrowseService.findLocalImageByType1(request.getParameter("customerId"),request.getParameter("productId")
+				,"1");
+		List<LocalImageForm> imagerList2 = jnpadImageBrowseService.findLocalImageByType1(request.getParameter("customerId"),request.getParameter("productId")
+				,"2");
+		List<LocalImageForm> imagerList3 = jnpadImageBrowseService.findLocalImageByType1(request.getParameter("customerId"),request.getParameter("productId")
+				,"3");
+		List<LocalImageForm> imagerList4 = jnpadImageBrowseService.findLocalImageByType1(request.getParameter("customerId"),request.getParameter("productId")
+				,"4");
+		List<LocalImageForm> imagerList5 = jnpadImageBrowseService.findLocalImageByType1(request.getParameter("customerId"),request.getParameter("productId")
+				,"5");
+		List<LocalImageForm> imagerList6 = jnpadImageBrowseService.findLocalImageByType1(request.getParameter("customerId"),request.getParameter("productId")
+				,"6");
+		List<LocalImageForm> imagerList7 = jnpadImageBrowseService.findLocalImageByType1(request.getParameter("customerId"),request.getParameter("productId")
+				,"7");
+		List<LocalImageForm> imagerList8 = jnpadImageBrowseService.findLocalImageByType1(request.getParameter("customerId"),request.getParameter("productId")
+				,"8");
+		List<LocalImageForm> imagerList9 = jnpadImageBrowseService.findLocalImageByType1(request.getParameter("customerId"),request.getParameter("productId")
+				,"9");
+		List<LocalImageForm> imagerList10 = jnpadImageBrowseService.findLocalImageByType1(request.getParameter("customerId"),request.getParameter("productId")
+				,"10");
+		List<LocalImageForm> imagerList11 = jnpadImageBrowseService.findLocalImageByType1(request.getParameter("customerId"),request.getParameter("productId")
+				,"11");
 		mv.addObject(PAGED_RESULT, pagedResult);
-		
+		mv.addObject("size1",imagerList1.size());
+		mv.addObject("size2",imagerList2.size());
+		mv.addObject("size3",imagerList3.size());
+		mv.addObject("size4",imagerList4.size());
+		mv.addObject("size5",imagerList5.size());
+		mv.addObject("size6",imagerList6.size());
+		mv.addObject("size7",imagerList7.size());
+		mv.addObject("size8",imagerList8.size());
+		mv.addObject("size9",imagerList9.size());
+		mv.addObject("size10",imagerList10.size());
+		mv.addObject("size11",imagerList11.size());
 		return mv;
 	}
 	
@@ -236,6 +306,46 @@ public class AddIntoPiecesControl extends BaseController {
 			String productId = request.getParameter("productId");
 			String customerId = request.getParameter("customerId");
 			addIntoPiecesService.importImage(file,productId,customerId,null);
+			map.put(JRadConstants.SUCCESS, true);
+			map.put(JRadConstants.MESSAGE, CustomerInforConstant.IMPORTSUCCESS);
+			JSONObject obj = JSONObject.fromObject(map);
+			response.getWriter().print(obj.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put(JRadConstants.SUCCESS, false);
+			map.put(JRadConstants.MESSAGE, "上传失败:"+e.getMessage());
+			JSONObject obj = JSONObject.fromObject(map);
+			response.getWriter().print(obj.toString());
+		}
+		return null;
+	}
+	
+	
+	
+	/**
+	 * 上传合同
+	 * @param file
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "wordImport.json")
+	public Map<String, Object> wordImport(@RequestParam(value = "file", required = false) MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws Exception {        
+		response.setContentType("text/html;charset=gbk");
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			if(file==null||file.isEmpty()){
+				map.put(JRadConstants.SUCCESS, false);
+				map.put(JRadConstants.MESSAGE, CustomerInforConstant.IMPORTEMPTY);
+				return map;
+			}
+			String productId = request.getParameter("productId");
+			String customerId = request.getParameter("customerId");
+			String id = request.getParameter("id");
+			
+			addIntoPiecesService.wordImport(file,productId,customerId,id);
 			map.put(JRadConstants.SUCCESS, true);
 			map.put(JRadConstants.MESSAGE, CustomerInforConstant.IMPORTSUCCESS);
 			JSONObject obj = JSONObject.fromObject(map);

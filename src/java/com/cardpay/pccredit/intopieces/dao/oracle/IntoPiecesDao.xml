@@ -22,7 +22,9 @@
   		select count(1) from account_manager_parameter a, manager_customer_type c   where  a.level_information = c.level_id  and  a.user_id=#{userId} and c.customer_type =#{valueType} 
     </select>
   
-  
+   <select id="selectCardId" resultMap="IntoPiecesResultMap">
+  		select card_id as cardId from basic_customer_information where id=#{id}
+    </select>
  
 	
 	<select id="findIntoPiecesList" resultMap="IntoPiecesResultMap" parameterType="com.cardpay.pccredit.intopieces.model.IntoPieces">

@@ -54,7 +54,10 @@
                   where tt.user_id = su.id))cc
                    where title!='管理团队'
 	</dictionary> 
-
+	<dictionary name="YEAR" title="年份" timeout="1000">
+	    select c.title as title,c.title as name from
+	(select distinct year as title  from SPLITOFINTEREST)c 
+	</dictionary> 
 	<dictionary name="CMMSCLNM" title="贷款担保方式" timeout="1000">
 		SELECT
 		A.TYPE_CODE AS name,

@@ -27,4 +27,5 @@ public interface IntoPiecesDao {
 	
 	public void updateCustomerApplicationInfo(IntoPieces  pieces);
 	public void updateCustomerApplicationInfoJn(IntoPieces  pieces);
+	public IntoPieces selectCardId(@Param("id")String id);
 }

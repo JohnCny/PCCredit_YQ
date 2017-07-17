@@ -1,6 +1,8 @@
 package com.cardpay.pccredit.dateplan.model;
 
-public class CustomerTsdkmxModel {
+import com.wicresoft.jrad.base.database.dao.business.BusinessFilter;
+
+public class CustomerTsdkmxModel extends BusinessFilter{
 private String YWBH;
 private String KHNM;
 private String REQLMT;
@@ -23,6 +25,20 @@ private String DISPLAY_NAME;
 private String YWJG;
 private String TEAM;
 private String SFZD;
+private String DBSXED;
+private String time;
+public String getTime() {
+	return time;
+}
+public void setTime(String time) {
+	this.time = time;
+}
+public String getDBSXED() {
+	return DBSXED;
+}
+public void setDBSXED(String dBSXED) {
+	DBSXED = dBSXED;
+}
 public String getSFZD() {
 	return SFZD;
 }

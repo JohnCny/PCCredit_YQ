@@ -1,5 +1,7 @@
 package com.cardpay.pccredit.intopieces.model;
 
+import java.util.Date;
+
 import com.wicresoft.jrad.base.database.model.BusinessModel;
 import com.wicresoft.jrad.base.database.model.ModelParam;
 /*
@@ -9,7 +11,7 @@ import com.wicresoft.jrad.base.database.model.ModelParam;
 public class AppManagerAuditLog extends BusinessModel {
 	
 	private static final long serialVersionUID = -8470111754965975277L;
-	
+	private Date createdTime;
 	private String  applicationId;//进件id
 	private String  auditType;     
 	private String  userId_1;    
@@ -34,6 +36,12 @@ public class AppManagerAuditLog extends BusinessModel {
 	private String PRODCREDITRANGE;
 	private String FINAL_APPROVAL;
 	private String dbfs;
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
 	public String getDbfs() {
 		return dbfs;
 	}

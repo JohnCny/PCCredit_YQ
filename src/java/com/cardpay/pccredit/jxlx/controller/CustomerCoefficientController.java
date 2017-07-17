@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ibatis.annotations.Param;
 import org.hibernate.mapping.Array;
@@ -223,7 +224,8 @@ public class CustomerCoefficientController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "selectByUserOrByTeam.page", method = { RequestMethod.GET })
-	public AbstractModelAndView selectByUserOrByTeam(@ModelAttribute SPLITOFINTEREST filter, HttpServletRequest request) {
+	public AbstractModelAndView selectByUserOrByTeam( HttpServletRequest request) {
+		SPLITOFINTEREST filter=new SPLITOFINTEREST();
 		if(!request.getParameter("name").equals("0")){
 			filter.setName(request.getParameter("name"));
 		}
@@ -239,21 +241,27 @@ public class CustomerCoefficientController extends BaseController{
 		//如果传过来的值有name
 		if(!request.getParameter("name").equals("0")){
 			List<SPLITOFINTEREST>resultUser=CoefficientService.selectSpliByTeam(filter);
-			resultNewUser.add(0, resultUser.get(0));
+			if(resultUser.size()>0){
+				resultNewUser.add(0, resultUser.get(0));
+			}
 		}
 		//如果传过来有team
 		else if(!request.getParameter("team").equals("0")){
 			List<SPLITOFINTEREST>resultUser=CoefficientService.selectSpliByTeam(filter);
-			for(int i1=0;i1<resultUser.size();i1++){
-				resultNewUser.add(size+i1, resultUser.get(i1));
+			if(resultUser.size()>0){
+				for(int i1=0;i1<resultUser.size();i1++){
+					resultNewUser.add(size+i1, resultUser.get(i1));
+				}
 			}
 			SPLITOFINTEREST resultUser1=CoefficientService.selectSumSpliByTeam(filter);
-			resultUser1.setOrgteam("总计");
-			resultUser1.setTeam(request.getParameter("team"));
-			resultUser1.setName(request.getParameter("team"));
-			resultUser1.setYear(request.getParameter("year"));
-			resultUser1.setMonth(request.getParameter("month"));
-			resultNewUser.add(size+resultUser.size(), resultUser1);
+			if(resultUser1!=null){
+				resultUser1.setOrgteam("总计");
+				resultUser1.setTeam(request.getParameter("team"));
+				resultUser1.setName(request.getParameter("team"));
+				resultUser1.setYear(request.getParameter("year"));
+				resultUser1.setMonth(request.getParameter("month"));
+				resultNewUser.add(size+resultUser.size(), resultUser1);
+			}
 		}else{
 			
 			ManagerPerformmanceForm from1=new ManagerPerformmanceForm();
@@ -270,26 +278,30 @@ public class CustomerCoefficientController extends BaseController{
 						resultNewUser.add(size+i1, resultUser.get(i1));
 					}
 					SPLITOFINTEREST resultUser1=CoefficientService.selectSumSpliByTeam(spt);
-					resultUser1.setOrgteam("总计");
-					resultUser1.setTeam(request.getParameter("team"));
-					resultUser1.setName(request.getParameter("team"));
-					resultUser1.setYear(request.getParameter("year"));
-					resultUser1.setMonth(request.getParameter("month"));
-					resultNewUser.add(size+resultUser.size(), resultUser1);
-					size+=resultUser.size()+1;
+					if(resultUser1!=null){
+						resultUser1.setOrgteam("总计");
+						resultUser1.setTeam(result.get(i).getTeam());
+						resultUser1.setName(result.get(i).getTeam());
+						resultUser1.setYear(request.getParameter("year"));
+						resultUser1.setMonth(request.getParameter("month"));
+						resultNewUser.add(size+resultUser.size(), resultUser1);
+						size+=resultUser.size()+1;
+					}
 				}
 				}
 			SPLITOFINTEREST sp=new SPLITOFINTEREST();
 			sp.setYear(request.getParameter("year"));
 			sp.setMonth(request.getParameter("month"));
+			sp.setOrgteam(request.getParameter("orgteam"));
 			SPLITOFINTEREST resultUser=CoefficientService.selectSumSpliByTeam(sp);
-			resultUser.setOrgteam("累计");
-			resultUser.setTeam("累计");
-			resultUser.setName("累计");
-			resultUser.setYear(request.getParameter("year"));
-			resultUser.setMonth(request.getParameter("month"));
-			resultNewUser.add(size, resultUser);
-			
+			if(resultUser!=null){
+				resultUser.setOrgteam("汇总");
+				resultUser.setTeam(request.getParameter("orgteam"));
+				resultUser.setName(request.getParameter("orgteam"));
+				resultUser.setYear(request.getParameter("year"));
+				resultUser.setMonth(request.getParameter("month"));
+				resultNewUser.add(size, resultUser);
+			}
 		}
 		SPLITOFINTEREST sp1=new SPLITOFINTEREST();
 		sp1.setYear(request.getParameter("year"));
@@ -298,9 +310,105 @@ public class CustomerCoefficientController extends BaseController{
 		mv.addObject("gxperformList", resultNewUser);
 		mv.addObject("sp1", sp1);
 		return mv;
-		
-		
-		
-		
+	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * 导出利息分拆报表
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "selectByUserOrByTeam1.page", method = { RequestMethod.GET })
+	public JRadReturnMap selectByUserOrByTeam1( HttpServletRequest request,HttpServletResponse response) {
+		SPLITOFINTEREST filter=new SPLITOFINTEREST();
+		JRadReturnMap returnMap = new JRadReturnMap();
+		if(!request.getParameter("name").equals("0")){
+			filter.setName(request.getParameter("name"));
+		}
+		if(!request.getParameter("team").equals("0")){
+			filter.setTeam(request.getParameter("team"));
+		}if(!request.getParameter("orgteam").equals("0")){
+			filter.setOrgteam(request.getParameter("orgteam"));
+		}
+		filter.setYear(request.getParameter("year"));
+		filter.setMonth(request.getParameter("month"));
+		Integer size=0;
+		List<SPLITOFINTEREST> resultNewUser=new ArrayList<SPLITOFINTEREST>();
+		//如果传过来的值有name
+		if(!request.getParameter("name").equals("0")){
+			List<SPLITOFINTEREST>resultUser=CoefficientService.selectSpliByTeam(filter);
+			if(resultUser.size()>0){
+				resultNewUser.add(0, resultUser.get(0));
+			}
+		}
+		//如果传过来有team
+		else if(!request.getParameter("team").equals("0")){
+			List<SPLITOFINTEREST>resultUser=CoefficientService.selectSpliByTeam(filter);
+			if(resultUser.size()>0){
+				for(int i1=0;i1<resultUser.size();i1++){
+					resultNewUser.add(size+i1, resultUser.get(i1));
+				}
+			}
+			SPLITOFINTEREST resultUser1=CoefficientService.selectSumSpliByTeam(filter);
+			if(resultUser1!=null){
+				resultUser1.setOrgteam("总计");
+				resultUser1.setTeam(request.getParameter("team"));
+				resultUser1.setName(request.getParameter("team"));
+				resultUser1.setYear(request.getParameter("year"));
+				resultUser1.setMonth(request.getParameter("month"));
+				resultNewUser.add(size+resultUser.size(), resultUser1);
+			}
+		}else{
+			
+			ManagerPerformmanceForm from1=new ManagerPerformmanceForm();
+			from1.setOrdteam(request.getParameter("orgteam"));
+			List<ManagerPerformmanceForm> result=managerPerformmanceService.selectAllManagerByOrgTeam(from1);
+			if(result.size()>0){
+				for(int i=0;i<result.size();i++){
+					SPLITOFINTEREST spt=new SPLITOFINTEREST();
+					spt.setYear(request.getParameter("year"));
+					spt.setMonth(request.getParameter("month"));
+					spt.setTeam(result.get(i).getTeam());
+					List<SPLITOFINTEREST>resultUser=CoefficientService.selectSpliByTeam(spt);
+					for(int i1=0;i1<resultUser.size();i1++){
+						resultNewUser.add(size+i1, resultUser.get(i1));
+					}
+					SPLITOFINTEREST resultUser1=CoefficientService.selectSumSpliByTeam(spt);
+					if(resultUser1!=null){
+						resultUser1.setOrgteam("总计");
+						resultUser1.setTeam(result.get(i).getTeam());
+						resultUser1.setName(result.get(i).getTeam());
+						resultUser1.setYear(request.getParameter("year"));
+						resultUser1.setMonth(request.getParameter("month"));
+						resultNewUser.add(size+resultUser.size(), resultUser1);
+						size+=resultUser.size()+1;
+					}
+				}
+				}
+			SPLITOFINTEREST sp=new SPLITOFINTEREST();
+			sp.setYear(request.getParameter("year"));
+			sp.setMonth(request.getParameter("month"));
+			sp.setOrgteam(request.getParameter("orgteam"));
+			SPLITOFINTEREST resultUser=CoefficientService.selectSumSpliByTeam(sp);
+			if(resultUser!=null){
+				resultUser.setOrgteam("汇总");
+				resultUser.setTeam(request.getParameter("orgteam"));
+				resultUser.setName(request.getParameter("orgteam"));
+				resultUser.setYear(request.getParameter("year"));
+				resultUser.setMonth(request.getParameter("month"));
+				resultNewUser.add(size, resultUser);
+			}
+		}
+		SPLITOFINTEREST sp1=new SPLITOFINTEREST();
+		sp1.setYear(request.getParameter("year"));
+		sp1.setMonth(request.getParameter("month"));
+		CoefficientService.getExportWageData(resultNewUser,sp1, response);
+		return returnMap;
 	}
 }

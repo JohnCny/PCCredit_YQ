@@ -16,8 +16,23 @@ public class LocalExcelForm extends BaseModel{
 	private String attachment;
 	private String uri;
 	private String createdTime;
-	private String approveValue;;
+	private String approveValue;
+	private Date time;
+	private Integer icount;
 	
+	
+	public Integer getIcount() {
+		return icount;
+	}
+	public void setIcount(Integer icount) {
+		this.icount = icount;
+	}
+	public Date getTime() {
+		return time;
+	}
+	public void setTime(Date time) {
+		this.time = time;
+	}
 	public String getCustomerId() {
 		return customerId;
 	}

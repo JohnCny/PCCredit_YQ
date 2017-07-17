@@ -10,8 +10,63 @@
       </div>
  <div class="inquiry">
         <div class="search_tag">#i18n("label.browse.filter")</div>
-        <div class="search">
-          <form id="excelForm" enctype="multipart/form-data" method="post" 
+        <div class="search" style="margin-top:10px;">
+        <input type="hidden" id="cid" value="$!result.filter.customerId">
+          <input type="hidden" id="pid" value="$!result.filter.productId ">
+          <div  id = "jycs" style="margin-left:170px;margin-right:0px;display:inline-block;">
+	                            <img src="${contextPath}/images/wenjian.png" /></br>
+	                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>经营场所(上传<font color="#FF0000">$!size1张</font> )</span>
+	                            </div>
+	                            
+	                                  <div id = "jyqs" style="margin-left:170px;margin-right:0px;display:inline-block;">
+	                            <img src="${contextPath}/images/wenjian.png" /></br>
+	                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>证件照片(上传<font color="#FF0000">$!size2张</font> )</span>
+	                            </div>
+	                               
+	                                  <div id = "ljjc" style="margin-left:170px;margin-right:0px;display:inline-block;">
+	                            <img src="${contextPath}/images/wenjian.png" /></br>
+	                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>担保经营(上传<font color="#FF0000">$!size3张</font> )</span>
+	                            </div>
+	                            
+	                            
+	                                  <div  id = "zcfz" style="margin-left:170px;margin-right:0px;display:inline-block;">
+	                            <img src="${contextPath}/images/wenjian.png" /></br>
+	                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>担保家庭(上传<font color="#FF0000">$!size4张</font> )</span>
+	                            </div>
+	                            
+	                            
+	                                  <div  id = "sy" style="margin-left:170px;margin-right:0px;display:inline-block;">
+	                            <img src="${contextPath}/images/wenjian.png" /></br>
+	                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>担保证件(上传<font color="#FF0000">$!size5张</font> )</span>
+	                            </div>
+	                              <div  id = "sy1" style="margin-left:170px;margin-right:0px;display:inline-block;">
+	                            <img src="${contextPath}/images/wenjian.png" /></br>
+	                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>担保流水(上传<font color="#FF0000">$!size11张</font> )</span>
+	                            </div>
+	                              <div  id = "qtsr" style="margin-left:170px;margin-right:0px;display:inline-block;">
+	                            <img src="${contextPath}/images/wenjian.png" /></br>
+	                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>固定资产(上传<font color="#FF0000">$!size6张</font> )</span>
+	                            </div>
+	                              <div  id = "sfzm" style="margin-left:170px;margin-right:0px;display:inline-block;">
+	                            <img src="${contextPath}/images/wenjian.png" /></br>
+	                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>家庭环境(上传<font color="#FF0000">$!size7张</font> )</span>
+	                            </div>
+	                            
+	                            
+	                            
+	                              <div  id = "grzc" style="margin-left:170px;margin-right:0px;display:inline-block;">
+	                            <img src="${contextPath}/images/wenjian.png" /></br>
+	                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>流水账单(上传<font color="#FF0000">$!size8张</font> )</span>
+	                            </div>
+	                              <div  id = "jf" style="margin-left:170px;margin-right:0px;display:inline-block;">
+	                            <img src="${contextPath}/images/wenjian.png" /></br>
+	                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>外债明细(上传<font color="#FF0000">$!size9张</font> )</span>
+	                            </div>
+	                              <div  id = "db" style="margin-left:170px;margin-right:0px;display:inline-block;">
+	                            <img src="${contextPath}/images/wenjian.png" /></br>
+	                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>合同(上传<font color="#FF0000">$!size10张</font> )</span>
+	                            </div>
+        <!--   <form id="excelForm" enctype="multipart/form-data" method="post" 
           	action="${contextPath}/intopieces/addIntopieces/imageImport.json?excelId=$!result.filter.excelId&customerId=$!result.filter.customerId&productId=$!result.filter.productId">
             <ul>
               <li>
@@ -25,9 +80,9 @@
               	onclick="importCustomer('${contextPath}/intopieces/addIntopieces/imageImport.page?excelId=$!result.filter.excelId&customerId=$!result.filter.customerId&productId=$!result.filter.productId')"/>
               </li>
             </ul>
-          </form>
+          </form> -->
         </div>
-               <div id="topDiv" class="inquiry_list inquiry_top">
+             <!--   <div id="topDiv" class="inquiry_list inquiry_top">
           <table>
             <colgroup>
               <col width="10%" />
@@ -64,12 +119,12 @@
             </tr>
             #end
           </table>
-        </div>
+        </div> -->
       </div>
       <div class="pagebar">
         <div class="controlbtn">
         	<a id="id_pre_button" class="btn_g" href="javascript:history.back();" title="上一步">上一步</a>
-        	<a id="id_del_button" class="btn_g" href="javascript:void(0);" title="删除">删除</a>
+        <!-- 	<a id="id_del_button" class="btn_g" href="javascript:void(0);" title="删除">删除</a> -->
         	<a id="id_next_button" class="btn_g" href="javascript:void(0);" title="提交进件">提交进件</a>
         </div>
         #parse ("common/pagination.htm")
@@ -85,6 +140,196 @@
 	$(document).ready(function() {
 		var opsObj = new Object();
 		prepareOperations(opsObj);
+		
+		
+		
+		 $("#jycs").click(function(){
+			 var cid=$("#cid").val();
+			 var pid=$("#pid").val();
+				var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=1";
+				
+						$.ajax({
+					 url : url,
+					 type : "get",
+					 success : function(data) {
+							 topWin.Dialog.message(data.message);
+							 window.location.reload();
+					 }
+				 });
+		 
+		    });
+		    $("#jyqs").click(function(){
+		    	 var cid=$("#cid").val();
+				 var pid=$("#pid").val();
+					var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=2";
+					
+							$.ajax({
+						 url : url,
+						 type : "get",
+						 success : function(data) {
+							 topWin.Dialog.message(data.message);
+							 window.location.reload();
+						 }
+					 });
+			 
+			    });
+		      $("#qtsr").click(function(){
+		    	  var cid=$("#cid").val();
+					 var pid=$("#pid").val();
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=6";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
+				 
+				    });
+		      $("#sfzm").click(function(){
+		    	  var cid=$("#cid").val();
+					 var pid=$("#pid").val();
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=7";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
+				 
+				    });
+		      $("#grzc").click(function(){
+		    	  var cid=$("#cid").val();
+					 var pid=$("#pid").val();
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=8";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
+				 
+				    });
+		      $("#jf").click(function(){
+		    	  var cid=$("#cid").val();
+					 var pid=$("#pid").val();
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=9";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
+				 
+				    });
+		      $("#db").click(function(){
+		    	  var cid=$("#cid").val();
+					 var pid=$("#pid").val();
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=10";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
+				 
+				    });
+		  $("#ljjc").click(function(){
+			  var cid=$("#cid").val();
+				 var pid=$("#pid").val();
+					var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=3";
+					
+							$.ajax({
+						 url : url,
+						 type : "get",
+						 success : function(data) {
+							 topWin.Dialog.message(data.message);
+							 window.location.reload();
+						 }
+					 });
+			 
+			    });
+		      $("#zcfz").click(function(){
+		    	  var cid=$("#cid").val();
+					 var pid=$("#pid").val();
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=4";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
+				 
+				    });
+		      $("#sy").click(function(){
+		    	  var cid=$("#cid").val();
+					 var pid=$("#pid").val();
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=5";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
+				 
+				    });
+		          $("#sy1").click(function(){
+		        	  var cid=$("#cid").val();
+		 			 var pid=$("#pid").val();
+		 				var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=11";
+		 				
+		 						$.ajax({
+		 					 url : url,
+		 					 type : "get",
+		 					 success : function(data) {
+		 						 topWin.Dialog.message(data.message);
+								 window.location.reload();
+		 					 }
+		 				 });
+		 		 
+		 		    });
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		$("#id_del_button").click(function() {
 			if ($(".checkbox :checked").length == 1) {
@@ -114,10 +359,10 @@
 				topWin.Dialog.message("请勿重复提交！");
 				return;
 			}
-			if($result.totalCount==0){
+		/* 	if($result.totalCount==0){
 				topWin.Dialog.message("请先上传影像资料！");
 				return;
-			}
+			} */
 			
 			var url = "${contextPath}/intopieces/addIntopieces/addIntopieces.json?excelId=$!result.filter.excelId&customerId=$!result.filter.customerId&productId=$!result.filter.productId";
 			Dialog.confirm("确定要提交进件吗？", "提示",

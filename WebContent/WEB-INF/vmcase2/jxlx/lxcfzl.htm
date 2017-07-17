@@ -24,12 +24,12 @@
                  </select></span>
               </li>
                 <li>
-                 <span>年份：<select id="year" name="year"><option value="">请选择</option>
-                 <option value="2017">2017</option>
+                 <span>年份：<select id="year" name="year"><option value="0">请选择</option>
+                #dict("YEAR","")
                  </select></span>
               </li>
                <li>
-                 <span>月份：<select id="month" name="month"><option value="">请选择</option>
+                 <span>月份：<select id="month" name="month"><option value="0">请选择</option>
                  <option value="01">一月</option>
                    <option value="02">二月</option>
                      <option value="03">三月</option>
@@ -131,26 +131,34 @@
  });
 $("#export_button").click(function() {
 	 var team=$("#team").val();
-	 var ordteam=$("#ordteam").val();
-	 var exporturl="";
-	 if(team=="" && ordteam==""){
-		  exporturl = "${contextPath}/manager/performmance/performexport.json"
-	 }else{
-		 exporturl = "${contextPath}/manager/performmance/portselectTeamName.json?orgteam="+ordteam+"&team="+team;
-	 }
-     window.location.href = exporturl;
-
- });
-
- $("#selectUser").click(function() {
-	 var team=$("#team").val();
-	 var ordteam=$("#ordteam").val();
+	 var ordteam=$("#orgteam").val();
 	 var year=$("#year").val();
 	 var month=$("#month").val();
 	 var name=$("#name").val();
 	 if(year=="0" || month=="0"){
 		 Dialog.message("请选择年份或月份!");
-	 }else if(ordteam=="0"&& month=="0" && name==""){
+	 }else if(ordteam=="0"&& team=="0" && (name=="" ||name==null)){
+		 Dialog.message("请选择区域或团队或填写客户经理!");
+	 }else{
+		 if(name==""){
+			 name="0";
+		 }
+		 var exporturl = "${contextPath}/customer/Coefficient/selectByUserOrByTeam1.page?orgteam="+ordteam+"&team="+team+"&year="+year+"&month="+month+"&name="+name;
+		 window.location.href = exporturl;
+	 }
+	 
+
+ });
+
+ $("#selectUser").click(function() {
+	 var team=$("#team").val();
+	 var ordteam=$("#orgteam").val();
+	 var year=$("#year").val();
+	 var month=$("#month").val();
+	 var name=$("#name").val();
+	 if(year=="0" || month=="0"){
+		 Dialog.message("请选择年份或月份!");
+	 }else if(ordteam=="0"&& team=="0" && (name=="" ||name==null)){
 		 Dialog.message("请选择区域或团队或填写客户经理!");
 	 }else{
 		 if(name==""){

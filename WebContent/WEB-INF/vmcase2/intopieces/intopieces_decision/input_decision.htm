@@ -111,8 +111,14 @@
               <col width="10%" />
               <col width="30%" />
             </colgroup>
-              <tr><td class="titlec" colspan="4" style="text-align: center;">初审结论</td></tr>
-            <tr>
+              <tr><td class="titlec" colspan="4" style="text-align: center;">资料评估结论</td></tr>
+               <tr>
+			  <td class="titlefc3"><label for="csAmount">评估结论:</label></td>
+              <td><input  type="text" class="rinpsty" name="csAmount" id="csAmount" value="通过" disabled="disabled"/></td>
+              <td class="titlefc3"><label for="examineLv">评估时间:</label></td>
+              <td><input type="text" class="rinpsty" name="csexamineLv" id="csexamineLv" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!appManagerAuditLog)" disabled="disabled"/></td>
+            </tr>
+        <!--     <tr>
 			  <td class="titlefc3"><label for="csAmount">初审额度(元):</label></td>
               <td><input  type="text" class="rinpsty" name="csAmount" id="csAmount" value="$!appManagerAuditLog.examineAmount" disabled="disabled"/></td>
               <td class="titlefc3"><label for="examineLv">利率:</label></td>
@@ -133,7 +139,7 @@
             <tr>
 			  <td class="titlefc3"><label for="csAmount">辅调客户经理:</label></td>
               <td><input  type="text" class="rinpsty" name="chu_fdUser" id="chu_fdUser" value="$!appManagerAuditLog.userId_3" disabled="disabled"/></td>
-              </tr>
+              </tr> -->
           </table>
          </div>
          <div class="form-bd" id="formsId" style="margin-top: 0px;padding-top: 0px;">
@@ -183,11 +189,11 @@
               </td>
             </tr>
             <tr>
-              <td class="titlefc3">审贷委:</td>
+            <!--   <td class="titlefc3">审贷委:</td>
               <td>
                   <input type="text" class="rinpsty" name="cyUser1" id="cyUser1" value="$!result.name1" disabled="disabled"/>
               </td>
-              
+               -->
               <td class="titlefc3">意见:</td>
               <td>
               <textarea name="SDWUSER1YJ" id="SDWUSER1YJ" >$!sdwinfo.SDWUSER1YJ</textarea>
@@ -347,9 +353,13 @@
 			
 			var status = $("select[name=status]").val();
 			if( status == "approved"){
-				$("tr:eq(18)").show();
+			/* 	$("tr:eq(18)").show();
 				$("tr:eq(19)").show();
-				$("tr:eq(21)").hide();
+				$("tr:eq(21)").hide(); */
+				$("tr:eq(15)").show();
+				$("tr:eq(16)").show();
+				$("tr:eq(17)").show();
+				$("tr:eq(18)").hide();
 				if($("input[name=decision_amount]").val() == ""){
 					 $("input[name='decision_amount']").after("<label class='error myerror' generated='true' >金额不能为空</label>");   
 				}
@@ -359,19 +369,20 @@
 			}
 			
 			if( status == "refuse"){
-				$("tr:eq(18)").hide();
-				$("tr:eq(19)").hide();
-				$("tr:eq(21)").show();
-				
+				$("tr:eq(15)").hide();
+				$("tr:eq(16)").hide();
+				$("tr:eq(17)").hide();
+				$("tr:eq(18)").show();
 				if($("textarea[name=decision_refusereason]").val() == ""){
 					 $("textarea[name='decision_refusereason']").after("<label class='error myerror' generated='true' >拒绝原因不能为空</label>");   
 				}
 			}
 			
 			if( status == "returnedToFirst"){
-				$("tr:eq(18)").hide();
-				$("tr:eq(19)").hide();
-				$("tr:eq(21)").show();
+				$("tr:eq(15)").hide();
+				$("tr:eq(16)").hide();
+				$("tr:eq(17)").hide();
+				$("tr:eq(18)").show();
 				
 			}
 			

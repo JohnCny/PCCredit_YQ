@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.manager.dao.SalaryRecordDao">
+
+    <resultMap id="ResultMap" type="com.cardpay.pccredit.manager.model.SalaryRecord">
+        <result property="id" column="id" />
+        <result property="addedLoan" column="ADDEDLOAN" />
+        <result property="loanBalance" column="LOANBALANCE" />
+        <result property="management" column="MANAGEMENT" />
+        <result property="assistLoan" column="ASSISTLOAN" />
+        <result property="overdueLoan" column="OVERDUELOAN" />
+        <result property="reviewLoan" column="REVIEWLOAN" />
+        <result property="ym" column="YM" />
+        <result property="loanId" column="LOANID" />
+        <result property="userId" column="USERID" />
+    </resultMap>
+
+    <resultMap id="ResultMapSum" type="com.cardpay.pccredit.manager.model.SalaryRecord">
+        <result property="addedLoan" column="ADDEDLOAN" />
+        <result property="loanBalance" column="LOANBALANCE" />
+        <result property="management" column="MANAGEMENT" />
+        <result property="assistLoan" column="ASSISTLOAN" />
+        <result property="overdueLoan" column="OVERDUELOAN" />
+        <result property="reviewLoan" column="REVIEWLOAN" />
+    </resultMap>
+
+    <!--<select id="getSumSalary" resultMap="ResultMapSum"-->
+            <!--parameterType="com.cardpay.pccredit.manager.filter.SalaryRecordFilter">-->
+        <!--SELECT-->
+        <!--SUM(addedloan) AS addedLoan, SUM(LoanBalance) AS loanBalance, SUM(AssistLoan) AS assistLoan,-->
+        <!--SUM(OverdueLoan) AS overdueLoan, SUM(ReviewLoan) AS reviewLoan-->
+        <!--FROM SALARY_RECORD sr-->
+        <!--WHERE 1=1-->
+        <!--<if test="userId != null and userId != '' ">-->
+            <!--and sr.userId = #{userId}-->
+        <!--</if>-->
+        <!--<if test="YM != null and YM != '' ">-->
+            <!--and sr.YM = #{YM}-->
+        <!--</if>-->
+
+    <!--</select>-->
+    <select id="getSumSalary" resultMap="ResultMapSum">
+        SELECT
+        SUM(added_loan) AS added_Loan, SUM(loan_Balance) AS loan_Balance, SUM(assist_Loan) AS assist_Loan,
+        SUM(overdue_Loan) AS overdue_Loan, SUM(review_Loan) AS review_Loan,SUM(management) AS management
+        FROM SALARY_RECORD sr
+        WHERE 1=1
+            and sr.user_Id = #{userId}
+            and sr.YM = #{YM}
+    </select>
+</mapper>

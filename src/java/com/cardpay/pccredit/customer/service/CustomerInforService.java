@@ -75,6 +75,8 @@ import com.cardpay.pccredit.customer.model.TyRepayLsz;
 import com.cardpay.pccredit.customer.model.TyRepayTkmxForm;
 import com.cardpay.pccredit.customer.model.TyRepayYehzVo;
 import com.cardpay.pccredit.datapri.service.DataAccessSqlService;
+import com.cardpay.pccredit.dateplan.dao.CustomerTsdkmxDao;
+import com.cardpay.pccredit.dateplan.model.CustomerTsdkmxModel;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.intopieces.constant.IntoPiecesException;
 import com.cardpay.pccredit.intopieces.filter.IntoPiecesFilter;
@@ -142,7 +144,8 @@ public class CustomerInforService {
 	ManagerPerformmanceDao managerPerformmanceDao;
 	@Autowired
 	private CommonDao commonDao;
-
+	@Autowired
+	private CustomerTsdkmxDao UserDao;
 	@Autowired
 	private CustomerInforDao customerInforDao;
 	
@@ -1681,7 +1684,7 @@ public class CustomerInforService {
 //				System.out.println(count);
 				// 保存数据
 				//先查询客户原始表，存在则更新否则插入(更新原始信息表)
-				String sql = "select * from ty_customer_base where khnm='"+map.get("khnm").toString()+"'";
+				String sql = "select khnm from ty_customer_base where khnm='"+map.get("khnm").toString()+"'";
 				List<CustomerFirsthendBase> list = commonDao.queryBySql(CustomerFirsthendBase.class, sql, null);
 				if(list.size()>0){
 					customerInforDao.updateCustomerBase(map);
@@ -1692,7 +1695,7 @@ public class CustomerInforService {
 					//客户经理标识
 					String khjl = map.get("khjl").toString();
 					//先通过标识获取柜员号
-					List<CustomerFirsthendRygl> rygl = commonDao.queryBySql(CustomerFirsthendRygl.class, "select * from ty_customer_rygl where dm='"+khjl.trim()+"'", null);
+					List<CustomerFirsthendRygl> rygl = commonDao.queryBySql(CustomerFirsthendRygl.class, "select ddrq,dldm from ty_customer_rygl where dm='"+khjl.trim()+"'", null);
 					String gyh1 = "";
 					String gyh2 = "";
 					if(rygl.size()>0){
@@ -1707,12 +1710,12 @@ public class CustomerInforService {
 					}
 					//获取客户经理id(由于两个字段都有可能为柜员号，所以两次判断)
 					String user_id=null;
-					List<SystemUser> users = commonDao.queryBySql(SystemUser.class, "select * from sys_user where external_id='"+gyh1+"'", null);
+					List<SystemUser> users = commonDao.queryBySql(SystemUser.class, "select id from sys_user where external_id='"+gyh1+"'", null);
 					//银行工号匹配本系统uuid，存在则替换，不存在则插入银行工号
 					if(users.size()>0){
 						user_id = users.get(0).getId();
 					}else{
-						List<SystemUser> users1 = commonDao.queryBySql(SystemUser.class, "select * from sys_user where external_id='"+gyh2+"'", null);
+						List<SystemUser> users1 = commonDao.queryBySql(SystemUser.class, "select id from sys_user where external_id='"+gyh2+"'", null);
 						if(users1.size()>0){
 							user_id = users1.get(0).getId();
 						}else{
@@ -1740,7 +1743,7 @@ public class CustomerInforService {
 					//客户经理标识
 					String khjl = map.get("khjl").toString();
 					//先通过标识获取柜员号
-					List<CustomerFirsthendRygl> rygl = commonDao.queryBySql(CustomerFirsthendRygl.class, "select * from ty_customer_rygl where dm='"+khjl.trim()+"'", null);
+					List<CustomerFirsthendRygl> rygl = commonDao.queryBySql(CustomerFirsthendRygl.class, "select ddrq,dldm from ty_customer_rygl where dm='"+khjl.trim()+"'", null);
 					String gyh1 = "";
 					String gyh2 = "";
 					if(rygl.size()>0){
@@ -1755,12 +1758,12 @@ public class CustomerInforService {
 					}
 					//获取客户经理id(由于两个字段都有可能为柜员号，所以两次判断)
 					String user_id=null;
-					List<SystemUser> users = commonDao.queryBySql(SystemUser.class, "select * from sys_user where external_id='"+gyh1+"'", null);
+					List<SystemUser> users = commonDao.queryBySql(SystemUser.class, "select id from sys_user where external_id='"+gyh1+"'", null);
 					//银行工号匹配本系统uuid，存在则替换，不存在则插入银行工号
 					if(users.size()>0){
 						user_id = users.get(0).getId();
 					}else{
-						List<SystemUser> users1 = commonDao.queryBySql(SystemUser.class, "select * from sys_user where external_id='"+gyh2+"'", null);
+						List<SystemUser> users1 = commonDao.queryBySql(SystemUser.class, "select id from sys_user where external_id='"+gyh2+"'", null);
 						if(users1.size()>0){
 							user_id = users1.get(0).getId();
 						}else{
@@ -4849,13 +4852,15 @@ public class CustomerInforService {
 	       Integer formatDate = Integer.parseInt(sdf.format(date));
 		List<MonthlyStatisticsModel>result=StatisticsDao.selectAllUserId(formatDate);
 		log.info("******************开始查询并添加新客户经理的月季贷款信息********************");  
+		Integer aq=(formatDate-2016)+1;
+		for(int ii=2016;ii<2016+aq;ii++){
 		for(int i=0;i<result.size();i++){
 			MonthlyStatisticsModel model=new MonthlyStatisticsModel();
 			model.setUserId(result.get(i).getUserId());
 			model.setId(IDGenerator.generateID());
 			model.setTeam(result.get(i).getTeam());
 			model.setOrgteam(result.get(i).getOrgteam());
-			model.setCustomeryeah(formatDate);
+			model.setCustomeryeah(ii);
 			model.setCustomerApril(0);
 			model.setCustomerAugust(0);
 			model.setCustomerDecember(0);
@@ -4869,63 +4874,54 @@ public class CustomerInforService {
 			model.setCustomerOctober(0);
 			model.setCustomerSeptember(0);
 			StatisticsDao.insertMonthlyStatistics(model);
-			/**
-			 * 添加去年的贷款信息，只限2016年，客户经理全部录入完成后此方法删除
-			 */
-			MonthlyStatisticsModel model1=new MonthlyStatisticsModel();
-			model1.setUserId(result.get(i).getUserId());
-			model1.setId(IDGenerator.generateID());
-			model1.setTeam(result.get(i).getTeam());
-			model1.setOrgteam(result.get(i).getOrgteam());
-			model1.setCustomeryeah(formatDate-1);
-			model1.setCustomerApril(0);
-			model1.setCustomerAugust(0);
-			model1.setCustomerDecember(0);
-			model1.setCustomerFebruary(0);
-			model1.setCustomerJanuary(0);
-			model1.setCustomerJuly(0);
-			model1.setCustomerJune(0);
-			model1.setCustomerMarch(0);
-			model1.setCustomerMay(0);
-			model1.setCustomerNovember(0);
-			model1.setCustomerOctober(0);
-			model1.setCustomerSeptember(0);
-			StatisticsDao.insertMonthlyStatistics(model1);
-		}
+		}}
 		log.info("******************开始查询所有客户经理********************");  
 		List<ManagerPerformmanceForm>result1=managerPerformmanceDao.selectAllManager();
 		log.info("******************开始查询并更新所有客户经理的月季贷款信息********************");  
 		for(int a=0;a<result1.size();a++){
+			List<MonthlyStatisticsModel> MonthlyStatisticsModels=new ArrayList<MonthlyStatisticsModel>();
 			List<MonthlyStatisticsModel> MonthlyStatistics=StatisticsDao.selectotalAmountByUserId(result1.get(a).getManager_id());
-			for(int i=0;i<MonthlyStatistics.size();i++){
+			for(int ii=0;ii<MonthlyStatistics.size();ii++){
+				MonthlyStatisticsModels.add(ii, MonthlyStatistics.get(ii));
+			}
+			List<MonthlyStatisticsModel>MonthlyStatisticsa= UserDao.selectCustomerTsdk(result1.get(a).getManager_id());
+			for(int aa=0;aa<MonthlyStatisticsa.size();aa++){
+				MonthlyStatisticsModels.add(MonthlyStatisticsModels.size(), MonthlyStatisticsa.get(aa));
+			}
+			List<MonthlyStatisticsModel>MonthlyStatisticsb= UserDao.selectMaxLOANDATE(result1.get(a).getManager_id());
+			for(int aa=0;aa<MonthlyStatisticsb.size();aa++){
+				System.out.println(MonthlyStatisticsModels.size());
+				MonthlyStatisticsModels.add(MonthlyStatisticsModels.size(), MonthlyStatisticsb.get(aa));
+			}
+			for(int i=0;i<MonthlyStatisticsModels.size();i++){
 				MonthlyStatisticsModel Model=new MonthlyStatisticsModel();
-				Model.setCustomeryeah(Integer.parseInt(MonthlyStatistics.get(i).getLoandate().substring(0, 4)));
-				if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("01")){
-					Model.setCustomerJanuary(MonthlyStatistics.get(i).getTotalAmount());
-				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("02")){
-					Model.setCustomerFebruary(MonthlyStatistics.get(i).getTotalAmount());
-				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("03")){
-					Model.setCustomerMarch(MonthlyStatistics.get(i).getTotalAmount());
-				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("04")){
-					Model.setCustomerApril(MonthlyStatistics.get(i).getTotalAmount());
-				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("05")){
-					Model.setCustomerMay(MonthlyStatistics.get(i).getTotalAmount());
-				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("06")){
-					Model.setCustomerJune(MonthlyStatistics.get(i).getTotalAmount());
-				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("07")){
-					Model.setCustomerJuly(MonthlyStatistics.get(i).getTotalAmount());
-				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("08")){
-					Model.setCustomerAugust(MonthlyStatistics.get(i).getTotalAmount());
-				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("09")){
-					Model.setCustomerSeptember(MonthlyStatistics.get(i).getTotalAmount());
-				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("10")){
-					Model.setCustomerOctober(MonthlyStatistics.get(i).getTotalAmount());
-				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("11")){
-					Model.setCustomerNovember(MonthlyStatistics.get(i).getTotalAmount());
-				}if(MonthlyStatistics.get(i).getLoandate().substring(4, 6).equals("12")){
-					Model.setCustomerDecember(MonthlyStatistics.get(i).getTotalAmount());
+				Model.setCustomeryeah(Integer.parseInt(MonthlyStatisticsModels.get(i).getLoandate().substring(0, 4)));
+				if(MonthlyStatisticsModels.get(i).getLoandate().substring(4, 6).equals("01")){
+					Model.setCustomerJanuary(MonthlyStatisticsModels.get(i).getTotalAmount());
+				}if(MonthlyStatisticsModels.get(i).getLoandate().substring(4, 6).equals("02")){
+					Model.setCustomerFebruary(MonthlyStatisticsModels.get(i).getTotalAmount());
+				}if(MonthlyStatisticsModels.get(i).getLoandate().substring(4, 6).equals("03")){
+					Model.setCustomerMarch(MonthlyStatisticsModels.get(i).getTotalAmount());
+				}if(MonthlyStatisticsModels.get(i).getLoandate().substring(4, 6).equals("04")){
+					Model.setCustomerApril(MonthlyStatisticsModels.get(i).getTotalAmount());
+				}if(MonthlyStatisticsModels.get(i).getLoandate().substring(4, 6).equals("05")){
+					Model.setCustomerMay(MonthlyStatisticsModels.get(i).getTotalAmount());
+				}if(MonthlyStatisticsModels.get(i).getLoandate().substring(4, 6).equals("06")){
+					Model.setCustomerJune(MonthlyStatisticsModels.get(i).getTotalAmount());
+				}if(MonthlyStatisticsModels.get(i).getLoandate().substring(4, 6).equals("07")){
+					Model.setCustomerJuly(MonthlyStatisticsModels.get(i).getTotalAmount());
+				}if(MonthlyStatisticsModels.get(i).getLoandate().substring(4, 6).equals("08")){
+					Model.setCustomerAugust(MonthlyStatisticsModels.get(i).getTotalAmount());
+				}if(MonthlyStatisticsModels.get(i).getLoandate().substring(4, 6).equals("09")){
+					Model.setCustomerSeptember(MonthlyStatisticsModels.get(i).getTotalAmount());
+				}if(MonthlyStatisticsModels.get(i).getLoandate().substring(4, 6).equals("10")){
+					Model.setCustomerOctober(MonthlyStatisticsModels.get(i).getTotalAmount());
+				}if(MonthlyStatisticsModels.get(i).getLoandate().substring(4, 6).equals("11")){
+					Model.setCustomerNovember(MonthlyStatisticsModels.get(i).getTotalAmount());
+				}if(MonthlyStatisticsModels.get(i).getLoandate().substring(4, 6).equals("12")){
+					Model.setCustomerDecember(MonthlyStatisticsModels.get(i).getTotalAmount());
 				}
-				Model.setTotalAmount(MonthlyStatistics.get(i).getTotalAmount());
+				Model.setTotalAmount(MonthlyStatisticsModels.get(i).getTotalAmount());
 				Model.setUserId(result1.get(a).getManager_id());
 				Model.setTeam(result1.get(a).getTeam());
 				Model.setOrgteam(result1.get(a).getOrdteam());
@@ -5046,6 +5042,38 @@ public class CustomerInforService {
 			c.setProvision(provision);
 			c.setNetprofit(netprofit1+netprofit);
 			CoefficientDao.insertSPLITOFINTEREST(c);
+		}
+		log.info("******************结束********************");  
+	}
+	
+	
+	
+	public void selectCustomerByDkfs(){
+		log.info("******************查询所有准贷记卡详细********************");
+		List<CustomerTsdkmxModel>result=UserDao.selectCustomerByDkfs();
+		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+	        Date date = new Date();
+	        
+		Integer b=0;
+		for(int i=0;i<result.size();i++){
+			result.get(i).setKHNM(result.get(i).getKHNM());
+			result.get(i).setZJHM(result.get(i).getZJHM());
+			result.get(i).setTime(sdf.format(date));
+			if( !result.get(i).getDBSXED().equals("0.00")){
+				result.get(i).setSXED(result.get(i).getDBSXED());
+			}else if(!result.get(i).getSXED().equals("0.00") ){
+				result.get(i).setSXED(result.get(i).getSXED());
+			}
+			int a=UserDao.selectCustomerByDkfsCount(result.get(i));
+			if(a==0){
+				if(i!=0){
+					if(!result.get(i).getKHNM().equals(result.get(i-1).getKHNM()) && !result.get(i).getZJHM().equals(result.get(i-1).getZJHM())){
+						UserDao.insertCustomerTsdk(	result.get(i));	
+					}
+				}else{
+					UserDao.insertCustomerTsdk(	result.get(i));	
+				}
+			}
 		}
 		log.info("******************结束********************");  
 	}

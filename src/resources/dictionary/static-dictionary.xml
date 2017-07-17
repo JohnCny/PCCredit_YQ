@@ -86,8 +86,9 @@
 		<item name="1" title="客户经理" />
 		<item name="2" title="部门主管" />
 		<item name="3" title="机构主管" />
-		<item name="4" title="微贷团队" />
-		<item name="5" title="风险岗" />
+		<item name="4" title="运营经理" />
+		<!-- <item name="4" title="微贷团队" /> -->
+		<item name="5" title="风险经理" />
 	</dictionary>
 	<dictionary name="MarketingEndResult" title="营销计划最终结果">
 		<item name="marketing" title="营销中" />
@@ -266,12 +267,11 @@
 		<item name="APPROVE" title="通过" />
 		<item name="REJECTAPPROVE" title="拒绝" />
 		<item name="RETURNAPPROVE" title="退回" />
-		<!-- <item name="approved" title="通过" />
-		<item name="refuse" title="拒绝" /> -->
-		<!-- <item name="nopass_replenish" title="补充调查" />
-		<item name="nopass_re" title="退回重新调查" /> -->
 	</dictionary>
-	
+		<dictionary name="intopieces_decision_chusheng1" title="审核结论">
+		<item name="APPROVE" title="通过" />
+		<item name="RETURNAPPROVE" title="退回" />
+	</dictionary>
 	<dictionary name="decision_term" title="期限">
 		<item name="1" title="1个月" />
 		<item name="2" title="2个月" />

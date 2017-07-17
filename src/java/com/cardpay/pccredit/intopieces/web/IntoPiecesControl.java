@@ -68,6 +68,7 @@ import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentBatch;
 import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentDetail;
 import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentList;
 import com.cardpay.pccredit.intopieces.service.AddIntoPiecesService;
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
 import com.cardpay.pccredit.intopieces.service.CustomerSqInfoService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
 import com.cardpay.pccredit.intopieces.service.JnpadCustormerSdwUserService;
@@ -124,7 +125,8 @@ public class IntoPiecesControl extends BaseController {
 	
 	@Autowired
 	private MaintenanceService maintenanceService;
-
+	@Autowired
+	private CustomerApplicationIntopieceWaitService customerApplicationIntopieceWaitService;
 	@Autowired
 	private AddIntoPiecesService addIntoPiecesService;
 	
@@ -148,31 +150,8 @@ public class IntoPiecesControl extends BaseController {
 	@JRadOperation(JRadOperation.BROWSE)
 	public AbstractModelAndView browse(@ModelAttribute IntoPiecesFilter filter,
 			HttpServletRequest request) {
-	/*	filter.setRequest(request);
-		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
-		String userId = user.getId();
-		//查询客户经理
-		List<AccountManagerParameterForm> forms = maintenanceService.findSubListManagerByManagerId(user);
-		if(forms != null && forms.size() > 0){
-			StringBuffer userIds = new StringBuffer();
-			userIds.append("(");
-			for(AccountManagerParameterForm form : forms){
-				userIds.append("'").append(form.getUserId()).append("'").append(",");
-			}
-			userIds = userIds.deleteCharAt(userIds.length() - 1);
-			userIds.append(")");
-			filter.setCustManagerIds(userIds.toString());
-		}else{
-			filter.setUserId(userId);
-		}
-		
-		QueryResult<IntoPieces> result = intoPiecesService.findintoPiecesByFilter(filter);
-		JRadPagedQueryResult<IntoPieces> pagedResult = new JRadPagedQueryResult<IntoPieces>(filter, result);
-
-		JRadModelAndView mv = new JRadModelAndView("/intopieces/intopieces_browse", request);
-		mv.addObject(PAGED_RESULT, pagedResult);*/
-		
 		filter.setRequest(request);
+	
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String startAmt = request.getParameter("startAmt");
 		String endAmt = request.getParameter("endAmt");
@@ -182,9 +161,28 @@ public class IntoPiecesControl extends BaseController {
 		if(endAmt ==null||endAmt==""){
 			filter.setEndAmt(request.getParameter("endAmt"));
 		}
-		
-		QueryResult<IntoPieces> result=null;
 		String userId = user.getId();
+		QueryResult<IntoPieces> result=null;
+		
+		if(user.getUserType()==4){
+			List<CustomerApplicationIntopieceWaitForm> list=customerApplicationIntopieceWaitService.findSpRy(userId);
+			StringBuffer belongChildIds = new StringBuffer();
+			belongChildIds.append("(");
+			for(int i=0;i<list.size();i++){
+				belongChildIds.append("'").append(list.get(i).getUserId()).append("'").append(",");
+			}
+			belongChildIds = belongChildIds.deleteCharAt(belongChildIds.length() - 1);
+			belongChildIds.append(")");
+			filter.setCustManagerIds(belongChildIds.toString());
+				result = intoPiecesService.findintoPiecesByFilter(filter);
+				JRadPagedQueryResult<IntoPieces> pagedResult = new JRadPagedQueryResult<IntoPieces>(
+						filter, result);
+			JRadModelAndView mv = new JRadModelAndView(
+					"/intopieces/intopieces_customer_browse", request);
+			mv.addObject(PAGED_RESULT, pagedResult);
+			return mv;
+		}else{
+			
 		//客户经理
 		if(user.getUserType() ==1){
 			filter.setUserId(userId);
@@ -196,9 +194,8 @@ public class IntoPiecesControl extends BaseController {
 		JRadModelAndView mv = new JRadModelAndView(
 				"/intopieces/intopieces_customer_browse", request);
 		mv.addObject(PAGED_RESULT, pagedResult);
-
-
 		return mv;
+		}
 	}
 	
 	/**
@@ -1251,10 +1248,10 @@ public class IntoPiecesControl extends BaseController {
 			 try {
 				if(IP.getApplyQuota()!=null){
 					ApproveHistoryForm4=new ApproveHistoryForm();
-					ApproveHistoryForm4.setExamineResult("初审通过");
+					ApproveHistoryForm4.setExamineResult("资料审核通过");
 					ApproveHistoryForm4.setDisplayName(IP.getDisplayName());
-					ApproveHistoryForm4.setStatusName("进件初审");
-					ApproveHistoryForm4.setExamineAmount(IP.getApplyQuota());
+					ApproveHistoryForm4.setStatusName("资料审核");
+					ApproveHistoryForm4.setExamineAmount("");
 					ApproveHistoryForm4.setStartExamineTime(IP.getCreatime());
 					historyForms.add(0, ApproveHistoryForm4);
 					//查询审贷
@@ -1500,7 +1497,7 @@ public class IntoPiecesControl extends BaseController {
 		CustomerInfor  customerInfor  = intoPiecesService.findCustomerManager(customerApplicationInfo.getCustomerId());
 		List<AppManagerAuditLog> appManagerAuditLog = productService.findAppManagerAuditLog(appId,"1");
 		if(appManagerAuditLog.size()!=0){
-			mv.addObject("appManagerAuditLog", appManagerAuditLog.get(0));
+			mv.addObject("appManagerAuditLog", appManagerAuditLog.get(0).getCreatedTime());
 			List<IntoPieces> result=SdwUserService.findsdh1(id);
 			for(int a=0;a<result.size();a++){
 				if(result.get(a).getStatus().equals("1")){
@@ -1545,34 +1542,7 @@ public class IntoPiecesControl extends BaseController {
 				mv.addObject("appManagerAuditLog", AppManagerAuditLog.getId());
 			}
 			
-		/*if(historyForms.size()>0){
-			List<IntoPieces> result=SdwUserService.findsdh1(id);
-			for(int a=0;a<result.size();a++){
-				if(result.get(a).getStatus().equals("1")){
-					result.get(a).setStatus("通过");
-				}else if(result.get(a).getStatus().equals("2")){
-					result.get(a).setStatus("拒绝");
-				}else if(result.get(a).getStatus().equals("3")){
-					result.get(a).setStatus("退回");
-				}
-			}
-			mv.addObject("result", result);
-			IntoPieces  IntoPieces= SdwUserService.findsph1(id);
-			
-			if(IntoPieces.getStatus().equals("end") || IntoPieces.getStatus().equals("approved")){
-				IntoPieces.setStatus("通过");
-			}else if(IntoPieces.getStatus().equals("nopass") || IntoPieces.getStatus().equals("refuse")){
-				IntoPieces.setStatus("拒绝");
-			}else if(IntoPieces.getStatus().equals("nopass_replenish") || IntoPieces.getStatus().equals("returnedToFirst")){
-				IntoPieces.setStatus("退回");
-			}
-			
-			mv.addObject("bss", IntoPieces);
-		}else{
-			IntoPieces IntoPieces1=new IntoPieces();
-			IntoPieces1.setStatus("无数据");
-			mv.addObject("bss", IntoPieces1);
-		}*/
+		
 		mv.addObject("customerApplicationInfo", customerApplicationInfo);
 		mv.addObject("producAttribute", producAttribute);
 		mv.addObject("custManagerId", customerInfor.getUserId());
@@ -1874,6 +1844,20 @@ public class IntoPiecesControl extends BaseController {
 			}
 			return null;
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		@ResponseBody
 		@RequestMapping(value = "applyInfo.json")
@@ -2246,4 +2230,59 @@ filter.setLimit(Integer.MAX_VALUE);
 			mv.addObject("customercardId", pid);
 			return mv;
 		}
+		/**
+		 * 运营补入
+		 * @param filter
+		 * @param request
+		 * @return
+		 */
+		@ResponseBody
+		@RequestMapping(value = "yybrowse.page", method = { RequestMethod.GET })
+		public AbstractModelAndView yybrowse(@ModelAttribute IntoPiecesFilter filter,
+				HttpServletRequest request) {
+			filter.setRequest(request);
+			filter.setStatus("approved");
+			filter.setCode(1);
+			IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+			String startAmt = request.getParameter("startAmt");
+			String endAmt = request.getParameter("endAmt");
+			if(startAmt ==null||startAmt==""){
+				filter.setStartAmt("0");
+			}
+			if(endAmt ==null||endAmt==""){
+				filter.setEndAmt(request.getParameter("endAmt"));
+			}
+			String userId = user.getId();
+			QueryResult<IntoPieces> result=null;
+			
+				List<CustomerApplicationIntopieceWaitForm> list=customerApplicationIntopieceWaitService.findSpRy(userId);
+				StringBuffer belongChildIds = new StringBuffer();
+				belongChildIds.append("(");
+				for(int i=0;i<list.size();i++){
+					belongChildIds.append("'").append(list.get(i).getUserId()).append("'").append(",");
+				}
+				belongChildIds = belongChildIds.deleteCharAt(belongChildIds.length() - 1);
+				belongChildIds.append(")");
+				filter.setCustManagerIds(belongChildIds.toString());
+					result = intoPiecesService.findintoPiecesByFilter(filter);
+					JRadPagedQueryResult<IntoPieces> pagedResult = new JRadPagedQueryResult<IntoPieces>(
+							filter, result);
+				JRadModelAndView mv = new JRadModelAndView(
+						"/intopieces/intopieces_customer_yybrowse", request);
+				mv.addObject(PAGED_RESULT, pagedResult);
+				return mv;
+		}
+		
+		
+		@ResponseBody
+		@RequestMapping(value = "reportImport1.page", method = { RequestMethod.GET })
+		@JRadOperation(JRadOperation.BROWSE)
+		public AbstractModelAndView reportImport1(@ModelAttribute AddIntoPiecesFilter filter,HttpServletRequest request) {
+			JRadModelAndView mv = new JRadModelAndView("/intopieces/report_import1",request);
+			mv.addObject("cid", request.getParameter("cid"));
+			mv.addObject("pid", request.getParameter("pid"));
+			mv.addObject("id", request.getParameter("id"));
+			return mv;
+		}
+		
 }
