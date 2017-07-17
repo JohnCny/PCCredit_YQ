@@ -1,0 +1,37 @@
+select 
+    yehz.zhtbh as APPLICATION_ID,--进件ID
+    basic.id as CUSTOMER_ID,--客户ID
+    sysuser.id as CHIEF_MANAGER_ID,--客户经理ID
+    '4' as SUP_MANAGER_ID,--辅调客户经理ID
+    to_date(yehz.QXRQ,'yyyymmdd') as QXRQ,--起息日期
+    --yehz.zhtbh,--主合同编号
+    yehz.JJH,--借据号
+    yehz.DKYE,--贷款余额
+    yehz.BNQX,--表内欠息
+    yehz.BWQX,--表外欠息
+    yehz.KSQXRQ--开始欠息日期
+    from 
+         --TY_REPAY_LSZ lsz,
+         TY_REPAY_YEHZ yehz,
+         TY_REPAY_TKMX tkmx,
+         ty_customer_rygl rygl ,
+         sys_user sysuser,
+         ty_customer_base base，
+         basic_customer_information basic
+    where 
+      --lsz.create_time = '20170629' --dataDt日期
+      tkmx.create_time = '20170629' --dataDt日期
+      and yehz.create_time = '20170629' --dataDt日期
+      and yehz.jgdm in ('14030100102','14030200103','14030302600','14030302500','14030301200','14030300201')
+      --and lsz.ywjg=tkmx.bljg 
+      and tkmx.bljg=yehz.jgdm
+      and (sysuser.external_id=rygl.ddrq or sysuser.external_id=rygl.dldm or sysuser.external_id=rygl.whry or sysuser.external_id=rygl.dcjg)
+      and rygl.dm=tkmx.khjl 
+      and base.khnm=tkmx.khh
+      and basic.ty_customer_id = base.id
+      and yehz.jjh=tkmx.jjh 
+      --and tkmx.jjh =lsz.jjh  
+      --and tkmx.ywbh=yehz.ywbh
+      order by tkmx.jkrq
+              
+          
