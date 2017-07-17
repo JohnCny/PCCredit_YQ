@@ -3,6 +3,7 @@ package com.cardpay.pccredit.jnpad.service;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentDetail;
 import com.cardpay.pccredit.intopieces.web.LocalImageForm;
 import com.cardpay.pccredit.jnpad.dao.JnpadImageBrowseDao;
 import com.cardpay.pccredit.jnpad.model.JNPAD_SFTPUtil;
+import com.jcraft.jsch.SftpException;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageDecoder;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
@@ -35,11 +37,16 @@ public class JnpadImageBrowseService {
 	@Autowired
 	private CommonDao commonDao;
 	
+	public List<LocalImageForm> findLocalImageByType1(String customerId,
+			 String productId, String phone_type) throws IOException, SftpException{
+		return jnpadImageBrowseDao.findLocalImageByType(customerId,productId,phone_type);
+		
 	
+	}
 	
-	public List<LocalImageForm> findLocalImage(String customerId,String productId ) {
+	public List<LocalImageForm> findLocalImage(String customerId,String productId,String phone_type ) {
 		// TODO Auto-generated method stub
-		return jnpadImageBrowseDao.findLocalImage(customerId,productId);
+		return jnpadImageBrowseDao.findLocalImage(customerId,productId,phone_type);
 	}
 	
 

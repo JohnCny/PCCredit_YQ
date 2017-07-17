@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -56,6 +57,7 @@ import sun.util.logging.resources.logging;
 import com.cardpay.pccredit.intopieces.constant.Constant;
 import com.cardpay.pccredit.intopieces.model.CustomerSqInfo;
 import com.cardpay.pccredit.intopieces.model.ImageMore;
+import com.cardpay.pccredit.intopieces.model.LocalImage;
 import com.cardpay.pccredit.intopieces.web.LocalImageForm;
 import com.cardpay.pccredit.manager.service.DailyReportScheduleService;
 import com.cardpay.pccredit.tools.ImportParameter;
@@ -176,6 +178,79 @@ public class SFTPUtil {
         }  
           return map;
     }
+    
+    public static List<File> mFileList;
+    public  synchronized  static List<LocalImage> ImauplodType(String cardId,String customerId,String pass) throws IOException, SftpException {
+    	List<LocalImage> images=new ArrayList<LocalImage>();
+		String path = Constant.FILE_PATH + customerId + File.separator;
+		mFileList= new ArrayList<File>();
+		String Imapath="";
+		if(pass.equals("1")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/经营场所/";
+		}
+		if(pass.equals("2")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/证件照片/";
+		}
+		if(pass.equals("3")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/担保人经营/";
+		}
+		if(pass.equals("4")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/担保人家庭/";
+		}
+		if(pass.equals("5")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/担保人证件/";
+		}
+		if(pass.equals("11")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/担保人流水/";
+		}
+		if(pass.equals("6")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/固定资产/";
+		}
+		if(pass.equals("7")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/家庭环境/";
+		}
+		if(pass.equals("8")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/流水账单/";
+		}
+		if(pass.equals("9")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/外债明细/";
+		}
+		if(pass.equals("10")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/合同/";
+		}
+		File f = new File(Imapath);
+		List<File> fileList = getFile(f);
+		for (int i = 0; i < fileList.size(); i++) {
+			LocalImage ima=new LocalImage();
+			File file = fileList.get(i);
+			ima.setUri(path+file.getName());
+			ima.setAttachment(file.getName());
+			images.add(i, ima);
+			    connect();
+		    	sftp.cd(Constant.FILE_PATH);
+		    	if(!isDirExist(customerId)){
+		    		 sftp.mkdir(customerId);
+		    	}
+				sftp.cd(Constant.FILE_PATH + customerId);
+				FileInputStream in = null;
+				File file1 = new File(Imapath+file.getName());
+			    in = new FileInputStream(file1);
+			   sftp.put(in,file.getName());
+			}
+		return images;}
+    public static List<File> getFile(File file) {
+		File[] fileArray = file.listFiles();
+		for (File f : fileArray) {
+		if (f.isFile()) {
+		mFileList.add(f);
+		} else {
+		getFile(f);
+		}
+		}
+		return mFileList;
+		}
+
+		
 /*
        if (!file1.isDirectory()) {
                         System.out.println("1");

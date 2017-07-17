@@ -11,6 +11,7 @@
     <result column="ATTACHMENT" property="attachment" jdbcType="VARCHAR" />
     <result column="URI" property="uri" jdbcType="VARCHAR" />
     <result column="CREATED_TIME" property="createdTime" jdbcType="VARCHAR" />
+      <result column="ICOUNT" property="icount" />
   </resultMap>
   <resultMap id="BaseResultMap1" type="com.cardpay.pccredit.intopieces.model.LocalExcel" >
     <id column="ID" property="id" jdbcType="VARCHAR" />
@@ -76,6 +77,8 @@
 		    left join PRODUCT_ATTRIBUTE pa on t.product_id = pa.id
 		    where 
 		    product_id=#{productId} and customer_id=#{customerId}
+		    and icount=(select max(icount) from local_excel  where 
+		    product_id=#{productId} and customer_id=#{customerId})
 		    
 		    <![CDATA[		
 							) ROW_

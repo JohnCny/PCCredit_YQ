@@ -18,7 +18,15 @@ public class LocalExcelForm extends BaseModel{
 	private String createdTime;
 	private String approveValue;
 	private Date time;
+	private Integer icount;
 	
+	
+	public Integer getIcount() {
+		return icount;
+	}
+	public void setIcount(Integer icount) {
+		this.icount = icount;
+	}
 	public Date getTime() {
 		return time;
 	}

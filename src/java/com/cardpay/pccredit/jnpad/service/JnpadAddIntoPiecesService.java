@@ -60,6 +60,7 @@ import com.cardpay.pccredit.intopieces.service.CustomerSqInfoService;
 import com.cardpay.pccredit.intopieces.web.AddIntoPiecesForm;
 import com.cardpay.pccredit.intopieces.web.LocalExcelForm;
 import com.cardpay.pccredit.intopieces.web.LocalImageForm;
+import com.cardpay.pccredit.jnpad.dao.JnpadImageBrowseDao;
 import com.cardpay.pccredit.jnpad.model.JNPAD_SFTPUtil;
 import com.cardpay.pccredit.jnpad.model.JNPAD_UploadFileTool;
 import com.cardpay.pccredit.manager.model.BatchTask;
@@ -95,7 +96,8 @@ public class JnpadAddIntoPiecesService {
 	
 	@Autowired
 	private LocalImageDao localImageDao;
-	
+	@Autowired
+	private JnpadImageBrowseDao addImageByPType;
 	@Autowired
 	private CustomerInforService customerInforService;
 	
@@ -248,7 +250,7 @@ public class JnpadAddIntoPiecesService {
 	}
 	
 	public void importImage(MultipartFile file, String productId,
-			String customerId,String applicationId) {
+			String customerId,String applicationId,String phone_type) {
 		Map<String, String> map  = new HashMap<String, String>();
 		if(ServerSideConstant.IS_SERVER_SIDE_TRUE.equals("0")){
 			//本地测试
@@ -261,6 +263,7 @@ public class JnpadAddIntoPiecesService {
 		String url = map.get("url");
 		LocalImage localImage = new LocalImage();
 		localImage.setProductId(productId);
+		localImage.setPhone_type(phone_type);
 		localImage.setCustomerId(customerId);
 		if(applicationId != null){
 			localImage.setApplicationId(applicationId);
@@ -273,7 +276,8 @@ public class JnpadAddIntoPiecesService {
 			localImage.setAttachment(fileName);
 		}
 		
-		commonDao.insertObject(localImage);
+		//commonDao.insertObject(localImage);
+		addImageByPType.addImageByPType(localImage);
 	}
 
 	public void addIntopieces(AddIntoPiecesForm addIntoPiecesForm,String userId) {
