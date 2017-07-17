@@ -10,259 +10,238 @@ as
 */
 
 
-step varchar2(200);						--步骤
-beginTime varchar2(20);					--开始执行时间
+step varchar2(200);           --步骤
+beginTime varchar2(20);         --开始执行时间
 
-Added_Loans char(1); 					--新增贷款
+A1NEW char(1);             --新增贷款
+A1OLD char(1);             --续授信
+A1RECOMMEND char(1);           --转介绍
 
-A3CUSNUM char(1); 						--是1否0 有效管户数
+A3CUSNUM char(1);             --是1否0 有效管户数
+A4CUSNUM char(1);             --是1否0 有效管户数
 
-D1OVERDUE char(1); 						--是1否0 跨月逾期
+D1OVERDUE NUMBER;             --跨月逾期笔数
 
 TOTAL_AMT NUMBER(16,2);                 --当月实时总和
 
-bonus_A1_NEW NUMBER(16,2);					--自主营销一笔的奖励金额
-bonus_A1_OLD NUMBER(16,2);					--续授信一笔的奖励金额
-bonus_A1_RECOMMEND NUMBER(16,2);			--转介绍一笔的奖励金额
-bonus_A2 NUMBER(16,2);						--贷款提成系数
-bonus_R NUMBER(16,2);						--
-bonus_A1 NUMBER(16,2);						--
-bonus_A1 NUMBER(16,2);						--
-bonus_A1 NUMBER(16,2);						--
+
+bonus_A1_NEW NUMBER(16,2);          --自主营销一笔的奖励金额
+bonus_A1_OLD NUMBER(16,2);          --续授信一笔的奖励金额
+bonus_A1_RECOMMEND NUMBER(16,2);      --转介绍一笔的奖励金额
+bonus_A2 NUMBER(16,2);            --贷款提成系数
+bonus_R NUMBER(16,2);           --
+bonus_A1 NUMBER(16,2);            --
+bonus_A1 NUMBER(16,2);            --
+bonus_A1 NUMBER(16,2);            --
 
 begin
-	beginTime := to_char(sysdate,'yyyyMMdd hh:mi:ss');
-	
-	--查询合同信息
-	for ht in (
-		select 
-			yehz.zhtbh as zhtbh,--进件ID
-			basic.id as CUSTOMER_ID,--客户ID
-			sysuser.id as CHIEF_MANAGER_ID,--客户经理ID
-			'4' as SUP_MANAGER_ID,--辅调客户经理ID
-		from 
-			 --TY_REPAY_LSZ lsz,
-			 TY_REPAY_YEHZ yehz,
-			 TY_REPAY_TKMX tkmx,
-			 ty_customer_rygl rygl ,
-			 sys_user sysuser,
-			 ty_customer_base base，
-			 basic_customer_information basic
-		where 
-		  --lsz.create_time = '20170629' --dataDt日期
-		  tkmx.create_time = '20170629' --dataDt日期
-		  and yehz.create_time = '20170629' --dataDt日期
-		  and yehz.jgdm in ('14030100102','14030200103','14030302600','14030302500','14030301200','14030300201')
-		  --and lsz.ywjg=tkmx.bljg 
-		  and tkmx.bljg=yehz.jgdm
-		  and (sysuser.external_id=rygl.ddrq or sysuser.external_id=rygl.dldm or sysuser.external_id=rygl.whry or sysuser.external_id=rygl.dcjg)
-		  and rygl.dm=tkmx.khjl 
-		  and base.khnm=tkmx.khh
-		  and basic.ty_customer_id = base.id
-		  and yehz.jjh=tkmx.jjh 
-		  --and tkmx.jjh =lsz.jjh  
-		  --and tkmx.ywbh=yehz.ywbh
-		  group by yehz.zhtbh
-		)
-		
-	loop
-		begin
-			--写入该笔合同对应的当月绩效数据
-			merge into PERFORMANCE T1
-			using (select ht.zhtbh ,substr(dataDt,0,6) as dataDt from dual)T2
-			on (T1.zhtbh = T2.zhtbh T1.dataDt = T2.dataDt)
-			when not matched then 
-				insert
-					(id,
-					A1_NEW,
-					A1_OLD,
-					A1_RECOMMEND,
-					zhtbh,
-					APPLICATION_ID,
-					CHIEF_MANAGER_ID,
-					SUP_MANAGER_ID,
-					data_Dt) 
-				values
-					(sys_guid(),
-					A1NEW,
-					A1OLD,
-					A1RECOMMEND,
-					yehz.zhtbh,
-					yehz.APPLICATION_ID,
-					yehz.CHIEF_MANAGER_ID,
-					yehz.SUP_MANAGER_ID,
-					substr(dataDt,0,6));
-			
-		end;
-	
-	end loop;
-		
-	--获取当天借据
-	for yehz in (
-		select 
-			yehz.zhtbh as APPLICATION_ID,--进件ID
-			basic.id as CUSTOMER_ID,--客户ID
-			sysuser.id as CHIEF_MANAGER_ID,--客户经理ID
-			'4' as SUP_MANAGER_ID,--辅调客户经理ID
-			to_date(yehz.QXRQ,'yyyymmdd') as QXRQ,--起息日期
-			--yehz.zhtbh,--主合同编号
-			yehz.JJH,--借据号
-			yehz.DKYE,--贷款余额
-			yehz.BNQX,--表内欠息
-			yehz.BWQX,--表外欠息
-			yehz.KSQXRQ--开始欠息日期
-			from 
-				 --TY_REPAY_LSZ lsz,
-				 TY_REPAY_YEHZ yehz,
-				 TY_REPAY_TKMX tkmx,
-				 ty_customer_rygl rygl ,
-				 sys_user sysuser,
-				 ty_customer_base base，
-				 basic_customer_information basic
-			where 
-			  --lsz.create_time = '20170629' --dataDt日期
-			  tkmx.create_time = '20170629' --dataDt日期
-			  and yehz.create_time = '20170629' --dataDt日期
-			  and yehz.jgdm in ('14030100102','14030200103','14030302600','14030302500','14030301200','14030300201')
-			  --and lsz.ywjg=tkmx.bljg 
-			  and tkmx.bljg=yehz.jgdm
-			  and (sysuser.external_id=rygl.ddrq or sysuser.external_id=rygl.dldm or sysuser.external_id=rygl.whry or sysuser.external_id=rygl.dcjg)
-			  and rygl.dm=tkmx.khjl 
-			  and base.khnm=tkmx.khh
-			  and basic.ty_customer_id = base.id
-			  and yehz.jjh=tkmx.jjh 
-			  --and tkmx.jjh =lsz.jjh  
-			  --and tkmx.ywbh=yehz.ywbh
-			  order by tkmx.jkrq
-		
-		)
-	
-	loop
-		
-		begin
-			
-			step:= "借据号" || yehz.JJH;
-			
-			--是否新增贷款
-			if ( yehz.QXRQ between trunc(to_date(dataDt,'yyyymmdd'), 'mm') and last_day(to_date(dataDt,'yyyymmdd')) ) then --判断QXRQ是否大于本月第一天且小于本月最后一天
-				A1NEW := '1'
-			else
-				A1NEW := '0'
-			endif;
-			
-			--是否续授信
-			if(  ) then
-				A1OLD := '1'
-			else
-				A1OLD := '0'
-			endif;
-			
-			--是否转介绍
-			if(  ) then
-				A1RECOMMEND := '1'
-			else
-				A1RECOMMEND := '0'
-			endif;
-			
-			--是否有效管户数
-			if(  ) then
-				A3CUSNUM := '1'
-			else
-				A3CUSNUM := '0'
-			endif;
-			
-			
-			--是否跨月逾期
-			if ( (yehz.BNQX <> '0.00' or BWQX <> '0.00') and yehz.KSQXRQ < trunc(to_date(dataDt,'yyyymmdd'), 'mm') ) then
-				D1OVERDUE := '1'
-			else:
-				D1OVERDUE := '0'
-			endif;
-			
-			--新增或更新客户经理绩效
-			
-			merge into PERFORMANCE T1
-			using (select 
-					yehz.JJH,
-					yehz.APPLICATION_ID as APPLICATION_ID,
-					yehz.CHIEF_MANAGER_ID as CHIEF_MANAGER_ID,
-					substr(dataDt,0,6) as dataDt from dual)
-					T2
-			on (T1.JJH = T2.JJH and T1.APPLICATION_ID = T2.APPLICATION_ID and T1.MANAGER_ID = T2.CHIEF_MANAGER_ID and T1.dataDt = T2.dataDt)
-			when matched then
-				update 
-					set 
-					T1.A1_NEW =A1NEW,
-					T1.A1_OLD =A1OLD,
-					T1.A1_RECOMMEND =A1RECOMMEND,
-					T1.A2_LOAN_BALANCE=yehz.DKYE,
-					T1.A3_CUS_NUM =A3CUSNUM,
-					T1.A4_CUS_NUM ='0',
-					T1.D1_OVERDUE =D1OVERDUE
-			when not matched then 
-				insert
-					(id,
-					A1_NEW,
-					A1_OLD,
-					A1_RECOMMEND,
-					A2_LOAN_BALANCE,
-					A3_CUS_NUM,
-					A4_CUS_NUM,
-					D1_OVERDUE,
-					zhtbh,
-					APPLICATION_ID,
-					CHIEF_MANAGER_ID,
-					SUP_MANAGER_ID,
-					data_Dt) 
-				values
-					(sys_guid(),
-					A1NEW,
-					A1OLD,
-					A1RECOMMEND,
-					yehz.DKYE,
-					A3CUSNUM,
-					'0',
-					D1OVERDUE,
-					yehz.zhtbh,
-					yehz.APPLICATION_ID,
-					yehz.CHIEF_MANAGER_ID,
-					yehz.SUP_MANAGER_ID
-					substr(dataDt,0,6));
-					
-			
-					
-		end;
-	
-	end loop;
-	
-	--写日志
-	insert into proc_log
+  beginTime := to_char(sysdate,'yyyyMMdd hh:mi:ss');
+
+  --清除当月绩效表
+  execute immediate 'delete from PERFORMANCE where data_dt = :dataDt' using substr(dataDt,0,6);
+  
+  --查询合同信息
+  for ht in (
+    select
+        yehz.zhtbh as zhtbh,--进件ID
+        yehz.zhtbh as APPLICATION_ID,--进件ID
+        basic.id as CUSTOMER_ID,--客户ID
+        sysuser.id as CHIEF_MANAGER_ID,--客户经理ID
+        '4' as SUP_MANAGER_ID,--辅调客户经理ID
+        to_date('20170617','yyyymmdd') as BEGIN_TIME
+      from
+         --TY_REPAY_LSZ lsz,
+         TY_REPAY_YEHZ yehz,
+         TY_REPAY_TKMX tkmx,
+         ty_customer_rygl rygl ,
+         sys_user sysuser,
+         ty_customer_base base，
+         basic_customer_information basic
+      where
+        --lsz.create_time = '20170629' --dataDt日期
+        tkmx.create_time = dataDt --dataDt日期
+        and yehz.create_time = dataDt --dataDt日期
+        and yehz.jgdm in ('14030100102','14030200103','14030302600','14030302500','14030301200','14030300201')
+        --and lsz.ywjg=tkmx.bljg
+        and tkmx.bljg=yehz.jgdm
+        and (sysuser.external_id=rygl.ddrq or sysuser.external_id=rygl.dldm or sysuser.external_id=rygl.whry or sysuser.external_id=rygl.dcjg)
+        and rygl.dm=tkmx.khjl
+        and base.khnm=tkmx.khh
+        and basic.ty_customer_id = base.id
+        and yehz.jjh=tkmx.jjh
+        --and tkmx.jjh =lsz.jjh
+        --and tkmx.ywbh=yehz.ywbh
+        group by yehz.zhtbh,basic.id,sysuser.id,'4',to_date('20170617','yyyymmdd')
+    )
+
+  loop
+    begin
+
+      --是否新增贷款
+      A1NEW := '0';
+      A4CUSNUM := '0';
+      if ( ht.BEGIN_TIME between trunc(to_date(dataDt,'yyyymmdd'), 'mm') and last_day(to_date(dataDt,'yyyymmdd')) ) then --判断BEGIN_TIME是否大于本月第一天且小于本月最后一天
+        A1NEW := '1';
+        A4CUSNUM := '1';
+      else
+        A1NEW := '0';
+        A4CUSNUM := '0';
+      end if;
+
+      --是否续授信
+      A1OLD := '0';
+      if( false ) then
+        A1OLD := '1';
+      else
+        A1OLD := '0';
+      end if;
+
+      --是否转介绍
+      A1RECOMMEND := '0';
+      if( false) then
+        A1RECOMMEND := '1';
+      else
+        A1RECOMMEND := '0';
+      end if;
+
+      --写入该笔合同对应的当月绩效数据
+      merge into PERFORMANCE T1
+      using (select ht.zhtbh as zhtbh ,substr(dataDt,0,6) as dataDt from dual)T2
+      on (T1.zhtbh = T2.zhtbh and T1.DATA_DT = T2.dataDt)
+      when not matched then
+        insert
+          (id,
+          A1_NEW,
+          A1_OLD,
+          A1_RECOMMEND,
+          A4_CUS_NUM,
+          D1_OVERDUE,
+          A2_LOAN_BALANCE,
+          zhtbh,
+          APPLICATION_ID,
+          CHIEF_MANAGER_ID,
+          SUP_MANAGER_ID,
+          data_Dt)
+        values
+          (sys_guid(),
+          A1NEW,
+          A1OLD,
+          A1RECOMMEND,
+          A4CUSNUM,
+          0,
+          0,
+          ht.zhtbh,
+          ht.APPLICATION_ID,
+          ht.CHIEF_MANAGER_ID,
+          ht.SUP_MANAGER_ID,
+          substr(dataDt,0,6));
+
+    end;
+
+  end loop;
+
+  --获取当天借据
+  for yehz in (
+    select
+      yehz.zhtbh as zhtbh,--进件ID
+      yehz.zhtbh as APPLICATION_ID,--进件ID
+      basic.id as CUSTOMER_ID,--客户ID
+      sysuser.id as CHIEF_MANAGER_ID,--客户经理ID
+      '4' as SUP_MANAGER_ID,--辅调客户经理ID
+      to_date(yehz.QXRQ,'yyyymmdd') as QXRQ,--起息日期
+      --yehz.zhtbh,--主合同编号
+      yehz.JJH,--借据号
+      yehz.DKYE,--贷款余额
+      yehz.BNQX,--表内欠息
+      yehz.BWQX,--表外欠息
+      yehz.KSQXRQ--开始欠息日期
+      from
+         --TY_REPAY_LSZ lsz,
+         TY_REPAY_YEHZ yehz,
+         TY_REPAY_TKMX tkmx,
+         ty_customer_rygl rygl ,
+         sys_user sysuser,
+         ty_customer_base base，
+         basic_customer_information basic
+      where
+        --lsz.create_time = '20170629' --dataDt日期
+        tkmx.create_time = dataDt --dataDt日期
+        and yehz.create_time = dataDt --dataDt日期
+        and yehz.jgdm in ('14030100102','14030200103','14030302600','14030302500','14030301200','14030300201')
+        --and lsz.ywjg=tkmx.bljg
+        and tkmx.bljg=yehz.jgdm
+        and (sysuser.external_id=rygl.ddrq or sysuser.external_id=rygl.dldm or sysuser.external_id=rygl.whry or sysuser.external_id=rygl.dcjg)
+        and rygl.dm=tkmx.khjl
+        and base.khnm=tkmx.khh
+        and basic.ty_customer_id = base.id
+        and yehz.jjh=tkmx.jjh
+        --and tkmx.jjh =lsz.jjh
+        --and tkmx.ywbh=yehz.ywbh
+        order by tkmx.jkrq
+
+    )
+
+  loop
+
+    begin
+
+      step:= '借据号' || yehz.JJH;
+
+      A3CUSNUM := '0';
+      --是否有效管户数
+      if(  true ) then
+        A3CUSNUM := '1';
+      end if;
+
+      --是否跨月逾期
+      D1OVERDUE := 0;
+      if ( (yehz.BNQX <> '0.00' or yehz.BWQX <> '0.00') and yehz.KSQXRQ < trunc(to_date(dataDt,'yyyymmdd'), 'mm') ) then
+        D1OVERDUE := 1;
+      end if;
+
+      --新增或更新客户经理绩效
+
+      merge into PERFORMANCE T1
+      using (select yehz.zhtbh as zhtbh ,substr(dataDt,0,6) as dataDt from dual)T2
+      on (T1.zhtbh = T2.zhtbh and T1.data_Dt = T2.dataDt)
+      when matched then
+        update
+          set
+          T1.A2_LOAN_BALANCE=T1.A2_LOAN_BALANCE + to_number(yehz.DKYE),
+          T1.A3_CUS_NUM =A3CUSNUM,
+          T1.D1_OVERDUE = T1.D1_OVERDUE + D1OVERDUE;
+    end;
+
+  end loop;
+
+  --写日志
+  insert into proc_log
         (proc_name,data_dt, begin_time, end_time, result, memo)
         select 'PRC_PROCESS_DATA',dataDt,
-			beginTime,
-			to_char(sysdate, 'yyyy-mm-dd hh:mi:ss'),
-			'0',
-			'success'
-			from dual;
-			
-	update job_work_date set status='1',end_time=to_char(sysdate, 'yyyy-mm-dd hh:mi:ss'),memo='日终处理成功' where data_dt=dataDt;
-	insert into job_work_date(id,data_dt,status)
-	select SEQ_JOB_WORK_DATE.Nextval,to_char(to_date(dataDt,'yyyymmdd')+1,'yyyymmdd'),'0' from dual;
-	commit;
-	msg:='0';
-	exception
-		WHEN OTHERS THEN
-		rollback;
-		msg:=step||'出现问题:'||substr(sqlerrm,1,1000);
-		insert into proc_log
-		(proc_name, data_dt,begin_time, end_time, result, memo)
-		select 'PRC_PROCESS_DATA',dataDt,
-			beginTime,
-			to_char(sysdate,'yyyy-mm-dd hh:mi:ss'),
-			'1',
-			msg
-		from dual;
+      beginTime,
+      to_char(sysdate, 'yyyy-mm-dd hh:mi:ss'),
+      '0',
+      'success'
+      from dual;
+
+  update job_work_date set status='1',end_time=to_char(sysdate, 'yyyy-mm-dd hh:mi:ss'),memo='日终处理成功' where data_dt=dataDt;
+  insert into job_work_date(id,data_dt,status)
+  select SEQ_JOB_WORK_DATE.Nextval,to_char(to_date(dataDt,'yyyymmdd')+1,'yyyymmdd'),'0' from dual;
+  commit;
+  msg:='0';
+  exception
+    WHEN OTHERS THEN
+    rollback;
+    msg:=step||'出现问题:'||substr(sqlerrm,1,1000);
+    insert into proc_log
+    (proc_name, data_dt,begin_time, end_time, result, memo)
+    select 'PRC_PROCESS_DATA',dataDt,
+      beginTime,
+      to_char(sysdate,'yyyy-mm-dd hh:mi:ss'),
+      '1',
+      msg
+    from dual;
         update job_work_date set status='2',memo='数据加工失败：'|| msg,end_time=to_char(sysdate,'yyyy-mm-dd hh:mi:ss') where data_dt=dataDt;
-	commit;
-	
-end PRC_PROCESS_DATA; 
+  commit;
+
+end PRC_PROCESS_DATA;
