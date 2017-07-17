@@ -80,7 +80,10 @@ public class IntoPiecesService {
 	@Autowired
 	private DivisionalService divisionalService;
 
-	
+	 public IntoPieces selectCardId(@Param("id")String id){
+		return intoPiecesDao.selectCardId(id);
+			
+		}
 	/* 查询进价信息 */
 	/*
 	 * TODO 1.添加注释 2.SQL写进DAO层

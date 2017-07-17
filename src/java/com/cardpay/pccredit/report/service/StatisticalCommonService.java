@@ -100,9 +100,11 @@ public class StatisticalCommonService {
      */
 	public String getApplicationStatusJson(){
 		List<PieJsonData> pList = getPieJsonData(statisticalApplicationStatus());
-		PieJsonData pieJsonData = pList.get(0);
-		pieJsonData.setSliced(true);
-		pieJsonData.setSelected(true);
+		if(pList.size()>0){
+			PieJsonData pieJsonData = pList.get(0);
+			pieJsonData.setSliced(true);
+			pieJsonData.setSelected(true);
+		}
 		
 		return JSONArray.fromObject(pList).toString();
 	}

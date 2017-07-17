@@ -10,7 +10,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,8 +27,22 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import com.cardpay.pccredit.intopieces.constant.Constant;
+import com.cardpay.pccredit.intopieces.model.LocalImage;
 import com.cardpay.pccredit.product.model.AddressAccessories;
 import com.wicresoft.jrad.base.database.id.IDGenerator;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*下面两个方法都可以上传文件，建议用第二种,上传多分文件,效率高.*/
 public class UploadFileTool {
@@ -405,6 +421,80 @@ public class UploadFileTool {
 		map.put("url", serverPath + newFileName);
 		return map;
 	}
+	public static List<File> mFileList;
+	public static List<LocalImage>uplodImageType(String cardId,String customerId,String pass) throws IOException {
+		List<LocalImage> images=new ArrayList<LocalImage>();
+		String path = Constant.FILE_PATH + customerId + File.separator;
+		mFileList= new ArrayList<File>();
+		String Imapath="";
+		if(pass.equals("1")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/经营场所/";
+		}
+		if(pass.equals("2")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/证件照片/";
+		}
+		if(pass.equals("3")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/担保人经营/";
+		}
+		if(pass.equals("4")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/担保人家庭/";
+		}
+		if(pass.equals("5")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/担保人证件/";
+		}
+		if(pass.equals("11")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/担保人流水/";
+		}
+		if(pass.equals("6")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/固定资产/";
+		}
+		if(pass.equals("7")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/家庭环境/";
+		}
+		if(pass.equals("8")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/流水账单/";
+		}
+		if(pass.equals("9")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/外债明细/";
+		}
+		if(pass.equals("10")){
+			Imapath="D:/调查客户影像资料/"+cardId+"/合同/";
+		}
+		
+		File f = new File(Imapath);
+		List<File> fileList = getFile(f);
+		for (int i = 0; i < fileList.size(); i++) {
+			LocalImage ima=new LocalImage();
+			File file = fileList.get(i);
+			ima.setUri(path+file.getName());
+			ima.setAttachment(file.getName());
+			images.add(i, ima);
+			String uploadIma=Imapath+file.getName();
+			  InputStream is = new FileInputStream(new File(uploadIma)); //本地图片路径  
+			  
+			    File file1=new File(path+file.getName());
+			  OutputStream os = new FileOutputStream(file1); //把图片写入到上面设置的路径里,转成二进制  
+			    
+			  byte[] buffer = new byte[1024]; //设置传输大小1024字节  
+			  int length  = 0 ;  
+			  while((length = is.read(buffer))>0){ //循环写入服务器  
+			  os.write(buffer, 0, length);  
+			  }  
+			}
+		return images;
+		
+	}
 	
+	public static List<File> getFile(File file) {
+		File[] fileArray = file.listFiles();
+		for (File f : fileArray) {
+		if (f.isFile()) {
+		mFileList.add(f);
+		} else {
+		getFile(f);
+		}
+		}
+		return mFileList;
+		}
 
 }
