@@ -3,10 +3,9 @@
  */
 package com.cardpay.pccredit.manager.dao.comdao;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.cardpay.pccredit.tools.structure.Tree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class ManagerBelongMapComdao {
 
 	@Autowired
 	private CommonDao commonDao;
-	
+
 	/**
 	 * 根据用户Id查询客户经理从属关系
 	 * @param userId
@@ -57,4 +56,47 @@ public class ManagerBelongMapComdao {
 			return null;
 		}
 	}
+
+    /**
+     * 获得客户经理管理树ID
+     * @param userId
+     * @return
+     */
+    public ArrayList<String> getManagerList(String userId){
+        Tree managerTree=new Tree();
+
+        String sql="select * from manager_belong_map";
+        List<ManagerBelongMap> tempList=commonDao.queryBySql(ManagerBelongMap.class,sql,null);
+
+
+        Iterator iterator=tempList.iterator();
+
+        while(iterator.hasNext()){
+            ManagerBelongMap managerBelongMap=(ManagerBelongMap)iterator.next();
+            managerTree.addNode(managerBelongMap.getParentId(),managerBelongMap.getChildId());
+        }
+
+        managerTree.traversalTree(managerTree.findNode(managerTree.getRoot(),userId));
+
+        return (ArrayList<String>)managerTree.getDataList();
+    }
+
+    /**
+     * 根据传入的list转化为ID清单 todo:可作为公共接口
+     * @param arrayList
+     * @return
+     */
+    public String managerSet(ArrayList<String> arrayList){
+        StringBuilder stringBuilder=new StringBuilder();
+        stringBuilder.append("( ");
+
+        Iterator iterator=arrayList.iterator();
+
+        while (iterator.hasNext()){
+            stringBuilder.append("'"+(String)iterator.next()+"',");
+        }
+
+        stringBuilder.append(" )");
+        return stringBuilder.toString();
+    }
 }

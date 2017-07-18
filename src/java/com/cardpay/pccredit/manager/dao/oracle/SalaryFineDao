@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cardpay.pccredit.manager.dao.SalaryFineDao">
     <resultMap id="SalaryFineMap" type="com.cardpay.pccredit.manager.model.SalaryFine">
-        <result property="fineAmount" column="FINE_AMOUT" />
+        <result property="fineAmount" column="FINE_AMOUNT" />
         <result property="fineType" column="FINE_TYPE" />
         <result property="fineDescribe" column="FINE_DESCRIBE" />
         <result property="ym" column="YM" />
