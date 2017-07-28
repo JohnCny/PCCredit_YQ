@@ -1,23 +1,26 @@
 package com.cardpay.pccredit.manager.service.salary;
 
+import org.springframework.stereotype.Service;
+
 /**
  * Created by Johnny on 2017/7/7 0007.
  * 风险经理绩效
  */
-public class RiskManagerSalary extends EmployeeSalary{
 
-    RiskManagerSalary(String userID){
+public class RiskManagerSalaryService extends EmployeeSalaryService {
+
+    RiskManagerSalaryService(String userID){
         setUserID(userID);
     }
 
     @Override
-    float calculateSalary(String YM) {
+    public double calculateSalary(String YM) {
 
-        return calculateAverageSalary(YM)+PublicCalculate.getSumSalary(getUserID(),YM);
+        return calculateAverageSalary(YM)+getSumSalary(YM);
     }
 
     @Override
-    float calculateMargin(String YM) {
+    public double calculateMargin(String YM) {
         return 0;
     }
 

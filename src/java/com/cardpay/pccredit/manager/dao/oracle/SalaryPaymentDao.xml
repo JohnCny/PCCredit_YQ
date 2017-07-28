@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cardpay.pccredit.manager.dao.SalaryFineDao">
+    <resultMap id="SalaryPaymentMap" type="com.cardpay.pccredit.manager.model.SalaryPayment">
+        <result property="amount" column="AMOUNT" />
+        <result property="ym" column="YM" />
+        <result property="userId" column="USER_ID" />
+    </resultMap>
+
+    <resultMap id="SalaryFineMapAvg" type="com.cardpay.pccredit.manager.model.SalaryPayment">
+        <result property="amount" column="AMOUNT" />
+    </resultMap>
+
+    <select id="getAvgSalaryAvg" resultMap="SalaryFineMapAvg" >
+        SELECT AVG(AMOUNT) AS AMOUNT
+        FROM
+        SALARY_PAYMENT t
+        WHERE
+        1 = 1
+        AND t.YM=#{YM}
+        AND t.USER_ID IN #{user_id}
+    </select>
+
+</mapper>

@@ -1,24 +1,26 @@
 package com.cardpay.pccredit.manager.service.salary;
 
+import org.springframework.stereotype.Service;
+
 /**
  * Created by Johnny on 2017/7/7 0007.
  * 运营岗绩效
  */
-public class OperateManagerSalary extends EmployeeSalary{
 
-    OperateManagerSalary(String userID){
+public class OperateManagerSalaryService extends EmployeeSalaryService {
+
+    OperateManagerSalaryService(String userID){
         setUserID(userID);
     }
 
     @Override
-    float calculateSalary(String YM) {
+    double calculateSalary(String YM) {
         //返回绩效额
-
         return calculateAverageSalary(YM);
     }
 
     @Override
-    float calculateMargin(String YM) {
+    double calculateMargin(String YM) {
         return 0;
     }
 

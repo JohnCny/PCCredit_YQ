@@ -1,44 +1,46 @@
 package com.cardpay.pccredit.manager.model;
-import com.wicresoft.jrad.base.database.id.IDType;
+
 import com.wicresoft.jrad.base.database.model.BusinessModel;
 import com.wicresoft.jrad.base.database.model.ModelParam;
+
+import java.math.BigDecimal;
 
 /**
  * Created by Johnny on 2017/7/6 0006.
  * 薪资记录表
  */
-@ModelParam(table="SALARY_RECORD",generator=IDType.uuid32)
+@ModelParam(table="salary_record")
 public class SalaryRecord extends BusinessModel {
 
     /**
      *当月新增贷款收入
      */
-    private float  addedLoan;
+    private Double addedLoan;
 
     /**
      *当月贷款余额收入
      */
-    private float  loanBalance;
+    private Double  loanBalance;
 
     /**
      *当月有效管户收入
      */
-    private float  management;
+    private Double  management;
 
     /**
      *当月辅调收入
      */
-    private float  assistLoan;
+    private Double  assistLoan;
 
     /**
      *当月逾期扣款
      */
-    private float  overdueLoan;
+    private Double  overdueLoan;
 
     /**
      *当月贷款审查
      */
-    private float  reviewLoan;
+    private Double  reviewLoan;
 
     /**
      *当前年月
@@ -55,51 +57,51 @@ public class SalaryRecord extends BusinessModel {
      */
     private String   userId;
 
-    public float getAddedLoan() {
+    public Double getAddedLoan() {
         return addedLoan;
     }
 
-    public void setAddedLoan(float addedLoan) {
+    public void setAddedLoan(Double addedLoan) {
         this.addedLoan = addedLoan;
     }
 
-    public float getLoanBalance() {
+    public Double getLoanBalance() {
         return loanBalance;
     }
 
-    public void setLoanBalance(float loanBalance) {
+    public void setLoanBalance(Double loanBalance) {
         this.loanBalance = loanBalance;
     }
 
-    public float getManagement() {
+    public Double getManagement() {
         return management;
     }
 
-    public void setManagement(float management) {
+    public void setManagement(Double management) {
         this.management = management;
     }
 
-    public float getAssistLoan() {
+    public Double getAssistLoan() {
         return assistLoan;
     }
 
-    public void setAssistLoan(float assistLoan) {
+    public void setAssistLoan(Double assistLoan) {
         this.assistLoan = assistLoan;
     }
 
-    public float getOverdueLoan() {
+    public Double getOverdueLoan() {
         return overdueLoan;
     }
 
-    public void setOverdueLoan(float overdueLoan) {
+    public void setOverdueLoan(Double overdueLoan) {
         this.overdueLoan = overdueLoan;
     }
 
-    public float getReviewLoan() {
+    public Double getReviewLoan() {
         return reviewLoan;
     }
 
-    public void setReviewLoan(float reviewLoan) {
+    public void setReviewLoan(Double reviewLoan) {
         this.reviewLoan = reviewLoan;
     }
 
