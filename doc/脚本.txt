@@ -1,0 +1,175 @@
+-- Create table 每日作业处理状态表
+create table JOB_WORK_DATE
+(
+  id         INTEGER,
+  data_dt    VARCHAR2(10),
+  status     CHAR(1),
+  begin_time VARCHAR2(30),
+  end_time   VARCHAR2(30),
+  memo       VARCHAR2(400)
+);
+-- Add comments to the table 
+comment on table JOB_WORK_DATE
+  is '每日作业处理状态表';
+-- Add comments to the columns 
+comment on column JOB_WORK_DATE.id
+  is 'SEQ_JOB_WORK_DATE';
+comment on column JOB_WORK_DATE.data_dt
+  is '工作日';
+comment on column JOB_WORK_DATE.status
+  is '处理状态 0：未处理 1：已处理';
+comment on column JOB_WORK_DATE.begin_time
+  is '处理开始时间';
+comment on column JOB_WORK_DATE.end_time
+  is '处理结束时间';
+comment on column JOB_WORK_DATE.memo
+  is '备注';
+
+  
+-- Create table 每日需装入数据表描述
+create table LOAD_TABLE_INFO
+(
+  table_code      VARCHAR2(40),
+  table_name      VARCHAR2(100),
+  field_separator VARCHAR2(10),
+  src_sys_code    VARCHAR2(20),
+  frequency       VARCHAR2(10),
+  data_file_name  VARCHAR2(50),
+  data_style      VARCHAR2(20),
+  src_table_code  VARCHAR2(40),
+  status          CHAR(1)
+);
+-- Add comments to the table 
+comment on table LOAD_TABLE_INFO
+  is '每日需装入数据表描述';
+-- Add comments to the columns 
+comment on column LOAD_TABLE_INFO.table_code
+  is '入库表名';
+comment on column LOAD_TABLE_INFO.table_name
+  is '中文名';
+comment on column LOAD_TABLE_INFO.field_separator
+  is '字段分隔符';
+comment on column LOAD_TABLE_INFO.src_sys_code
+  is '源系统';
+comment on column LOAD_TABLE_INFO.frequency
+  is '频度';
+comment on column LOAD_TABLE_INFO.data_file_name
+  is '数据文件名';
+comment on column LOAD_TABLE_INFO.data_style
+  is '增量add/全量all';
+comment on column LOAD_TABLE_INFO.src_table_code
+  is '原系统表';
+comment on column LOAD_TABLE_INFO.status
+  is '是否需要装入 0： 不装入 1：需装入';
+  
+  
+-- Create table 数据表装入日志
+create table LOAD_PROCESS_LOG
+(
+  data_dt      VARCHAR2(10),
+  table_code   VARCHAR2(40),
+  src_sys_code VARCHAR2(20),
+  begin_time   VARCHAR2(50),
+  end_time     VARCHAR2(50),
+  status       VARCHAR2(1),
+  memo         VARCHAR2(2000)
+);
+-- Add comments to the table 
+comment on table LOAD_PROCESS_LOG
+  is '数据表装入日志';
+-- Add comments to the columns 
+comment on column LOAD_PROCESS_LOG.data_dt
+  is '数据日期';
+comment on column LOAD_PROCESS_LOG.table_code
+  is '表名';
+comment on column LOAD_PROCESS_LOG.src_sys_code
+  is '源系统';
+comment on column LOAD_PROCESS_LOG.begin_time
+  is '开始时间(yyyymmdd hh:mi:ss';
+comment on column LOAD_PROCESS_LOG.end_time
+  is '结束时间(yyyymmdd hh:mi:ss';
+comment on column LOAD_PROCESS_LOG.status
+  is '0：待处理 1：成功 2：失败';
+comment on column LOAD_PROCESS_LOG.memo
+  is '备注';
+
+-- Create table
+create table PROC_LOG
+(
+  proc_name  VARCHAR2(50),
+  data_dt    VARCHAR2(10),
+  begin_time VARCHAR2(50),
+  end_time   VARCHAR2(50),
+  result     VARCHAR2(1),
+  memo       VARCHAR2(2000)
+);
+-- Add comments to the table 
+comment on table PROC_LOG
+  is '存储过程日志';
+-- Add comments to the columns 
+comment on column PROC_LOG.proc_name
+  is '存储过程名称';
+comment on column PROC_LOG.begin_time
+  is '开始时间';
+comment on column PROC_LOG.end_time
+  is '结束时间';
+comment on column PROC_LOG.result
+  is '执行结果';
+comment on column PROC_LOG.memo
+  is '备注';
+  
+-- Create table 绩效明细表
+create table PERFORMANCE
+(
+  id             VARCHAR2(32) not null,
+  data_dt        VARCHAR2(6),
+  application_id VARCHAR2(32),
+  a1_new         char(1),
+  a1_old         char(1),
+  a1_recommend   char(1),
+  overdue        char(1),
+  loan_balance   NUMBER(16,2)
+);
+-- Add comments to the table 
+comment on table PERFORMANCE
+  is '绩效明细表';
+-- Add comments to the columns 
+comment on column PERFORMANCE.id
+  is '主键 uuid32';
+comment on column PERFORMANCE.a1_new
+  is '是1否0 新增贷款';
+comment on column PERFORMANCE.a1_old
+  is '是1否0 续贷客户';
+comment on column PERFORMANCE.a1_recommend
+  is '是1否0 员工推荐';
+comment on column PERFORMANCE.application_id
+  is '进件ID';
+comment on column PERFORMANCE.overdue
+  is '是1否0  跨月逾期';
+comment on column PERFORMANCE.data_dt
+  is '月份yyyymm';
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table PERFORMANCE
+  add constraint PK_ID primary key (ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+  
+  
+-- Create sequence 
+create sequence SEQ_JOB_WORK_DATE
+minvalue 1
+maxvalue 99999999999999999
+start with 1
+increment by 1
+cache 20;

@@ -1,0 +1,661 @@
+create or replace procedure "PRC_PROCESS_DATA"(dataDt in varchar2,
+                                                       msg out varchar2)
+as
+/*
+    dataDt: yyyy-mm-dd
+    msg:执行结果  0：成功
+    修改时间      修改人                                      修改记录
+    20150804      nihc                  台账历史表data_dt格式改为yyyy-mm-dd
+    20150806      nihc                  客户信息表BASIC_CUSTOMER_INFORMATION,QZ_IESB_FOR_ECIF与ECIF同步：增量同步，存量保留
+  20150914      tanwh                 合并贷后检查
+*/
+step varchar2(2000);--步骤
+beginTime varchar2(20);
+cust_cert O_ECIF_CUST_CERT_INFO%rowtype;
+cust_name O_ECIF_CUST_PER_NAME_INFO%rowtype;
+cust_per O_ECIF_CUST_PER%rowtype;
+cust_ext O_ECIF_CUST_PER_EXT_INFO%rowtype;
+cust_belg O_ECIF_CUST_BELG_INFO%rowtype;
+cust_belg_org O_ECIF_CUST_BELG_ORG_INFO%rowtype;
+cust_addr O_ECIF_CUST_ADDR_INFO%rowtype;
+--cust_relate O_ECIF_CUST_RELATE_INFO%rowtype;
+lev integer;  -- 地区级别
+rsd varchar2(50);  -- 户籍所在地
+rsd1 varchar2(50);
+rsd2 varchar2(50);
+rsd3 varchar2(50);
+city varchar2(50); --住址城市
+city1 varchar2(50);
+city2 varchar2(50);
+city3 varchar2(50);
+num  integer; --记录数
+begin
+
+     beginTime := to_char(sysdate,'yyyyMMdd hh:mi:ss');
+     select '','','','' into rsd,rsd1,rsd2,rsd3 from dual;
+     select '','','','' into city,city1,city2,city3 from dual;
+     step:='删除'||dataDt||'贷款台账历史数据';
+     execute immediate 'delete from o_clpm_acc_loan_history where data_dt=:dataDt' using dataDt;--yyyy-mm-dd
+
+     step:='生成'||dataDt||'贷款台账历史数据';
+     execute immediate 'insert into o_clpm_acc_loan_history select :dataDt,t.* from o_clpm_acc_loan t' using dataDt;--yyyy-mm-dd
+
+     step:='删除o_clpm_acc_loan数据并插入新数据';
+     execute immediate 'truncate table o_clpm_acc_loan';
+     insert into o_clpm_acc_loan select * from o_clpm_acc_loan_tmp;
+
+     step:='删除o_clpm_ctr_loan_cont数据并插入新数据';
+     execute immediate 'truncate table o_clpm_ctr_loan_cont';
+     insert into o_clpm_ctr_loan_cont select * from o_clpm_ctr_loan_cont_tmp;
+
+     /*step:='删除o_clpm_iqp_cus_acct数据并插入新数据';
+     execute immediate 'truncate table o_clpm_iqp_cus_acct';
+     insert into o_clpm_iqp_cus_acct select * from o_clpm_iqp_cus_acct_tmp;
+
+     step:='删除O_CLPM_CUS_BASE数据并插入新数据';
+     execute immediate 'truncate table  O_CLPM_CUS_BASE';
+     insert into O_CLPM_CUS_BASE select * from O_CLPM_CUS_BASE_TMP;
+
+     step:='删除o_core_ffhz数据并插入新数据';
+     execute immediate 'truncate table  o_core_ffhz';
+     insert into o_core_ffhz select * from o_core_ffhz_tmp;
+
+
+
+     step:='删除O_ECIF_CUST_CERT_INFO数据并插入新数据';
+     execute immediate 'truncate table O_ECIF_CUST_CERT_INFO';
+     insert into O_ECIF_CUST_CERT_INFO select * from O_ECIF_CUST_CERT_INFO_tmp;
+
+     step:='删除O_ECIF_CUST_PER_NAME_INFO数据并插入新数据';
+     execute immediate 'truncate table O_ECIF_CUST_PER_NAME_INFO';
+     insert into O_ECIF_CUST_PER_NAME_INFO select * from O_ECIF_CUST_PER_NAME_INFO_tmp;
+
+     step:='删除O_ECIF_CUST_PER数据并插入新数据';
+     execute immediate 'truncate table O_ECIF_CUST_PER';
+     insert into O_ECIF_CUST_PER select * from O_ECIF_CUST_PER_tmp;
+
+     step:='删除O_ECIF_CUST_PER_EXT_INFO数据并插入新数据';
+     execute immediate 'truncate table O_ECIF_CUST_PER_EXT_INFO';
+     insert into O_ECIF_CUST_PER_EXT_INFO select * from O_ECIF_CUST_PER_EXT_INFO_tmp;
+
+     step:='删除O_ECIF_CUST_BELG_INFO数据并插入新数据';
+     execute immediate 'truncate table O_ECIF_CUST_BELG_INFO';
+     insert into O_ECIF_CUST_BELG_INFO select * from O_ECIF_CUST_BELG_INFO_tmp;
+
+     step:='删除O_ECIF_CUST_BELG_ORG_INFO数据并插入新数据';
+     execute immediate 'truncate table  O_ECIF_CUST_BELG_ORG_INFO';
+     insert into O_ECIF_CUST_BELG_ORG_INFO select * from O_ECIF_CUST_BELG_ORG_INFO_tmp;
+
+     step:='删除O_ECIF_CUST_ADDR_INFO数据并插入新数据';
+     execute immediate 'truncate table O_ECIF_CUST_ADDR_INFO';
+     insert into O_ECIF_CUST_ADDR_INFO select * from O_ECIF_CUST_ADDR_INFO_tmp;*/
+
+     step:='删除O_CCH_LM_PM_SHD数据并插入新数据';
+     execute immediate 'truncate table O_CCH_LM_PM_SHD';
+     insert into O_CCH_LM_PM_SHD select * from O_CCH_LM_PM_SHD_tmp;
+     
+     step:='删除O_CCH_LM_LMT_CONT_T数据并插入新数据';
+     execute immediate 'truncate table O_CCH_LM_LMT_CONT_T';
+     insert into O_CCH_LM_LMT_CONT_T select * from O_CCH_LM_LMT_CONT_T_tmp;
+
+/*     step:='删除O_ECIF_CUST_RELATE_INFO数据并插入新数据';
+     execute immediate 'truncate table O_ECIF_CUST_RELATE_INFO';
+     insert into O_ECIF_CUST_RELATE_INFO select * from O_ECIF_CUST_RELATE_INFO_tmp;
+
+     step:='删除 o_clpm_s_user 数据并插入新数据';
+     execute immediate 'truncate table o_clpm_s_user';
+     insert into o_clpm_s_user select * from o_clpm_s_user_tmp;
+     step:='删除 o_clpm_s_org 数据并插入新数据';
+     execute immediate 'truncate table o_clpm_s_org';
+     insert into o_clpm_s_org select * from o_clpm_s_org_tmp;
+     step:='删除 o_clpm_s_deptuser 数据并插入新数据';
+     execute immediate 'truncate table o_clpm_s_deptuser';
+     insert into o_clpm_s_deptuser select * from o_clpm_s_deptuser_tmp;
+      -- 同步 客户经理信息  存量不变，增量插入
+      step:='同步 客户经理信息sys_user  存量不变，增量插入';
+      merge into sys_user a
+      using o_clpm_s_user b
+      on (a.login=b.actorno)
+      when not matched then
+      insert (id,user_type,external_id,login,password,display_name,created_time,created_by,is_deleted,business_type,written_off)
+      values (sys_guid(),'1',b.actorno,b.actorno,'96E79218965EB72C92A549DD5A330112',nvl(b.actorname,'待定'),sysdate,'SYS_JOB','0','1','0');
+
+      -- 同步 机构部门信息  存量不变，增量插入
+      step:='同步 部门信息sys_department  存量不变，增量插入';
+      merge into sys_department a
+      using o_clpm_s_org b
+      on (a.org_id = b.organno)
+      when not matched then
+      insert (id,org_id,name,short_name,created_time,created_by,is_deleted)
+      values(sys_guid(),organno,nvl(organname,'待定'),nvl(organshortform,'待定'),sysdate,'SYS_JOB','0');
+      step:='同步 机构信息sys_organization  存量不变，增量插入';
+      -- 同步 部门信息  存量不变，增量插入
+      merge into sys_organization a
+      using o_clpm_s_org b
+      on (a.id= b.organno)
+      when not matched then
+      insert (id,name,short_name,parent_id,description,created_time,created_by,IS_DELETED)
+      values(b.organno,nvl(b.organname,'待定'),nvl(organshortform,'待定'),b.suporganno,b.organno,sysdate,'SYS_JOB','0');
+      -- 同步 用户部门关联信息 存量不变，增量插入
+      step:='同步 用户部门关联信息sys_dept_user 存量不变，增量插入';
+      merge into sys_dept_user a
+      using (select a.actorno,b.id user_id,c.id dept_id from o_clpm_s_deptuser a,sys_user b,sys_department c where a.actorno=b.login and a.organno=c.org_id) b
+      on (a.user_id = b.user_id)
+      when matched then
+      update
+      set a.dept_id = b.dept_id
+      when not matched then
+      insert (id,dept_id,user_id)
+      values('X'||substr(SYS_GUID(),1,31),b.dept_id,b.user_id);
+      -- 默认新增用户为客户经理角色
+      step:='新增用户默认角色为客户经理角色';
+      MERGE INTO SYS_ROLE_USER A
+      USING SYS_USER B
+      ON (A.USER_ID=B.ID)
+      WHEN NOT MATCHED THEN
+      INSERT(ID,ROLE_ID,USER_ID)
+      VALUES('X'||substr(SYS_GUID(),1,31),'402880f9493b762e01493c00562e0009',B.ID);
+      -- 只增加有存量业务的住房按揭客户
+     for cust in (select distinct cert.cust_no, cert.cert_no
+                             from o_ecif_cust_cert_info cert, qz_iesb_for_ecif i,o_clpm_ctr_loan_cont cont
+                            where cert.cert_no = i.global_id(+)
+                              and cert.cust_no = cont.cus_id
+                              and cert.cert_type = '100'
+                               and cont.cont_status = '200'
+                               and cont.prd_id in('100028')
+                              and i.id is null
+                                  )
+     loop
+     begin
+         cust_cert := null;
+         cust_name := null;
+         cust_per := null;
+         cust_ext := null;
+         cust_belg := null;
+         cust_belg_org := null;
+         cust_addr := null;
+        select '','','','' into rsd,rsd1,rsd2,rsd3 from dual;   -- 复位
+        select '','','','' into city,city1,city2,city3 from dual;
+         -- 保证只取一条记录
+         step:=cust.cust_no||'01';
+         select count(1) into num from O_ECIF_CUST_CERT_INFO t where t.cust_no=cust.cust_no and t.cert_no=cust.cert_no and t.cert_type='100' and rownum=1;
+         if num=1 then
+            select t.* into cust_cert from O_ECIF_CUST_CERT_INFO t where t.cust_no=cust.cust_no and t.cert_no=cust.cert_no and t.cert_type='100' and rownum=1;
+         end if;
+         step:=cust.cust_no||'02';
+         select count(1) into num from O_ECIF_CUST_PER_NAME_INFO t where t.cust_no=cust.cust_no and t.name_info is not null and rownum=1;
+         if num=1 then
+         select t.* into cust_name from O_ECIF_CUST_PER_NAME_INFO t where t.cust_no=cust.cust_no and t.name_info is not null  and rownum=1;
+         end if;
+         step:=cust.cust_no||'03';
+         select count(1) into num from O_ECIF_CUST_PER t where t.cust_no=cust.cust_no and rownum=1;
+         if num=1 then
+         select t.* into cust_per from O_ECIF_CUST_PER t where t.cust_no=cust.cust_no and rownum=1;
+         end if;
+         step:=cust.cust_no||'04';
+         select count(1) into num from O_ECIF_CUST_PER_EXT_INFO t where t.cust_no=cust.cust_no and rownum=1;
+         if num=1 then
+         select t.* into cust_ext from O_ECIF_CUST_PER_EXT_INFO t where t.cust_no=cust.cust_no and rownum=1;
+         end if;
+         step:=cust.cust_no||'05';
+         select count(1) into num from O_ECIF_CUST_BELG_INFO t where t.cust_no=cust.cust_no and rownum=1;
+         if num=1 then
+         select t.* into cust_belg from O_ECIF_CUST_BELG_INFO t where t.cust_no=cust.cust_no and rownum=1;
+         end if;
+         step:=cust.cust_no||'06';
+         select count(1) into num from O_ECIF_CUST_BELG_ORG_INFO t where t.cust_no=cust.cust_no and rownum=1;
+         if num=1 then
+         select t.* into cust_belg_org from O_ECIF_CUST_BELG_ORG_INFO t where t.cust_no=cust.cust_no and rownum=1;
+         end if;
+         step:=cust.cust_no||'07';
+         select count(1) into num from O_ECIF_CUST_ADDR_INFO t where t.cust_no=cust.cust_no and rownum=1;
+         if num=1 then
+         select t.* into cust_addr from O_ECIF_CUST_ADDR_INFO t where t.cust_no=cust.cust_no and rownum=1;
+         end if;
+         step:=cust.cust_no||'08';
+         select count(1) into num from O_ECIF_CUST_RELATE_INFO t where t.cust_no=cust.cust_no and rownum=1;
+         if num=1 then
+         select t.* into cust_relate from O_ECIF_CUST_RELATE_INFO t where t.cust_no=cust.cust_no and rownum=1;
+         end if;
+         step:=cust.cust_no||'09';
+         select count(1) into num from indiv_brt_place t where t.type_code=cust_ext.city and rownum=1;
+         if num=1 then
+            select t.levels,t.type_code into lev,city from indiv_brt_place t where t.type_code=cust_ext.city;
+            if lev=3 then
+                select parent_code||'_'||type_code into city3 from indiv_brt_place
+                    where levels=3
+                    start with  type_code=cust_ext.city
+                    connect by nocycle type_code = prior parent_code
+                    ;
+                select parent_code||'_'||type_code into city2 from indiv_brt_place
+                    where levels=2
+                    start with  type_code=cust_ext.city
+                    connect by nocycle type_code = prior parent_code
+                    ;
+                select parent_code||'_'||type_code into city1 from indiv_brt_place
+                    where levels=1
+                    start with  type_code=cust_ext.city
+                    connect by nocycle type_code = prior parent_code
+                    ;
+            elsif lev=2 then
+                select parent_code||'_'||type_code into city2 from indiv_brt_place
+                    where levels=2
+                    start with  type_code=cust_ext.city
+                    connect by nocycle type_code = prior parent_code
+                    ;
+                select parent_code||'_'||type_code into city1 from indiv_brt_place
+                    where levels=1
+                    start with  type_code=cust_ext.city
+                    connect by nocycle type_code = prior parent_code
+                    ;
+            elsif lev=1 then
+                    select parent_code||'_'||type_code into city1 from indiv_brt_place
+                    where levels=1
+                    start with  type_code=cust_ext.city
+                    connect by nocycle type_code = prior parent_code
+                    ;
+
+           end if;
+         end if;
+         step:=cust.cust_no||'10';
+        -- step:=cust_ext.reg_pmt_rsd_qlty;
+         select count(1) into num from indiv_brt_place t where t.type_code=cust_ext.reg_pmt_rsd_qlty and rownum=1;
+         step:='10'  ;
+         if num=1 then
+             step:='11'  ;
+             select t.levels,t.type_code into lev,rsd from indiv_brt_place t where t.type_code=cust_ext.reg_pmt_rsd_qlty;
+             step:='12'  ;
+             if lev=3 then
+             step:='13'  ;
+                  select parent_code||'_'||type_code into rsd3 from indiv_brt_place
+                      where levels=3
+                      start with  type_code=cust_ext.reg_pmt_rsd_qlty
+                      connect by nocycle type_code = prior parent_code
+                      ;
+             step:='14'  ;
+                  select parent_code||'_'||type_code into rsd2 from indiv_brt_place
+                      where levels=2
+                      start with  type_code=cust_ext.reg_pmt_rsd_qlty
+                      connect by nocycle type_code = prior parent_code
+                      ;
+                      step:='14'  ;
+                  select parent_code||'_'||type_code into rsd1 from indiv_brt_place
+                      where levels=1
+                      start with  type_code=cust_ext.reg_pmt_rsd_qlty
+                      connect by nocycle type_code = prior parent_code
+                      ;
+              elsif lev=2 then
+              step:='15'  ;
+                  select parent_code||'_'||type_code into rsd2 from indiv_brt_place
+                      where levels=2
+                      start with  type_code=cust_ext.reg_pmt_rsd_qlty
+                      connect by nocycle type_code = prior parent_code
+                      ;
+                      step:='16'  ;
+                  select parent_code||'_'||type_code into rsd1 from indiv_brt_place
+                      where levels=1
+                      start with  type_code=cust_ext.reg_pmt_rsd_qlty
+                      connect by nocycle type_code = prior parent_code
+                      ;
+              elsif lev=1 then
+              step:='17'  ;
+                      select parent_code||'_'||type_code into rsd1 from indiv_brt_place
+                      where levels=1
+                      start with  type_code=cust_ext.reg_pmt_rsd_qlty
+                      connect by nocycle type_code = prior parent_code
+                      ;
+
+             end if;
+             step:='18'  ;
+         end if;
+      -- 同步增加 qz_iesb_for_ecif
+      step:='同步 qz_iesb_for_ecif 存量不变，增量插入:'||cust.cust_no;
+
+     insert into qz_iesb_for_ecif(
+        ID,
+        GLOBAL_TYPE,
+        GLOBAL_ID,
+        GLOBAL_DESC,
+        CERT_AREA_CODE,
+        CERT_ORG,
+        ISS_DATE,
+        EFFECT_DATE,
+        EXPIRY_DATE,
+        CLIENT_NAME,
+        CLIENT_NAME_TYPE,
+        CLIENT_TYPE,
+        CLIENT_STATUS,
+        BIRTH_DATE,
+        SEX,
+        CUST_MANAGER_ID,
+        RECORD_TELLER_NO,
+        REGISTERED_DATE,
+        CLIENT_BELONG_ORG,
+        REGISTERED_TELLER_NO,
+        REGIST_ORG_NO,
+        ORG_REGISTERED_DATE,
+        COUNTRY_CITIZEN,
+        NATIONALITY_CODE,
+        REG_PERM_RESIDENCE,
+        REG_PERM_RESIDENCE_1,
+        REG_PERM_RESIDENCE_2,
+        REG_PERM_RESIDENCE_3,
+        OPEN_ACCT_BRANCH_ID,
+        OPEN_TELLER_NO,
+        OPEN_ACCT_DATE,
+        MARITAL_STATUS,
+        EDUCATION_LEVEL,
+        CITY,
+        CITY_1,
+        CITY_2,
+        CITY_3,
+        AREA_CODE,
+        INCIDENCE_RELATION,
+        IDENTITY_TYPE,
+        ADDRESS,
+        ADDRESS_TYPE,
+        POSTAL_CODE,
+        CONTACT_MODE_TYPE,
+        CONTACT_MODE,
+        OCCUPATION,
+        COMPANY_NAME,
+        USER_ID,
+        CREATED_TIME,
+        CREATED_BY,
+        CLIENT_NO,
+        STATUS,
+        CUSTOMER_ID
+     )  select
+        sys_guid(),
+        cust_cert.CERT_TYPE,
+        cust_cert.CERT_NO,
+        cust_cert.CERT_DESC,
+        cust_cert.ISSUE_CERT_CTY_AREA,
+        cust_cert.ISSUE_CERT_ORG,
+        to_date(nvl(trim(cust_cert.ISSUE_CERT_DT),'18991231'),'yyyymmdd'),
+        to_date(nvl(trim(cust_cert.VALID_DT),'18991231'),'yyyymmdd'),
+        to_date(nvl(trim(cust_cert.END_DT),'18991231'),'yyyymmdd'),
+        cust_name.NAME_INFO,
+        cust_name.PER_CUST_NAME_TYPE,
+        CUST_PER.CUST_TYPE,
+        cust_ext.STS,
+        to_date(nvl(trim(CUST_PER.BIRTH_DT),'18991231'),'yyyymmdd'),
+        CUST_PER.SEX,
+        CUST_BELG.BELG_CUST_MGR,
+        CUST_BELG.REG_TLR,
+        to_date(nvl(trim(CUST_BELG.REG_DT),'18991231'),'yyyymmdd'),
+        CUST_BELG_ORG.BELG_ORG,
+        CUST_BELG_ORG.REG_TLR,
+        CUST_BELG_ORG.REG_ORG,
+        to_date(nvl(trim(CUST_BELG_ORG.REG_DT),'18991231'),'yyyymmdd'),
+        CUST_EXT.NATION,
+        CUST_EXT.ETHNIC,
+        rsd,
+        rsd1,
+        rsd2,
+        rsd3,
+        CUST_EXT.OPAC_BRANCH,
+        CUST_EXT.OPAC_TLR,
+        to_date(nvl(trim(CUST_EXT.OPAC_DT),'18991231'),'yyyymmdd'),
+        CUST_EXT.MARRIAGE_STS,
+        CUST_EXT.EDU_DEGREE,
+        city,
+        city1,
+        city2,
+        city3,
+        CUST_EXT.LOC_CTY_AREA,
+        CUST_EXT.THIS_ORG_RELA,
+        CUST_EXT.ID_TYPE,
+        CUST_ADDR.DTL_ADDR,
+        CUST_ADDR.ADDR_TYPE,
+        CUST_ADDR.ZIP_CD,
+        '',--联系方式
+        '',
+        '',  --工作类型
+        '',   -- 工作单位
+        (select distinct id from sys_user where login=CUST_BELG.belg_cust_mgr and rownum=1) ,  --  userId
+        sysdate,   -- createtime
+        'SYS_JOB',
+        cust_cert.CUST_NO,
+        '0',
+        sys_guid()
+
+        from dual t;
+     end;
+     end loop;
+     -- 同步basic_customer_information，只根据身份证 判断增量客户
+     step:='同步basic_customer_information，只根据身份证 判断增量客户';
+     merge into basic_customer_information a
+     using (select * from qz_iesb_for_ecif where global_id is not null ) b
+     on (b.global_id=a.card_id)
+     when not matched then
+     insert (id,chinese_name,card_id,user_id,created_time,created_by)
+     values (b.customer_id,b.client_name,b.global_id,b.user_id,sysdate,'SYS_JOB');*/
+
+     step := '0.删除'||dataDt||'psp_check_task检查任务,并生成检查任务';
+     delete from psp_check_task where task_create_date=dataDt; --yyyy-mm-dd
+
+
+     step :='1.生成首次放款的客户首次检查任务';
+
+     insert into psp_check_task
+       (task_id,
+        cus_id,
+        task_type,
+        task_create_date,
+        qnt,
+        loan_totl_amt,
+        loan_balance,
+        manager_id,
+        manager_br_id,
+        approve_status,
+        CHECK_DESCRIBE)
+     select regexp_replace(dataDt,'-','')||'1'||lpad(seq_psp_check_task.nextval,7,0),
+            t.cus_id,
+            '1',
+            dataDt,
+            t.billNum,
+            t.loan_amt,
+            t.loan_balance,
+            mgr_id,                 --该字段可能需要修改
+            mgr_br_id,               --该字段可能需要修改
+            '0',
+            '首次放款检查'
+       from (
+            select distinct cont.cus_id,
+            cont.cont_amt loan_amt,--授信金额
+            sum(nvl(acc.loan_balance,0)) over(partition by cont.cont_no) loan_balance,--用信余额
+             nvl(ecif.cust_manager_id,cont.input_id) mgr_id,
+             nvl(ecif.client_belong_org,cont.input_br_id) mgr_br_id,
+             count(acc.bill_no) over(partition by acc.cont_no) billNum --用信笔数
+
+              from o_clpm_ctr_loan_cont cont,
+                   o_clpm_acc_loan      acc,
+                   qz_iesb_for_ecif     ecif
+             where cont.cont_no = acc.cont_no(+)
+               and cont.cus_id = ecif.client_no(+)
+               and cont.cont_start_date=dataDt
+               and cont.prd_id in('100084','100085')
+               and acc.acc_status='1'
+           ) t
+        ;
+
+     step :='2.生成已全部用信客户检查任务';
+      insert into psp_check_task
+       (task_id,
+        cus_id,
+        task_type,
+        task_create_date,
+        qnt,
+        loan_totl_amt,
+        loan_balance,
+        manager_id,
+        manager_br_id,
+        approve_status,
+        CHECK_DESCRIBE)
+     select regexp_replace(dataDt,'-','')||'2'||lpad(seq_psp_check_task.nextval,7,0),
+            t.cus_id,
+            '2',
+            dataDt,
+             t.billNum,
+            t.cont_amt,
+            t.TOTAL_LOAN_AMT,
+            t.mgr_id,                 --该字段可能需要修改
+            t.mgr_br_id,                --该字段可能需要修改
+            '0',
+            '满额用信'
+     from (select cus_id,cont_amt,mgr_id,mgr_br_id,billNum,fullDate,TOTAL_LOAN_AMT
+             from (
+                   select distinct cont.cus_id,cont.cont_amt,
+                     nvl(ecif.cust_manager_id,cont.input_id) mgr_id,
+                     nvl(ecif.client_belong_org,cont.input_br_id) mgr_br_id,
+                     count(acc.bill_no) over(partition by acc.cont_no) billNum, --用信笔数
+                     max(acc.distr_date) over(partition by acc.cont_no) fullDate,
+                     SUM(LOAN_balance)OVER(PARTITION BY acc.Cont_No) TOTAL_LOAN_AMT
+                      --达到全额用信日期
+                      from o_clpm_ctr_loan_cont cont,
+                           o_clpm_acc_loan      acc,
+                           qz_iesb_for_ecif     ecif
+                     where cont.cont_no = acc.cont_no
+                       and cont.cus_id = ecif.client_no(+)
+                       AND ACC.ACC_STATUS='1'   --正常状态 未结清的
+                       and cont.prd_id in('100084','100085')
+             ) where total_loan_amt=cont_amt
+               and not exists(select 1 from psp_check_task t where t.task_type='2' and t.cus_id=cus_id)--做过满额授信检查，不再生成检查任务
+               and fullDate=dataDt --每日跑批
+               --and fullDate<=dataDt  --首次跑批
+            ) t
+            ;
+
+     step :='3.生成授信到期前已用信客户进行最高额用信检查任务';
+     insert into psp_check_task
+       (task_id,
+        cus_id,
+        task_type,
+        task_create_date,
+        qnt,
+        loan_totl_amt,
+        loan_balance,
+        manager_id,
+        manager_br_id,
+        approve_status,
+        CHECK_DESCRIBE)
+     select regexp_replace(dataDt,'-','')||'3'||lpad(seq_psp_check_task.nextval,7,0),
+            t.cus_id,
+            '3',
+            dataDt,
+            t.billNum,
+            t.loan_amt,
+            t.loan_balance,
+            t.mgr_id,                 --该字段可能需要修改
+            t.mgr_br_id,                --该字段可能需要修改
+            '0',
+            '授信到期前最高额用信检查'
+     from( select distinct cont.cus_id,
+            cont.cont_amt loan_amt,--用信总金额
+            sum(acc.loan_balance) over(partition by acc.cont_no) loan_balance,--用信余额
+             nvl(ecif.cust_manager_id,cont.input_id) mgr_id,
+             nvl(ecif.client_belong_org,cont.input_br_id) mgr_br_id,
+             count(acc.bill_no) over(partition by acc.cont_no) billNum --用信笔数
+
+          from o_clpm_ctr_loan_cont cont,
+               o_clpm_acc_loan      acc,
+               qz_iesb_for_ecif     ecif
+         where cont.cont_no = acc.cont_no
+           and cont.cus_id = ecif.client_no(+)
+           and cont.cont_end_date=to_char(to_date(dataDt,'yyyy-mm-dd')+10,'yyyy-mm-dd')-- 授信到期前十天生成检查作业
+           and cont.prd_id in('100084','100085')
+           and acc.acc_status='1'
+           and not exists(select 1 from psp_check_task where cus_id = cont.cus_id and task_type='2') --做过满额用信的客户不再生成最高用信检查
+         ) t ;
+
+
+     step :='4.每个月1日生成存量客户回访任务';
+     if substr(dataDt,9,2)='01' then
+     insert into psp_check_task
+       (task_id,
+        cus_id,
+        task_type,
+        task_create_date,
+        qnt,
+        loan_totl_amt,
+        loan_balance,
+        manager_id,
+        manager_br_id,
+        approve_status,
+        CHECK_DESCRIBE)
+     select regexp_replace(dataDt,'-','')||'4'||lpad(seq_psp_check_task.nextval,7,0),
+            t.cus_id,
+            '4',
+            dataDt,
+            t.billNum,
+            t.loan_amt,
+            t.loan_balance,
+            t.mgr_id,                 --该字段可能需要修改
+            t.mgr_br_id,                --该字段可能需要修改
+            '0',
+            '放款次月客户回访'
+     from(
+         select distinct cont.cus_id,
+            cont.cont_amt loan_amt,--授信总额
+            sum(acc.loan_balance) over(partition by acc.cont_no) loan_balance,--用信余额
+             nvl(ecif.cust_manager_id,cont.input_id) mgr_id,
+             nvl(ecif.client_belong_org,cont.input_br_id) mgr_br_id,
+             count(acc.bill_no) over(partition by acc.cont_no) billNum --用信笔数
+
+          from o_clpm_ctr_loan_cont cont,
+               o_clpm_acc_loan      acc,
+               qz_iesb_for_ecif     ecif
+         where cont.cont_no = acc.cont_no
+           and cont.cus_id = ecif.client_no(+)
+           and cont.prd_id in('100084','100085')
+           and acc.acc_status='1'
+           and to_date(cont.cont_start_date,'yyyy-mm-dd')<=last_day(add_months(to_date(dataDt,'yyyy-mm-dd'),-1)) --上一个月最后一天
+
+         ) t ;
+     end if;
+
+     
+
+  DELETE from psp_check_task T
+  WHERE
+    T.cus_id IN ( SELECT cus_id FROM psp_check_task GROUP BY cus_id HAVING COUNT(cus_id) > 1)
+    AND
+    substr(T.task_id,10,15) not IN (SELECT MAX(substr(task_id,10,15)) FROM psp_check_task GROUP BY cus_id HAVING COUNT(cus_id) > 1)
+    and T.APPROVE_STATUS in ('0')
+    and T.TASK_TYPE != '6';--季度检查不合并
+
+
+    step :='8.删除非100028,100084,100085的数据';
+    DELETE from o_clpm_acc_loan_history where prd_id not in ('100084','100085','100028');
+    DELETE from o_clpm_acc_loan where prd_id not in ('100084','100085','100028');
+    DELETE from O_CCH_LM_LMT_CONT_T where APPLY_TYPE != '01';
+    
+    insert into proc_log
+       (proc_name,data_dt, begin_time, end_time, result, memo)
+       select 'PRC_PROCESS_DATA',dataDt,
+              beginTime,
+              to_char(sysdate, 'yyyy-MM-dd hh:mi:ss'),
+              '0',
+              'success'
+         from dual;
+     update job_work_date set status='1',end_time=to_char(sysdate, 'yyyy-MM-dd hh:mi:ss'),memo='日终处理成功' where data_dt=dataDt;
+     insert into job_work_date(id,data_dt,status)
+     select SEQ_JOB_WORK_DATE.Nextval,to_char(to_date(dataDt,'yyyy-MM-dd')+1,'yyyy-mm-dd'),'0' from dual;
+     commit;
+     msg:='0';
+     exception
+       WHEN OTHERS THEN
+       rollback;
+       msg:=step||'出现问题:'||substr(sqlerrm,1,1000);
+       insert into proc_log
+       (proc_name, data_dt,begin_time, end_time, result, memo)
+       select 'PRC_PROCESS_DATA',dataDt,
+              beginTime,
+              to_char(sysdate,'yyyyMMdd hh:mi:ss'),
+              '1',
+              msg
+         from dual;
+        update job_work_date set status='2',memo='数据加工失败：'|| msg,end_time=to_char(sysdate,'yyyy-MM-dd hh:mi:ss') where data_dt=dataDt;
+     commit;
+end PRC_PROCESS_DATA;
