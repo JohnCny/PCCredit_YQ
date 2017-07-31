@@ -3,6 +3,7 @@ package com.cardpay.pccredit.manager.service.salary;
 import com.cardpay.pccredit.manager.dao.SalaryFineDao;
 import com.cardpay.pccredit.manager.dao.SalaryMarginDao;
 import com.cardpay.pccredit.manager.dao.comdao.SalaryMarginComdao;
+import com.cardpay.pccredit.manager.dao.comdao.SalaryPaymentComdao;
 import com.cardpay.pccredit.manager.dao.comdao.SalaryRecordComdao;
 import com.cardpay.pccredit.manager.model.SalaryRecord;
 import org.aspectj.lang.annotation.After;
@@ -34,6 +35,10 @@ public abstract class EmployeeSalaryService {
 
     @Autowired
     private SalaryMarginDao salaryMarginDao;
+
+    @Autowired
+    private SalaryPaymentComdao salaryPaymentComdao;
+
     /**
     获得罚款金额
      */
@@ -132,13 +137,13 @@ public abstract class EmployeeSalaryService {
         return 1;
     }
 
-    /**
+    /**todo:尚未完成
      * 获得跨月逾期扣款
      * @param YM
      * @param D 每笔逾期扣款对应金额
      * @return
      */
-    protected int calculateTeamOverdueFine(String YM,int D){
+    protected double calculateTeamOverdueFine(String YM,double D){
         //获得团队跨月逾期笔数
         int overdueNum=1;
 
@@ -150,10 +155,12 @@ public abstract class EmployeeSalaryService {
      * @param YM
      * @return
      */
-    protected float calculateTeamAverageSalary(String YM){
+    protected double calculateTeamAverageSalary(String YM){
 
         //获得团队客户经理平均绩效
-        int averageSalary=0;
+        double averageSalary=0;
+
+        averageSalary=salaryPaymentComdao.calculateAvgSalary(getUserID(),YM);
 
         return averageSalary;
     }

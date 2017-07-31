@@ -1,6 +1,7 @@
 package com.cardpay.pccredit.tools.structure;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Johnny on 2017/7/17.
@@ -37,9 +38,13 @@ public class Tree<T> {
 
         public void addNode(Node<T> node){
             setIsLeaf(false);
-            ArrayList<Node<T>> childList=getChildList();
-            childList.addAll(node.getChildList());
-
+            node.setParent(this);
+            if (node.getChildList().size()>0) {
+                ArrayList<Node<T>> childList = getChildList();
+                childList.addAll(node.getChildList());
+            }
+            else
+                getChildList().add(node);
         }
 
         public Node<T> getParent() {
@@ -77,8 +82,13 @@ public class Tree<T> {
 
     private Node root;
 
-    public Tree(T data){
-        Node root=new Node(data);
+    private static int size;
+
+    private List<T> dataList;
+
+    public Tree(){
+        Node root=new Node("root");
+        size=1;
         setRoot(root);
     }
 
@@ -91,7 +101,7 @@ public class Tree<T> {
     public Node findNode(Node currentNode,T data){
         Node resultNode=currentNode;
         if (resultNode.data!=data) {
-            while (!currentNode.isLeaf()) {
+            if (!currentNode.isLeaf()) {
                 for (int i = 0; i < currentNode.getChildList().size(); i++)
                     resultNode = findNode((Node) currentNode.getChildList().get(i), data);
             }
@@ -100,16 +110,42 @@ public class Tree<T> {
     }
 
     /**
-     * 新增叶子节点 todo:设置父亲节点，树合并
+     * 新增节点
      * @param parentData
      * @param data
      */
-    public void addData(T parentData,T data){
+    public void addNode(T parentData,T data){
         Node root=getRoot();
-        Node parentNode=findNode(root,parentData);
-        Node currentNode=new Node(data);
 
-        parentNode.addNode(currentNode);
+        Node findParentNode=findNode(root, parentData);
+        Node findSonNode=findNode(root,data);
+
+        if(findParentNode.getData()=="root" && findSonNode.getData()=="root"){
+            Node parentNode=new Node(parentData);
+            Node sonNode = new Node(data);
+            parentNode.addNode(sonNode);
+            root.addNode(parentNode);
+            size+=2;
+        }
+        else if(findParentNode.getData()!="root" && findSonNode.getData()=="root"){
+            Node sonNode=new Node(data);
+            findParentNode.addNode(sonNode);
+            size+=1;
+        }
+
+    }
+
+    /**
+     * 遍历树
+     * @param node
+     */
+    public void traversalTree(Node node){
+        if(node.isLeaf) {
+            dataList.add((T) node.getData());
+        }
+        for (int i=0;i<node.getChildList().size();i++) {
+            traversalTree((Node)node.getChildList().get(i));
+        }
     }
 
     public Node getRoot() {
@@ -118,5 +154,21 @@ public class Tree<T> {
 
     public void setRoot(Node root) {
         this.root = root;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public List<T> getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(List<T> dataList) {
+        this.dataList = dataList;
     }
 }
