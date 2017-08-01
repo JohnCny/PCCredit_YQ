@@ -55,7 +55,7 @@ public class JnpadImageBrowseController {
 	public AbstractModelAndView downLoadYxzlJn(HttpServletRequest request,HttpServletResponse response){
 		try {
 			String s =request.getParameter("id");
-			
+			System.out.println(s);
 			jnpadImageBrowseService.downLoadYxzlJn(response,s);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -135,7 +135,7 @@ public class JnpadCustomerInfoInsertServ‎ice {
 			}
 		}
 		
-		sql.append(" order by t.id asc");
+		sql.append(" order by t.CREATED_TIME desc");
 		return commonDao.queryBySqlInPagination(IntoPieces.class, sql.toString(), params,
 				filter.getStart(),sum);
 	}

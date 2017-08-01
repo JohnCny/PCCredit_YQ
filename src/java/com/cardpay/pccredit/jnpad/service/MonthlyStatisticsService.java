@@ -28,6 +28,13 @@ public class MonthlyStatisticsService {
 	public MonthlyStatisticsModel selectTeamYear(MonthlyStatisticsModel MonthlyStatisticsModel){
 		return commonDao.selectTeamYear(MonthlyStatisticsModel);
 	}
+	public List<MonthlyStatisticsModel>selectTdpm(@Param("team") String team){
+		 List<MonthlyStatisticsModel> result= commonDao.selectTdpm(team);
+		 for(int i=0;i<result.size();i++){
+			 result.get(i).setId(String.valueOf(i+1));
+		}
+			return result;
+	}
 	public List<MonthlyStatisticsModel>selectAllteam(){
 		return commonDao.selectAllteam();
 	}

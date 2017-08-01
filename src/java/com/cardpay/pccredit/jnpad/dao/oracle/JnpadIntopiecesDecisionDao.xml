@@ -168,6 +168,12 @@
 		and A.NEXT_NODE_ID=p.NODE_ID and p.USER_ID=#{userId}
 		and b.status='audit' 
 		and b.id not in (select APPLICATION_ID from T_APP_MANAGER_AUDIT_LOG)
+		and U.user_id in (select s.id from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{userId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
 		<if test="cardId!=null and cardId!=''">
 			and U.card_id=#{cardId}
 		</if>

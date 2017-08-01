@@ -220,27 +220,32 @@ public class AddIntoPiecesControl extends BaseController {
 	 * @throws IOException 
 	 */
 	@ResponseBody
-	@RequestMapping(value = "addImageByType.json", method = { RequestMethod.GET })
-	public JRadReturnMap addImageByType(HttpServletRequest request) throws SftpException, IOException {
+	@RequestMapping(value = "addImageByType.json", method = { RequestMethod.POST })
+	public void addImageByType(@RequestParam(value = "file", required = false) MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws SftpException, IOException {
 		JRadReturnMap returnMap = new JRadReturnMap();
 		String cid=request.getParameter("cid").trim();
 		String pid=request.getParameter("pid").trim();
 		String type=request.getParameter("type").trim();
 		IntoPieces cardId=intoPiecesService.selectCardId(request.getParameter("cid"));
 
-			int a=addIntoPiecesService.importImagesType(pid, cid, cardId.getCardId(), type);
-			if(a>0){
-				returnMap.put("message","上传"+a+"张照片成功!!");
-			}else{
-				returnMap.put("message","此文件类无照片");
-			}
-		
-		return returnMap;
+			addIntoPiecesService.importImagesType(file,pid, cid, cardId.getCardId(), type);
+			response.getWriter().write("true");
 		
 	}
 	
 	
-	
+	@ResponseBody
+	@RequestMapping(value = "aaa.page", method = { RequestMethod.GET })
+	@JRadOperation(JRadOperation.BROWSE)
+	public AbstractModelAndView aaa(
+			HttpServletRequest request) {
+		JRadModelAndView mv = new JRadModelAndView("/intopieces/report_import1", request);
+		mv.addObject("cid", request.getParameter("cid"));
+		mv.addObject("pid", request.getParameter("pid"));
+		mv.addObject("type", request.getParameter("type"));
+		mv.addObject("eid", request.getParameter("eid"));
+		return mv;
+	}
 	
 	
 	
@@ -288,6 +293,7 @@ public class AddIntoPiecesControl extends BaseController {
 		mv.addObject("size9",imagerList9.size());
 		mv.addObject("size10",imagerList10.size());
 		mv.addObject("size11",imagerList11.size());
+		mv.addObject("eid",request.getParameter("excelId"));
 		return mv;
 	}
 	

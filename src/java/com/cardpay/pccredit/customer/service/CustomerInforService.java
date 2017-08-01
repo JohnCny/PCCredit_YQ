@@ -2362,7 +2362,7 @@ public class CustomerInforService {
 					}
 					if(fileN.startsWith("kdk_yehz")){
 						//删除余额汇总历史数据
-						String sql = " truncate   table   ty_repay_yehz";
+						String sql = " truncate   table   ty_repay_yehz ff8080815d81918b015d831b06400109";
 						commonDao.queryBySql(sql, null);
 					}
 					if(fileN.startsWith("kdk_tkmx")){

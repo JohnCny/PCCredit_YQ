@@ -8,8 +8,11 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +97,26 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 	private CustomerApplicationIntopieceWaitService customerApplicationIntopieceWaitService;
 	@Autowired
 	private MaintenanceService maintenanceService;
+	
+	
+	//下载APK
+	@ResponseBody
+	@RequestMapping(value = "/ipad/updateapk/downloadApk.json",method = { RequestMethod.GET })
+	@JRadOperation(JRadOperation.EXPORT)
+	public AbstractModelAndView downLoadDcmb(HttpServletRequest request,HttpServletResponse response){
+		try {
+			//下载APK
+			addIntoPiecesService.downloadApk(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	
+	
+	
 	//审核信息查询
 	@ResponseBody
 	@RequestMapping(value = "/ipad/intopieces/csBrowse.json", method = { RequestMethod.GET })
@@ -202,14 +225,37 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 	@JRadOperation(JRadOperation.APPROVE)
 	public String update(HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
-
-		if (returnMap.isSuccess()) {
-			try {
+		IntoPieces IntoPieces=new IntoPieces();
+		IntoPieces.setId(request.getParameter("id"));
+		IntoPieces.setFallBackReason(request.getParameter("decisionRefusereason"));
+		IntoPieces.setUserId(request.getParameter("userId"));
+		IntoPieces.setCreatime(new Date());
+		IntoPieces.setStatus("returnedToFirst");
+		int c=SdwUserService.updateCustormerInfoSdwUser(IntoPieces);
+		AppManagerAuditLog AppManagerAuditLog =new AppManagerAuditLog();
+		AppManagerAuditLog.setId(IDGenerator.generateID());
+		AppManagerAuditLog.setApplicationId(request.getParameter("id"));
+		AppManagerAuditLog.setAuditType("0");
+		AppManagerAuditLog.setUserId_4(request.getParameter("userId"));
+		AppManagerAuditLog.setCreatedTime(new Date());
+		SdwUserService.insertCsJl(AppManagerAuditLog);
+		//退回时修改节点状态
+		String applicationId=request.getParameter("id");
+		Date times=new Date();
+		SdwUserService.updateHistory(request.getParameter("userId"),times,applicationId);
+		if(c>0){
+			int d=SdwUserService.updateCustormerProSdwUser(IntoPieces);
+			if(d>0){
+				returnMap.put("message", "提交成功");	
+			}else{
+				returnMap.put("message", "提交失败");
+			}
+		/*	try {
 				jnpadIntopiecesDecisionService.updateCustomerApplicationProcessBySerialNumber(request);
 				returnMap.put("message","提交成功");
 			} catch (Exception e) {
 				returnMap.put("message","提交失败");
-			}
+			}*/
 		}
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
@@ -550,7 +596,14 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 			return json.toString();
 		}
 		
-		
+		  public static boolean isNumeric(String str){
+	           Pattern pattern = Pattern.compile("[0-9]*");
+	           Matcher isNum = pattern.matcher(str);
+	           if( !isNum.matches() ){
+	               return false;
+	           }
+	           return true;
+	    }
 		/**
 		 * 当前审贷委审批
 		 * @param RiskCustomer
@@ -575,8 +628,14 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 			CustomerSpUser.setDbfs(request.getParameter("dbfs"));
 			//如果前两位审贷委审贷状况都为通过，且当前审贷委的审贷状况也为通过，则比较三位审贷的金额，利息，期限
 			if(request.getParameter("status").equals("approved")){
+				if(request.getParameter("decisionAmount")=="" || request.getParameter("decisionAmount")==null){
+					map.put("message", "提交失败,请输入正确的授信额度!!");
+				}else if(!isNumeric(request.getParameter("decisionAmount"))){
+					map.put("message", "提交失败,授信额度为数字!!");
+				}else if(request.getParameter("decisionRate")=="" || request.getParameter("decisionRate")==null){
+					map.put("message", "提交失败,请输入正确的利率区间!!");
+				}else{
 				CustomerSpUser.setStatus("1");
-				
 				//查询是否该进件已经有两位审贷委审贷并且状态都为通过
 				List<IntoPieces> spry=SdwUserService.findEndCount(request.getParameter("id"));
 				//如果是,比较三位审贷委审批的金额，利息，期限，担保方式
@@ -631,12 +690,31 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 							SdwUserService.insertCustormerSdwUser1(CustormerSdwUser2);
 						
 					}
+					int a=UserService.addSpUser1(CustomerSpUser);
+					if(a>0){
+						map.put("message", "提交成功");
+					}
+				else{
+					map.put("message", "提交失败");
+				}
+				}else{
+					//添加当前客户经理的审贷
+					int a=UserService.addSpUser1(CustomerSpUser);
+					if(a>0){
+						map.put("message", "提交成功");
+					}
+				else{
+					map.put("message", "提交失败");
+				}
+				}
 				}
 			}
 			//如果当前审贷委拒绝或退回该进件，进件直接审批完成退回或拒绝到申请客户经理处，不必通过终审
 			else if(request.getParameter("status").equals("refuse")){
+				if(request.getParameter("decisionRefusereason")=="" || request.getParameter("decisionRefusereason")==null){
+					map.put("message", "提交失败,请输入拒绝或退回!");
+				}else{
 				CustomerSpUser.setStatus("2");
-				
 				IntoPieces.setStatus("refuse");
 				IntoPieces.setCreatime(new Date());
 				IntoPieces.setId(request.getParameter("id"));
@@ -660,6 +738,8 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 						Date times=new Date();
 						SdwUserService.updateHistorys(userId,times,applicationId);
 						if(e>0){
+							//添加当前客户经理的审贷
+							int a=UserService.addSpUser1(CustomerSpUser);
 							map.put("message", "提交成功");
 						}else{
 							map.put("message", "提交失败");
@@ -670,8 +750,11 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 				}else{
 					map.put("message", "提交失败");
 				}
-			
+				}
 			}else if(request.getParameter("status").equals("returnedToFirst")){
+				if(request.getParameter("decisionRefusereason")=="" || request.getParameter("decisionRefusereason")==null){
+					map.put("message", "提交失败,请输入拒绝或退回!");
+				}else{
 				CustomerSpUser.setStatus("3");
 				IntoPieces.setStatus("returnedToFirst");
 				IntoPieces.setId(request.getParameter("id"));
@@ -686,18 +769,13 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 				if(c>0){
 					int d=SdwUserService.updateCustormerProSdwUser(IntoPieces);
 					if(d>0){
+						//添加当前客户经理的审贷
+						int a=UserService.addSpUser1(CustomerSpUser);
 						map.put("message", "提交成功");	
 					}else{
 						map.put("message", "提交失败");
 					}
-				}
-			}
-			//添加当前客户经理的审贷
-			int a=UserService.addSpUser1(CustomerSpUser);
-			if(a>0){
-				map.put("message", "提交成功");	
-			}else{
-				map.put("message", "提交失败");
+				}}
 			}
 			JsonConfig jsonConfig = new JsonConfig();
 			jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
@@ -797,6 +875,19 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 		@RequestMapping(value="/ipad/intopieces/insertsdjy.json", method = { RequestMethod.GET })
 		public String insertsdjy(@ModelAttribute RiskCustomer RiskCustomer,@ModelAttribute CustormerSdwUser CustormerSdwUser,@ModelAttribute IntoPieces IntoPieces,HttpServletRequest request) {
 			Map<String, Object> map = new LinkedHashMap<String, Object>();
+		/*	if(request.getParameter("status").equals("approved")){
+				if(request.getParameter("decisionAmount")=="" || request.getParameter("decisionAmount")==null){
+					map.put("message", "提交失败,请输入正确的授信额度!!");
+				}else if(!isNumeric(request.getParameter("decisionAmount"))){
+					map.put("message", "提交失败,授信额度为数字!!");
+				}else if(request.getParameter("decisionRate")=="" || request.getParameter("decisionRate")==null){
+					map.put("message", "提交失败,请输入正确的利率区间!!");
+				}}else if(!request.getParameter("status").equals("approved")){
+					if(request.getParameter("decisionRefusereason")=="" || request.getParameter("decisionRefusereason")==null){
+						map.put("message", "提交失败,请输入拒绝或退回!");
+					}
+				}
+				else{*/
 			String userId=request.getParameter("userId");
 			CustormerSdwUser.setSDJE(request.getParameter("decisionAmount"));
 			CustormerSdwUser.setSDTIME(new Date());
@@ -808,9 +899,15 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 			CustormerSdwUser.setZSW(Integer.parseInt(request.getParameter("zsw")));
 			CustormerSdwUser.setDbfs(request.getParameter("dbfs"));
 			CustormerSdwUser.setSDWUSER1(userId);
-			SdwUserService.updateCustormerSdwUser1(CustormerSdwUser);
 			//如果进件通过，则需判断是否为主审
 			if(request.getParameter("status").equals("approved")){
+				if(request.getParameter("decisionAmount")=="" || request.getParameter("decisionAmount")==null){
+					map.put("message", "提交失败,请输入正确的授信额度!!");
+				}else if(!isNumeric(request.getParameter("decisionAmount"))){
+					map.put("message", "提交失败,授信额度为数字!!");
+				}else if(request.getParameter("decisionRate")=="" || request.getParameter("decisionRate")==null){
+					map.put("message", "提交失败,请输入正确的利率区间!!");
+				}else{
 				//如果进件通过，则需判断是否为主审,如果不是需要判断另一个副审是否审批，并且审批结果为通过
 				if(CustormerSdwUser.getZSW()!=1){
 					IntoPiecesFilters time=IntopieceWaitService.findfsw(request.getParameter("id"), userId);
@@ -841,11 +938,13 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 					
 				}else{
 					map.put("message", "提交成功");
-				}
+				}SdwUserService.updateCustormerSdwUser1(CustormerSdwUser);}
 			}
 			//如果当前审贷委拒绝或退回该进件，进件直接审批完成退回或拒绝到申请客户经理处
 			else if(request.getParameter("status").equals("refuse")){
-				
+				if(request.getParameter("decisionRefusereason")=="" || request.getParameter("decisionRefusereason")==null){
+					map.put("message", "提交失败,请输入拒绝或退回!");
+				}else{
 				IntoPieces.setStatus("refuse");
 				IntoPieces.setCreatime(new Date());
 				IntoPieces.setId(request.getParameter("id"));
@@ -879,8 +978,12 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 				}else{
 					map.put("message", "提交失败");
 				}
-			
+				SdwUserService.updateCustormerSdwUser1(CustormerSdwUser);
+				}
 			}else if(request.getParameter("status").equals("returnedToFirst")){
+				if(request.getParameter("decisionRefusereason")=="" || request.getParameter("decisionRefusereason")==null){
+					map.put("message", "提交失败,请输入拒绝或退回!");
+				}else{
 				IntoPieces.setStatus("returnedToFirst");
 				IntoPieces.setId(request.getParameter("id"));
 				IntoPieces.setFallBackReason(request.getParameter("decisionRefusereason"));
@@ -899,7 +1002,7 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 						map.put("message", "提交失败");
 					}
 				}
-			}
+			}SdwUserService.updateCustormerSdwUser1(CustormerSdwUser);}
 			JsonConfig jsonConfig = new JsonConfig();
 			jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
 			JSONObject json = JSONObject.fromObject(map, jsonConfig);
@@ -951,6 +1054,198 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 			ApproveHistoryForm ApproveHistoryForm5=null;
 			String id = request.getParameter("id");
 			if(StringUtils.isNotEmpty(id)){
+				IntoPieces ai=SdwUserService.findHISTORY(id);
+				if(ai!=null){
+					if(ai.getSpqx().equals("0")){
+						ApproveHistoryForm5=new ApproveHistoryForm();
+						ApproveHistoryForm5.setDisplayName(ai.getDisplayName());
+						ApproveHistoryForm5.setStartExamineTime(ai.getCreatime1());
+						ApproveHistoryForm5.setStatusName("资料审核");
+						ApproveHistoryForm5.setExamineResult("资料审核不通过");
+						ApproveHistoryForm5.setExamineAmount("");
+						historyForms.add(0, ApproveHistoryForm5);
+					}else{
+
+						ApproveHistoryForm4=new ApproveHistoryForm();
+						ApproveHistoryForm4.setExamineResult("审核通过");
+						ApproveHistoryForm4.setDisplayName(ai.getDisplayName());
+						ApproveHistoryForm4.setStatusName("进件资料审核");
+						ApproveHistoryForm4.setExamineAmount("");
+						ApproveHistoryForm4.setStartExamineTime(ai.getCreatime());
+						historyForms.add(0, ApproveHistoryForm4);
+						//查询审贷
+						List<IntoPieces> result=SdwUserService.findsdh(id);
+						if(result.size()==3){
+						//查询三位审贷是否都为通过
+						if(result.get(0).getStatus().equals("1") && result.get(1).getStatus().equals("1") && result.get(2).getStatus().equals("1")){
+							//查询三位审贷结果都一样
+							if(result.get(0).getSplv()==result.get(1).getSplv() && result.get(0).getSplv()==result.get(2).getSplv()&&
+							result.get(0).getSpqx()==result.get(1).getSpqx() && result.get(0).getSpqx()==result.get(2).getSpqx()&&
+							result.get(0).getDbfs()==result.get(1).getDbfs() && result.get(0).getDbfs()==result.get(2).getDbfs()&&
+							result.get(0).getApplyQuota()==result.get(1).getApplyQuota() && result.get(0).getApplyQuota()==result.get(2).getApplyQuota()){
+							//如果一样无需查询终审
+								for(int a=0;a<result.size();a++){
+										ApproveHistoryForm=new ApproveHistoryForm();
+										ApproveHistoryForm.setStatusName("审贷决议");
+										if(result.get(a).getZsw()==1){
+											ApproveHistoryForm.setExamineResult("主审"+"审贷通过");
+										}else if(result.get(a).getZsw()==0){
+											ApproveHistoryForm.setExamineResult("副审"+"审贷通过");
+										}
+										ApproveHistoryForm.setDisplayName(result.get(a).getDisplayName());
+										ApproveHistoryForm.setExamineAmount(result.get(a).getApplyQuota());
+										ApproveHistoryForm.setStartExamineTime(result.get(a).getCreatime());
+										historyForms.add(a+1, ApproveHistoryForm);
+									
+								}}else{
+									//否则需要查询终审
+									for(int a=0;a<result.size();a++){
+										ApproveHistoryForm=new ApproveHistoryForm();
+										ApproveHistoryForm.setStatusName("审贷决议");
+										if(result.get(a).getZsw()==1){
+											ApproveHistoryForm.setExamineResult("主审"+"审贷通过");
+										}else if(result.get(a).getZsw()==0){
+											ApproveHistoryForm.setExamineResult("副审"+"审贷通过");
+										}
+										ApproveHistoryForm.setDisplayName(result.get(a).getDisplayName());
+										ApproveHistoryForm.setExamineAmount(result.get(a).getApplyQuota());
+										ApproveHistoryForm.setStartExamineTime(result.get(a).getCreatime());
+										historyForms.add(a+1, ApproveHistoryForm);
+									
+								}
+									//查询最终审批
+									List<IntoPieces>IntoPieces= SdwUserService.findsph(id);
+									if(IntoPieces!=null){
+										for(int a=0;a<IntoPieces.size();a++){
+											if(IntoPieces.get(a).getApplyQuota()==null){
+												 if(IntoPieces.get(a).getStatus().equals("nopass") || IntoPieces.get(a).getStatus().equals("refuse")){
+													ApproveHistoryForm3=new ApproveHistoryForm();
+													if(IntoPieces.get(a).getZsw()==1){
+														ApproveHistoryForm3.setStatusName("主审决审");
+													}else if(IntoPieces.get(a).getZsw()==0){
+														ApproveHistoryForm3.setStatusName("副审决审");
+													}
+													ApproveHistoryForm3.setExamineResult("审批拒绝");
+													ApproveHistoryForm3.setDisplayName(IntoPieces.get(a).getDisplayName());
+													ApproveHistoryForm3.setStartExamineTime(IntoPieces.get(a).getCreatime());
+													historyForms.add(a+4, ApproveHistoryForm3);
+												}else if(IntoPieces.get(a).getStatus().equals("nopass_replenish") || IntoPieces.get(a).getStatus().equals("returnedToFirst")){
+													ApproveHistoryForm3=new ApproveHistoryForm();
+													if(IntoPieces.get(a).getZsw()==1){
+														ApproveHistoryForm3.setStatusName("主审决审");
+													}else if(IntoPieces.get(a).getZsw()==0){
+														ApproveHistoryForm3.setStatusName("副审决审");
+													}
+													ApproveHistoryForm3.setExamineResult("审批退回");
+													ApproveHistoryForm3.setDisplayName(IntoPieces.get(a).getDisplayName());
+													ApproveHistoryForm3.setStartExamineTime(IntoPieces.get(a).getCreatime());
+													historyForms.add(a+4, ApproveHistoryForm3);
+												}
+											}else{
+												ApproveHistoryForm3=new ApproveHistoryForm();
+												if(IntoPieces.get(a).getZsw()==1){
+													ApproveHistoryForm3.setStatusName("主审决审");
+												}else if(IntoPieces.get(a).getZsw()==0){
+													ApproveHistoryForm3.setStatusName("副审决审");
+												}
+												ApproveHistoryForm3.setExamineResult("审批通过");
+												ApproveHistoryForm3.setDisplayName(IntoPieces.get(a).getDisplayName());
+												ApproveHistoryForm3.setExamineAmount(IntoPieces.get(a).getApplyQuota());
+												ApproveHistoryForm3.setStartExamineTime(IntoPieces.get(a).getCreatime());
+												historyForms.add(a+4, ApproveHistoryForm3);
+											}
+										}
+									}
+							}
+						}else{
+							for(int a=0;a<result.size();a++){
+								if(result.get(a).getStatus().equals("1")){
+									ApproveHistoryForm=new ApproveHistoryForm();
+									ApproveHistoryForm.setStatusName("审贷决议");
+									if(result.get(a).getZsw()==1){
+										ApproveHistoryForm.setExamineResult("主审"+"审贷通过");
+									}else if(result.get(a).getZsw()==0){
+										ApproveHistoryForm.setExamineResult("副审"+"审贷通过");
+									}
+									ApproveHistoryForm.setDisplayName(result.get(a).getDisplayName());
+									ApproveHistoryForm.setExamineAmount(result.get(a).getApplyQuota());
+									ApproveHistoryForm.setStartExamineTime(result.get(a).getCreatime());
+									historyForms.add(a+1, ApproveHistoryForm);
+								
+								}else
+									if(result.get(a).getStatus().equals("2")){
+										ApproveHistoryForm1=new ApproveHistoryForm();
+										ApproveHistoryForm1.setStatusName("审贷决议");
+										if(result.get(a).getZsw()==1){
+											ApproveHistoryForm1.setExamineResult("主审"+"审贷拒绝");
+										}else if(result.get(a).getZsw()==0){
+											ApproveHistoryForm1.setExamineResult("副审"+"审贷拒绝");
+										}
+										ApproveHistoryForm1.setDisplayName(result.get(a).getDisplayName());
+										ApproveHistoryForm1.setStartExamineTime(result.get(a).getCreatime());
+										historyForms.add(a+1, ApproveHistoryForm1);
+										
+									}else
+										if(result.get(a).getStatus().equals("3")){
+											ApproveHistoryForm2=new ApproveHistoryForm();
+											ApproveHistoryForm2.setStatusName("审贷决议");
+											if(result.get(a).getZsw()==1){
+												ApproveHistoryForm2.setExamineResult("主审"+"审贷退回");
+											}else if(result.get(a).getZsw()==0){
+												ApproveHistoryForm2.setExamineResult("副审"+"审贷退回");
+											}
+											ApproveHistoryForm2.setDisplayName(result.get(a).getDisplayName());
+											ApproveHistoryForm2.setStartExamineTime(result.get(a).getCreatime());
+											historyForms.add(a+1, ApproveHistoryForm2);
+										}
+							}
+						}
+						}else{
+							for(int a=0;a<result.size();a++){
+								if(result.get(a).getStatus().equals("1")){
+									ApproveHistoryForm=new ApproveHistoryForm();
+									ApproveHistoryForm.setStatusName("审贷决议");
+									if(result.get(a).getZsw()==1){
+										ApproveHistoryForm.setExamineResult("主审"+"审贷通过");
+									}else if(result.get(a).getZsw()==0){
+										ApproveHistoryForm.setExamineResult("副审"+"审贷通过");
+									}
+									ApproveHistoryForm.setDisplayName(result.get(a).getDisplayName());
+									ApproveHistoryForm.setExamineAmount(result.get(a).getApplyQuota());
+									ApproveHistoryForm.setStartExamineTime(result.get(a).getCreatime());
+									historyForms.add(a+1, ApproveHistoryForm);
+								
+								}else
+									if(result.get(a).getStatus().equals("2")){
+										ApproveHistoryForm1=new ApproveHistoryForm();
+										ApproveHistoryForm1.setStatusName("审贷决议");
+										if(result.get(a).getZsw()==1){
+											ApproveHistoryForm1.setExamineResult("主审"+"审贷拒绝");
+										}else if(result.get(a).getZsw()==0){
+											ApproveHistoryForm1.setExamineResult("副审"+"审贷拒绝");
+										}
+										ApproveHistoryForm1.setDisplayName(result.get(a).getDisplayName());
+										ApproveHistoryForm1.setStartExamineTime(result.get(a).getCreatime());
+										historyForms.add(a+1, ApproveHistoryForm1);
+										
+									}else
+										if(result.get(a).getStatus().equals("3")){
+											ApproveHistoryForm2=new ApproveHistoryForm();
+											ApproveHistoryForm2.setStatusName("审贷决议");
+											if(result.get(a).getZsw()==1){
+												ApproveHistoryForm2.setExamineResult("主审"+"审贷退回");
+											}else if(result.get(a).getZsw()==0){
+												ApproveHistoryForm2.setExamineResult("副审"+"审贷退回");
+											}
+											ApproveHistoryForm2.setDisplayName(result.get(a).getDisplayName());
+											ApproveHistoryForm2.setStartExamineTime(result.get(a).getCreatime());
+											historyForms.add(a+1, ApproveHistoryForm2);
+										}
+							}
+						}}
+					}
+				
+				/*
 				//查询初审
 				IntoPieces IP=SdwUserService.findsph2(id);
 				if(IP.getApplyQuota()==null && !IP.getStatus().equals("audit")){
@@ -1151,7 +1446,7 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 				map.put("historyForms", historyForms);
 				map.put("size", historyForms.size());
 			}

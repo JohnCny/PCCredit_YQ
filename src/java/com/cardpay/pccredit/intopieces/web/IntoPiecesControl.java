@@ -1228,7 +1228,216 @@ public class IntoPiecesControl extends BaseController {
 		String ifHideUser = request.getParameter("ifHideUser");
 		if(StringUtils.isNotEmpty(id)){
 			//查询初审
-			IntoPieces IP=SdwUserService.findsph2(id);
+			IntoPieces ai=SdwUserService.findHISTORY(id);
+			if(ai!=null){
+				if(ai.getSpqx().equals("0")){
+					ApproveHistoryForm5=new ApproveHistoryForm();
+					ApproveHistoryForm5.setDisplayName(ai.getDisplayName());
+					ApproveHistoryForm5.setStartExamineTime(ai.getCreatime());
+					ApproveHistoryForm5.setStatusName("资料审核");
+					ApproveHistoryForm5.setExamineResult("资料审核不通过");
+					historyForms.add(0, ApproveHistoryForm5);
+				}else{
+
+					
+					ApproveHistoryForm4=new ApproveHistoryForm();
+					ApproveHistoryForm4.setExamineResult("资料审核通过");
+					ApproveHistoryForm4.setDisplayName(ai.getDisplayName());
+					ApproveHistoryForm4.setStatusName("资料审核");
+					ApproveHistoryForm4.setExamineAmount("");
+					ApproveHistoryForm4.setStartExamineTime(ai.getCreatime());
+					historyForms.add(0, ApproveHistoryForm4);
+					//查询审贷
+					List<IntoPieces> result=SdwUserService.findsdh(id);
+					if(result.size()==3){
+					//查询三位审贷是否都为通过
+					if(result.get(0).getStatus().equals("1") && result.get(1).getStatus().equals("1") && result.get(2).getStatus().equals("1")){
+						//查询三位审贷结果都一样
+						if(result.get(0).getSplv()==result.get(1).getSplv() && result.get(0).getSplv()==result.get(2).getSplv()&&
+						result.get(0).getSpqx()==result.get(1).getSpqx() && result.get(0).getSpqx()==result.get(2).getSpqx()&&
+						result.get(0).getDbfs()==result.get(1).getDbfs() && result.get(0).getDbfs()==result.get(2).getDbfs()&&
+						result.get(0).getApplyQuota()==result.get(1).getApplyQuota() && result.get(0).getApplyQuota()==result.get(2).getApplyQuota()){
+						//如果一样无需查询终审
+							for(int a=0;a<result.size();a++){
+									ApproveHistoryForm=new ApproveHistoryForm();
+									ApproveHistoryForm.setStatusName("审贷决议");
+									if(result.get(a).getZsw()==1){
+										ApproveHistoryForm.setExamineResult("主审"+"审贷通过");
+									}else if(result.get(a).getZsw()==0){
+										ApproveHistoryForm.setExamineResult("副审"+"审贷通过");
+									}
+									ApproveHistoryForm.setDisplayName(result.get(a).getDisplayName());
+									ApproveHistoryForm.setExamineAmount(result.get(a).getApplyQuota());
+									ApproveHistoryForm.setStartExamineTime(result.get(a).getCreatime());
+									historyForms.add(a+1, ApproveHistoryForm);
+								
+							}}else{
+								//否则需要查询终审
+								for(int a=0;a<result.size();a++){
+									ApproveHistoryForm=new ApproveHistoryForm();
+									ApproveHistoryForm.setStatusName("审贷决议");
+									if(result.get(a).getZsw()==1){
+										ApproveHistoryForm.setExamineResult("主审"+"审贷通过");
+									}else if(result.get(a).getZsw()==0){
+										ApproveHistoryForm.setExamineResult("副审"+"审贷通过");
+									}
+									ApproveHistoryForm.setDisplayName(result.get(a).getDisplayName());
+									ApproveHistoryForm.setExamineAmount(result.get(a).getApplyQuota());
+									ApproveHistoryForm.setStartExamineTime(result.get(a).getCreatime());
+									historyForms.add(a+1, ApproveHistoryForm);
+								
+							}
+								//查询最终审批
+								List<IntoPieces>IntoPieces= SdwUserService.findsph(id);
+								if(IntoPieces!=null){
+									for(int a=0;a<IntoPieces.size();a++){
+										if(IntoPieces.get(a).getApplyQuota()==null){
+											 if(IntoPieces.get(a).getStatus().equals("nopass") || IntoPieces.get(a).getStatus().equals("refuse")){
+												ApproveHistoryForm3=new ApproveHistoryForm();
+												if(IntoPieces.get(a).getZsw()==1){
+													ApproveHistoryForm3.setStatusName("主审决审");
+												}else if(IntoPieces.get(a).getZsw()==0){
+													ApproveHistoryForm3.setStatusName("副审决审");
+												}
+												ApproveHistoryForm3.setExamineResult("审批拒绝");
+												ApproveHistoryForm3.setDisplayName(IntoPieces.get(a).getDisplayName());
+												ApproveHistoryForm3.setStartExamineTime(IntoPieces.get(a).getCreatime());
+												historyForms.add(a+4, ApproveHistoryForm3);
+											}else if(IntoPieces.get(a).getStatus().equals("nopass_replenish") || IntoPieces.get(a).getStatus().equals("returnedToFirst")){
+												ApproveHistoryForm3=new ApproveHistoryForm();
+												if(IntoPieces.get(a).getZsw()==1){
+													ApproveHistoryForm3.setStatusName("主审决审");
+												}else if(IntoPieces.get(a).getZsw()==0){
+													ApproveHistoryForm3.setStatusName("副审决审");
+												}
+												ApproveHistoryForm3.setExamineResult("审批退回");
+												ApproveHistoryForm3.setDisplayName(IntoPieces.get(a).getDisplayName());
+												ApproveHistoryForm3.setStartExamineTime(IntoPieces.get(a).getCreatime());
+												historyForms.add(a+4, ApproveHistoryForm3);
+											}
+										}else{
+											ApproveHistoryForm3=new ApproveHistoryForm();
+											if(IntoPieces.get(a).getZsw()==1){
+												ApproveHistoryForm3.setStatusName("主审决审");
+											}else if(IntoPieces.get(a).getZsw()==0){
+												ApproveHistoryForm3.setStatusName("副审决审");
+											}
+											ApproveHistoryForm3.setExamineResult("审批通过");
+											ApproveHistoryForm3.setDisplayName(IntoPieces.get(a).getDisplayName());
+											ApproveHistoryForm3.setExamineAmount(IntoPieces.get(a).getApplyQuota());
+											ApproveHistoryForm3.setStartExamineTime(IntoPieces.get(a).getCreatime());
+											historyForms.add(a+4, ApproveHistoryForm3);
+										}
+									}
+								}
+						}
+					}else{
+						for(int a=0;a<result.size();a++){
+							if(result.get(a).getStatus().equals("1")){
+								ApproveHistoryForm=new ApproveHistoryForm();
+								ApproveHistoryForm.setStatusName("审贷决议");
+								if(result.get(a).getZsw()==1){
+									ApproveHistoryForm.setExamineResult("主审"+"审贷通过");
+								}else if(result.get(a).getZsw()==0){
+									ApproveHistoryForm.setExamineResult("副审"+"审贷通过");
+								}
+								ApproveHistoryForm.setDisplayName(result.get(a).getDisplayName());
+								ApproveHistoryForm.setExamineAmount(result.get(a).getApplyQuota());
+								ApproveHistoryForm.setStartExamineTime(result.get(a).getCreatime());
+								historyForms.add(a+1, ApproveHistoryForm);
+							
+							}else
+								if(result.get(a).getStatus().equals("2")){
+									ApproveHistoryForm1=new ApproveHistoryForm();
+									ApproveHistoryForm1.setStatusName("审贷决议");
+									if(result.get(a).getZsw()==1){
+										ApproveHistoryForm1.setExamineResult("主审"+"审贷拒绝");
+									}else if(result.get(a).getZsw()==0){
+										ApproveHistoryForm1.setExamineResult("副审"+"审贷拒绝");
+									}
+									ApproveHistoryForm1.setDisplayName(result.get(a).getDisplayName());
+									ApproveHistoryForm1.setStartExamineTime(result.get(a).getCreatime());
+									historyForms.add(a+1, ApproveHistoryForm1);
+									
+								}else
+									if(result.get(a).getStatus().equals("3")){
+										ApproveHistoryForm2=new ApproveHistoryForm();
+										ApproveHistoryForm2.setStatusName("审贷决议");
+										if(result.get(a).getZsw()==1){
+											ApproveHistoryForm2.setExamineResult("主审"+"审贷退回");
+										}else if(result.get(a).getZsw()==0){
+											ApproveHistoryForm2.setExamineResult("副审"+"审贷退回");
+										}
+										ApproveHistoryForm2.setDisplayName(result.get(a).getDisplayName());
+										ApproveHistoryForm2.setStartExamineTime(result.get(a).getCreatime());
+										historyForms.add(a+1, ApproveHistoryForm2);
+									}
+						}
+					}
+					
+					
+					
+					
+					
+				
+					}else{
+						for(int a=0;a<result.size();a++){
+							if(result.get(a).getStatus().equals("1")){
+								ApproveHistoryForm=new ApproveHistoryForm();
+								ApproveHistoryForm.setStatusName("审贷决议");
+								if(result.get(a).getZsw()==1){
+									ApproveHistoryForm.setExamineResult("主审"+"审贷通过");
+								}else if(result.get(a).getZsw()==0){
+									ApproveHistoryForm.setExamineResult("副审"+"审贷通过");
+								}
+								ApproveHistoryForm.setDisplayName(result.get(a).getDisplayName());
+								ApproveHistoryForm.setExamineAmount(result.get(a).getApplyQuota());
+								ApproveHistoryForm.setStartExamineTime(result.get(a).getCreatime());
+								historyForms.add(a+1, ApproveHistoryForm);
+							
+							}else
+								if(result.get(a).getStatus().equals("2")){
+									ApproveHistoryForm1=new ApproveHistoryForm();
+									ApproveHistoryForm1.setStatusName("审贷决议");
+									if(result.get(a).getZsw()==1){
+										ApproveHistoryForm1.setExamineResult("主审"+"审贷拒绝");
+									}else if(result.get(a).getZsw()==0){
+										ApproveHistoryForm1.setExamineResult("副审"+"审贷拒绝");
+									}
+									ApproveHistoryForm1.setDisplayName(result.get(a).getDisplayName());
+									ApproveHistoryForm1.setStartExamineTime(result.get(a).getCreatime());
+									historyForms.add(a+1, ApproveHistoryForm1);
+									
+								}else
+									if(result.get(a).getStatus().equals("3")){
+										ApproveHistoryForm2=new ApproveHistoryForm();
+										ApproveHistoryForm2.setStatusName("审贷决议");
+										if(result.get(a).getZsw()==1){
+											ApproveHistoryForm2.setExamineResult("主审"+"审贷退回");
+										}else if(result.get(a).getZsw()==0){
+											ApproveHistoryForm2.setExamineResult("副审"+"审贷退回");
+										}
+										ApproveHistoryForm2.setDisplayName(result.get(a).getDisplayName());
+										ApproveHistoryForm2.setStartExamineTime(result.get(a).getCreatime());
+										historyForms.add(a+1, ApproveHistoryForm2);
+									}
+						}
+					}
+			
+				}
+				mv.addObject("historyForms", historyForms);
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			/*IntoPieces IP=SdwUserService.findsph2(id);
 			if(IP.getApplyQuota()==null && !IP.getStatus().equals("audit")){
 				ApproveHistoryForm5=new ApproveHistoryForm();
 				ApproveHistoryForm5.setStatusName("进件初审");
@@ -1246,7 +1455,7 @@ public class IntoPiecesControl extends BaseController {
 				}
 			}
 			 try {
-				if(IP.getApplyQuota()!=null){
+			
 					ApproveHistoryForm4=new ApproveHistoryForm();
 					ApproveHistoryForm4.setExamineResult("资料审核通过");
 					ApproveHistoryForm4.setDisplayName(IP.getDisplayName());
@@ -1429,12 +1638,11 @@ public class IntoPiecesControl extends BaseController {
 										historyForms.add(a+1, ApproveHistoryForm2);
 									}
 						}
-					}}
+					}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			mv.addObject("historyForms", historyForms);
+			}*/
 		}
 		mv.addObject("ifHideUser", ifHideUser);
 	

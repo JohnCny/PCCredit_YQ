@@ -16,6 +16,7 @@ import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,7 +27,13 @@ import com.cardpay.pccredit.customer.service.CustomerMarketingService;
 import com.cardpay.pccredit.customer.service.MaintenanceService;
 import com.cardpay.pccredit.divisional.service.DivisionalService;
 import com.cardpay.pccredit.intopieces.constant.Constant;
+import com.cardpay.pccredit.intopieces.filter.IntoPiecesFilter;
+import com.cardpay.pccredit.intopieces.model.IntoPieces;
 import com.cardpay.pccredit.intopieces.service.CustomerApplicationInfoService;
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
+import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.manager.dao.StatisticsManagerDao;
 import com.cardpay.pccredit.manager.service.AccountManagerParameterService;
 import com.cardpay.pccredit.manager.service.InformationMaintenanceService;
@@ -44,9 +51,11 @@ import com.cardpay.pccredit.riskControl.service.CustomerOverdueService;
 import com.cardpay.pccredit.riskControl.service.RiskCustomerCollectionService;
 import com.cardpay.pccredit.system.service.SystemUserService;
 import com.wicresoft.jrad.base.auth.IUser;
+import com.wicresoft.jrad.base.database.model.QueryResult;
 import com.wicresoft.jrad.base.enviroment.GlobalSetting;
 import com.wicresoft.jrad.base.web.JRadModelAndView;
 import com.wicresoft.jrad.base.web.menu.UIMenuMgr;
+import com.wicresoft.jrad.base.web.result.JRadPagedQueryResult;
 import com.wicresoft.jrad.base.web.security.LoginManager;
 import com.wicresoft.jrad.modules.privilege.model.Organization;
 import com.wicresoft.jrad.modules.privilege.model.User;
@@ -68,7 +77,8 @@ public class MainController {
 	private static final Logger logger = Logger.getLogger(MainController.class);
 	@Autowired
 	private GlobalSetting globalSetting;
-
+	@Autowired
+	private CustomerApplicationIntopieceWaitService customerApplicationIntopieceWaitService;
 	@Autowired
 	private UIMenuMgr menuMgr;
 
@@ -86,10 +96,10 @@ public class MainController {
 	
 	@Autowired
 	private ManagerAssessmentScoreService managerAssessmentScoreService;
-	
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	@Autowired
 	private CustomerMarketingService customerMarketingService;
-	
 	@Autowired
 	private DivisionalService divisionalService;
 	
@@ -152,15 +162,15 @@ public class MainController {
 		//JRadModelAndView mv = new JRadModelAndView("home/home", request);
 		User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId();
+		if(user.getUserType()==4){
+			return yymain(request);
+		}else{
 		String rolename = user.getRoles().get(0).getName();
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DATE, 3); 
 		int day1 = calendar.get(Calendar.DAY_OF_MONTH);
 		calendar.add(Calendar.DATE, 1); 
 		int day2 = calendar.get(Calendar.DAY_OF_MONTH);
-		//Date date = calendar.getTime();
-		//Date day1 = DateHelper.normalizeDate(DateHelper.shiftDay(date, 3), "yyyy-MM-dd");
-		//Date day2 = DateHelper.normalizeDate(DateHelper.shiftDay(date, 4), "yyyy-MM-dd");
 		Organization organization = organizationService.findOrgByUserId(userId);
 		AccountManagerParameterForm accountManagerParameter = accountManagerParameterService.findAccountManagerParameterByUserId(userId);
 		//客户经理层级
@@ -224,19 +234,10 @@ public class MainController {
 		mv.addObject("riskCustomer",rightHomeData.get("riskCustomer"));
 		mv.addObject("verificationCustomer",rightHomeData.get("verificationCustomer"));
 		
-		//if(level =="MANA005" || level =="MANA003" ){
 		if(user.getUserType()!=1){
-			/*  // 当前进件状况
-				mv.addObject("applicationStatusJson",statisticalCommonService.getApplicationStatusJson());
-				// 当前贷款状况
-				mv.addObject("creditStatusJson",statisticalCommonService.getCreditStatusJson());
-				// 当前卡片状况
-				mv.addObject("cardStatusCategoriesJson",statisticalCommonService.getCardStatusCategoriesJson(cardList));
-			    mv.addObject("cardStatusValuesJson",statisticalCommonService.getCardStatusValuesJson(cardList));
-			*/
 			long start = System.currentTimeMillis();
 			// 1.当前进件状况 济南 sj 20160804
-		    mv.addObject("applicationStatusJson",statisticalCommonService.getApplicationStatusJson());
+		    mv.addObject("applicationStatusJson",statisticalCommonService.getApplicationStatusJson(""));
 		    
 		    // 2.统计各行已申请和通过进件数量  济南 sj 20160809
 		    mv.addObject("organApplicationAuditNumJson",statisticalCommonService.getOrganApplicationAuditNumJson());
@@ -251,14 +252,13 @@ public class MainController {
 		   // mv.addObject("organApplicationblJson",statisticalCommonService.statisticalblorgan());
 		    //放款排名
 		    List<FkRankingFilter> fk=statisticalCommonService.queryFkRanking();
-		    mv.addObject("sydk",statisticalCommonService.tjsydk());
+		    mv.addObject("sydk",statisticalCommonService.tjsydk(""));
 		    mv.addObject("fk",fk);
 		    long end = System.currentTimeMillis();
-			//System.out.println("查询时间花费：" + (end - start) + "毫秒");
 			logger.info("查询时间花费：" + (end - start) + "毫秒");
 		}
-		
 		return mv;
+		}
 	}
 	
 	/*首页右边信息*/
@@ -342,4 +342,29 @@ public class MainController {
 		printWriter.flush();
 		printWriter.close();
 	}
+	
+	
+	/**
+	 * 运营首页
+	 * @param filter
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "yymain.page", method = { RequestMethod.GET })
+	public AbstractModelAndView yymain(
+			HttpServletRequest request) {
+		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+		String userId = user.getId();
+			JRadModelAndView mv = new JRadModelAndView("/home/yyhome", request);
+			MonthlyStatisticsModel model=StatisticsService.selectUserOnTeam(userId);
+			  mv.addObject("applicationStatusJson",statisticalCommonService.getApplicationStatusJson(userId));
+			  mv.addObject("model",model);
+			  mv.addObject("organApplicationjineJson",statisticalCommonService.statisticalye(model.getTeam()));
+			    mv.addObject("sydk",statisticalCommonService.tjsydk(model.getTeam()));
+			    List<MonthlyStatisticsModel> fk=StatisticsService.selectTdpm(model.getTeam());
+			    mv.addObject("fk",fk);
+			return mv;
+	}
+	
 }

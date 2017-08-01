@@ -99,4 +99,7 @@ public class JnpadCustormerSdwUserService {
 	public List<IntoPieces> findEndCount(@Param(value = "id")String id){
 		return SdwUserDao.findEndCount(id);
 	}
+	public 	IntoPieces findHISTORY(@Param(value = "id")String id){
+		return SdwUserDao.findHISTORY(id);
+	}
 }

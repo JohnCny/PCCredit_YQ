@@ -16,26 +16,80 @@
 	</resultMap>
 	<select id="statisticalApplicationStatussum" resultMap="ResultMap" >
 	    select c.status as name,sum(nvl(c.APPLY_QUOTA,0)) as value from CUSTOMER_APPLICATION_INFO c,(select count(status),status from CUSTOMER_APPLICATION_INFO where status=#{status} group by status)cc
+,BASIC_CUSTOMER_INFORMATION b
 where c.status=cc.status
+and c.CUSTOMER_ID=b.id
 and c.status=#{status}
+<if test="userId != null and userId != '' ">
+		     AND b.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{userId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+		</if>
 group by c.status
 	    </select>
 	    <select id="statisticalApplicationStatussum1" resultMap="ResultMap" >
 	    select c.status as name,sum(nvl(c.APPLY_QUOTA,0)) as value from CUSTOMER_APPLICATION_INFO c,(select count(status),status from CUSTOMER_APPLICATION_INFO where status='approved' group by status)cc
+,BASIC_CUSTOMER_INFORMATION b
 where c.status=cc.status
+and c.CUSTOMER_ID=b.id
 and c.status='approved'
+<if test="userId != null and userId != '' ">
+		    AND b.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{userId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+		</if>
 group by c.status
 	    </select>
 	<select id="statisticalApplicationStatusAmt" resultMap="ResultMap" >
-	  select t.STATUS as name ,sum(nvl(t.APPLY_QUOTA,0)) as value from customer_application_info t where t.status ='audit' group by t.STATUS
+	  select t.STATUS as name ,sum(nvl(t.APPLY_QUOTA,0)) as value from customer_application_info t,BASIC_CUSTOMER_INFORMATION b where t.status ='audit' and t.CUSTOMER_ID=b.id  
+	  <if test="userId != null and userId != '' ">
+		    AND b.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{userId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+		</if>
+		group by t.STATUS
       union all
-      select t.STATUS as name,sum(nvl(t.APPLY_QUOTA,0))  as value from customer_application_info t where t.status ='refuse' group by t.STATUS
-    <!--   union all
-      select t.STATUS as name,sum(nvl(t.ACTUAL_QUOTE,0)) as value from customer_application_info t where t.status ='end' group by t.STATUS -->
+      select t.STATUS as name,sum(nvl(t.APPLY_QUOTA,0))  as value from customer_application_info t,BASIC_CUSTOMER_INFORMATION b where t.status ='refuse' and t.CUSTOMER_ID=b.id  
+      	  <if test="userId != null and userId != '' ">
+		    AND b.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{userId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+		</if>
+		group by t.STATUS
       union all
-      select t.STATUS as name,sum(nvl(t.APPLY_QUOTA,0))  as value from customer_application_info t where t.status ='returnedToFirst' group by t.STATUS
+      select t.STATUS as name,sum(nvl(t.APPLY_QUOTA,0))  as value from customer_application_info t,BASIC_CUSTOMER_INFORMATION b where t.status ='returnedToFirst' and t.CUSTOMER_ID=b.id  
+      	  <if test="userId != null and userId != '' ">
+		    AND b.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{userId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+		</if>
+		group by t.STATUS
       union all
-      select t.STATUS as name,sum(nvl(t.FINAL_APPROVAL,0)) as value from customer_application_info t where t.status ='approved' group by t.STATUS
+      select t.STATUS as name,sum(nvl(t.FINAL_APPROVAL,0)) as value from customer_application_info t,BASIC_CUSTOMER_INFORMATION b where t.status ='approved' and t.CUSTOMER_ID=b.id  
+      	  <if test="userId != null and userId != '' ">
+		    AND b.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{userId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+		</if>
+		group by t.STATUS
 	    
 	</select>
 	
@@ -298,18 +352,6 @@ union all
 	
 	<!-- 总联社的放放款，逾期，不良金额 -->
 	<select id="statisticaljine" resultMap="ResultMap" >
-	  <!--   with circle as (
-	    SELECT *
-		  FROM (select T.BUSICODE,T.CUSTID,T.CNAME,T.CUSTIDNO,T.DEPTCODE,T.TELEPHONE,T.MAINASSURE,T.REQLMT,T.BUSIMANAGER,T.LOANDATE,T.STARTDATE,T.ORIENDDATE,T.ENDDATE,T.INTEREST,T.MONEY,T.BALAMT,T.ACCOUNTSTATE,T.CLOSEDATE,T.FIVECLASS,T.DELAYAMTDAYS,T.DELAYINTERESTDAYS,T.FIRSTINTERESTDATE,T.DEBTINTEREST,T.DEBTINTERESTTIMES,T.NORMALAMT,T.DLAYAMT,T.DLAYDT,T.PAYDEBT,T.INDEBTAMT,T.OUTDEBTAMT,T.BAILAMT,T.CREATE_TIME,ROW_NUMBER() OVER(PARTITION BY busicode ORDER BY OPERDATETIME desc) RN
-		          from t_mibusidata T)
-		 WHERE RN = 1
-	    )
-	    
-	    select nvl(sum(money),0) as value from circle  
-		union all
-		select nvl(sum(DLAYAMT+INDEBTAMT+OUTDEBTAMT),0) as value from circle  
-		union all
-		select nvl(sum(DLAYAMT+INDEBTAMT+OUTDEBTAMT),0)  as value from circle  where FIVECLASS in ('1','2','3') -->
 		 with circle as (
 	    SELECT *
 		  FROM (    select
@@ -325,28 +367,19 @@ union all
 		 (nvl(a.DELAYINTERESTDAYS,0)  >   0 or nvl(a.DELAYAMTDAYS,0)  >  0) and (wjfl3!=0 or wjfl4!=0 or wjfl3!=0)
 	</select>
 	
+	
+		<!-- 团队的放放款，余额-->
+	<select id="statisticaljineYe" resultMap="ResultMap" >
+		  select
+        nvl(sum(REQLMT),0) as value, nvl(sum(dkye),0) as name from mibusidata where team =#{team}
+	</select>
+			<!-- 团队的放放款，余额-->
+	<select id="statisticaljineYe1" resultMap="ResultMap" >
+		select nvl(sum(REQLMT),0) as value, nvl(sum(dkye),0) as name from aaaa where  dkfs!='001' and team =#{team} and ywbh not in (select ywbh from MIBUSIDATA )
+	</select>
+	
 	<!-- 放款总金额 -->
 	<select id="statisticalsxorgan" resultMap="ResultMap" >
-	  <!--  with circle as (
-	    SELECT *
-		  FROM (select T.BUSICODE,T.CUSTID,T.CNAME,T.CUSTIDNO,T.DEPTCODE,T.TELEPHONE,T.MAINASSURE,T.REQLMT,T.BUSIMANAGER,T.LOANDATE,T.STARTDATE,T.ORIENDDATE,T.ENDDATE,T.INTEREST,T.MONEY,T.BALAMT,T.ACCOUNTSTATE,T.CLOSEDATE,T.FIVECLASS,T.DELAYAMTDAYS,T.DELAYINTERESTDAYS,T.FIRSTINTERESTDATE,T.DEBTINTEREST,T.DEBTINTERESTTIMES,T.NORMALAMT,T.DLAYAMT,T.DLAYDT,T.PAYDEBT,T.INDEBTAMT,T.OUTDEBTAMT,T.BAILAMT,T.CREATE_TIME,ROW_NUMBER() OVER(PARTITION BY busicode ORDER BY OPERDATETIME desc) RN
-		          from t_mibusidata T)
-		 WHERE RN = 1
-	    )
-	    
-	    select nvl(sum(money),0) as value from circle  where DEPTCODE ='200734'
-		union all
-		select nvl(sum(money),0) as value from circle  where DEPTCODE ='200733'
-		union all
-		select nvl(sum(money),0) as value from circle  where DEPTCODE ='200729'
-		union all
-		select nvl(sum(money),0) as value from circle  where DEPTCODE ='200730'
-		union all
-		select nvl(sum(money),0) as value from circle  where DEPTCODE ='200732'
-		union all
-		select nvl(sum(money),0) as value from circle  where DEPTCODE ='200731'
-		union all
-		select nvl(sum(money),0) as value from circle  where DEPTCODE ='200735' -->
 		
 		 with circle as (
 	    SELECT *
@@ -360,7 +393,50 @@ union all
 		union all
 		select nvl(sum(REQLMT),0) as value from circle  where YWJG ='平定信用联社'
 	</select>
-	
+		<!-- 放款总金额 -->
+				
+<!-- 	<select id="statisticalsxorgan1" resultMap="ResultMap" >
+	    select nvl(sum(REQLMT),0) as value ,MIBUSIDATA
+	</select> -->
+		
+		
+		
+		
+	<select id="statisticalsxorgan1" resultMap="ResultMap" >
+		
+		 with circle as (
+	    SELECT *
+		  FROM (select sxed,YWJG from CUSTOMER_TSDKMX
+        )
+	    )
+	    
+	    select nvl(sum(sxed),0) as value from circle  where YWJG ='阳泉郊区信用联社'
+		union all
+		select nvl(sum(sxed),0) as value from circle  where YWJG ='盂县农商银行'
+		union all
+		select nvl(sum(sxed),0) as value from circle  where YWJG ='平定信用联社'
+	</select>
+		<!-- 放款总金额 -->
+	<select id="statisticalsxorgan2" resultMap="ResultMap" >
+		
+		 with circle as (
+	    SELECT *
+		  FROM (  select REQLMT,YWJG from aaaa where ywbh not in (select ywbh from MIBUSIDATA ) and dkfs!='001' 
+        )
+	    )
+	    
+	    select nvl(sum(REQLMT),0) as value from circle  where YWJG ='阳泉郊区信用联社'
+		union all
+		select nvl(sum(REQLMT),0) as value from circle  where YWJG ='盂县农商银行'
+		union all
+		select nvl(sum(REQLMT),0) as value from circle  where YWJG ='平定信用联社'
+	</select>
+	<select id="statisticalsxorgan3" resultMap="ResultMap" >
+		 select nvl(sum(REQLMT),0) as value from aaaa where ywbh not in (select ywbh from MIBUSIDATA ) and dkfs!='001' 
+	</select>
+	<select id="statisticalsxorgan4" resultMap="ResultMap" >
+		select nvl(sum(sxed),0)  as value from CUSTOMER_TSDKMX
+	</select>
 	<select id="statisticalyqorgan" resultMap="ResultMap" >
 	  <!--  with circle as (
 	    SELECT *

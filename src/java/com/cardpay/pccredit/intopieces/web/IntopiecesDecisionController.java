@@ -1,5 +1,6 @@
 package com.cardpay.pccredit.intopieces.web;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,7 @@ import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
 import com.wicresoft.jrad.base.constant.JRadConstants;
+import com.wicresoft.jrad.base.database.id.IDGenerator;
 import com.wicresoft.jrad.base.database.model.QueryResult;
 import com.wicresoft.jrad.base.web.JRadModelAndView;
 import com.wicresoft.jrad.base.web.controller.BaseController;
@@ -353,8 +355,34 @@ public class IntopiecesDecisionController extends BaseController {
 	@RequestMapping(value = "updateAll.json")
 	@JRadOperation(JRadOperation.APPROVE)
 	public JRadReturnMap update(HttpServletRequest request) {
+		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+		String id = user.getId();
 		JRadReturnMap returnMap = new JRadReturnMap();
-
+		IntoPieces IntoPieces=new IntoPieces();
+		IntoPieces.setId(request.getParameter("id"));
+		IntoPieces.setFallBackReason(request.getParameter("decisionRefusereason"));
+		IntoPieces.setUserId(id);
+		IntoPieces.setStatus("returnedToFirst");
+		IntoPieces.setCreatime(new Date());
+		int c=SdwUserService.updateCustormerInfoSdwUser(IntoPieces);
+		AppManagerAuditLog AppManagerAuditLog =new AppManagerAuditLog();
+		AppManagerAuditLog.setId(IDGenerator.generateID());
+		AppManagerAuditLog.setApplicationId(request.getParameter("id"));
+		AppManagerAuditLog.setAuditType("0");
+		AppManagerAuditLog.setUserId_4(id);
+		AppManagerAuditLog.setCreatedTime(new Date());
+		SdwUserService.insertCsJl(AppManagerAuditLog);
+		//退回时修改节点状态
+		String applicationId=request.getParameter("id");
+		Date times=new Date();
+		SdwUserService.updateHistory(id,times,applicationId);
+			int d=SdwUserService.updateCustormerProSdwUser(IntoPieces);
+			try {
+				returnMap.addGlobalMessage(CHANGE_SUCCESS);
+			} catch (Exception e) {
+				return WebRequestHelper.processException(e);
+			}
+/*
 		if (returnMap.isSuccess()) {
 			try {
 				customerApplicationIntopieceWaitService.updateCustomerApplicationProcessBySerialNumber(request);
@@ -363,7 +391,7 @@ public class IntopiecesDecisionController extends BaseController {
 				return WebRequestHelper.processException(e);
 			}
 		}
-
+*/
 		return returnMap;
 	}
 	

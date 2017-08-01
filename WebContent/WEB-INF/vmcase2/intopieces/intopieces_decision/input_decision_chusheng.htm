@@ -231,7 +231,6 @@
 		$("#id_save_button").click(function() {
 			$(".myerror").remove();
 			var status = $("select[name=status]").val();
-			
 		 	if( status == "APPROVE"){
 				if($("#decisionAmount").val() == ""){
 					 $("#decisionAmount").after("<label class='error myerror' generated='true' >金额不能为空</label>");  
@@ -267,23 +266,28 @@
 			    	var cyUser2=$("#cyUser2").val();
 			    	var fdUser=$("#fdUser").val(); 
 			    	var dbfs=$("#dbfs").val(); 
-			    	
-			      $.ajax({
-							url : "${contextPath}/jnpad/CustormerSdwUserPc/insertCSPC.json?customerId="+customerId+"&&productId="+productId
-							+"&&decisionRate="+decisionRate+"&&decisionAmount="+decisionAmount+"&&qx="+qx+"&&user_Id1="+user_Id1
-							+"&&user_Id2="+user_Id2+"&&user_Id3="+user_Id3+"&&cyUser1="+cyUser1+"&&cyUser2="+cyUser2+"&&fdUser="+fdUser+"&&dbfs="+dbfs,
-							
-							dataType : 'json',
-							type : "get",
-							success : function(data) {
-							if (data.success) {
-								topWin.Dialog.message("保存成功!");
-			 	            	window.location.href="${contextPath}/intopieces/intopiecesdecision/csBrowse.page";
-							 }else{
-									window.top.Dialog.message("系统出现异常,请联系管理员"); 
-						    	}
-							}
-				    }); 
+			    	if(user_Id1==user_Id2 || user_Id1==user_Id3 || user_Id2==user_Id3){
+			    		topWin.Dialog.message("请勿选择相同的审贷委!!");
+			    	}else if(user_Id1==user_Id2 && user_Id2 == user_Id3){
+			    		topWin.Dialog.message("请勿选择相同的审贷委!!");
+			    	}else{
+			    		  $.ajax({
+								url : "${contextPath}/jnpad/CustormerSdwUserPc/insertCSPC.json?customerId="+customerId+"&&productId="+productId
+								+"&&decisionRate="+decisionRate+"&&decisionAmount="+decisionAmount+"&&qx="+qx+"&&user_Id1="+user_Id1
+								+"&&user_Id2="+user_Id2+"&&user_Id3="+user_Id3+"&&cyUser1="+cyUser1+"&&cyUser2="+cyUser2+"&&fdUser="+fdUser+"&&dbfs="+dbfs,
+								
+								dataType : 'json',
+								type : "get",
+								success : function(data) {
+								if (data.success) {
+									topWin.Dialog.message("保存成功!");
+				 	            	window.location.href="${contextPath}/intopieces/intopiecesdecision/csBrowse.page";
+								 }else{
+										window.top.Dialog.message("系统出现异常,请联系管理员"); 
+							    	}
+								}
+					    }); 
+			    	}
 		    	}
 			}else{
 			

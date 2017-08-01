@@ -13,7 +13,6 @@
         <div class="search" style="margin-top:10px;">
         <input type="hidden" id="cid" value="$!result.filter.customerId">
           <input type="hidden" id="pid" value="$!result.filter.productId ">
-             <input type="hidden" id="eid" value="$!eid ">
           <div  id = "jycs" style="margin-left:170px;margin-right:0px;display:inline-block;">
 	                            <img src="${contextPath}/images/wenjian.png" /></br>
 	                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>经营场所(上传<font color="#FF0000">$!size1张</font> )</span>
@@ -124,7 +123,7 @@
       </div>
       <div class="pagebar">
         <div class="controlbtn">
-        	<a id="id_pre_button" class="btn_g"  title="上一步">上一步</a>
+        	<a id="id_pre_button" class="btn_g" href="javascript:history.back();" title="上一步">上一步</a>
         <!-- 	<a id="id_del_button" class="btn_g" href="javascript:void(0);" title="删除">删除</a> -->
         	<a id="id_next_button" class="btn_g" href="javascript:void(0);" title="提交进件">提交进件</a>
         </div>
@@ -141,21 +140,13 @@
 	$(document).ready(function() {
 		var opsObj = new Object();
 		prepareOperations(opsObj);
-		 $("#id_pre_button").click(function(){
-			 var cid=$("#cid").val();
-			 var pid=$("#pid").val();
-			 var url="${contextPath}/intopieces/addIntopieces/reportImport.page?customerId="+cid+"&productId="+pid;
-			 window.location.href = url;
-		 });
+		
 		
 		
 		 $("#jycs").click(function(){
 			 var cid=$("#cid").val();
 			 var pid=$("#pid").val();
-			 var type=1;
-			 var url="${contextPath}/intopieces/addIntopieces/aaa.page?cid="+cid+"&pid="+pid+"&type="+type+"&eid="+$("#eid").val();
-			 window.location.href = url;
-			/* 	var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=1";
+				var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=1";
 				
 						$.ajax({
 					 url : url,
@@ -164,16 +155,15 @@
 							 topWin.Dialog.message(data.message);
 							 window.location.reload();
 					 }
-				 }); */
+				 });
 		 
 		    });
 		    $("#jyqs").click(function(){
 		    	 var cid=$("#cid").val();
 				 var pid=$("#pid").val();
-				 var type=2;
-				 var url="${contextPath}/intopieces/addIntopieces/aaa.page?cid="+cid+"&pid="+pid+"&type="+type+"&eid="+$("#eid").val();
-				 window.location.href = url;
-				/*  $.ajax({
+					var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=2";
+					
+							$.ajax({
 						 url : url,
 						 type : "get",
 						 success : function(data) {
@@ -181,78 +171,142 @@
 							 window.location.reload();
 						 }
 					 });
-			  */
+			 
 			    });
 		      $("#qtsr").click(function(){
 		    	  var cid=$("#cid").val();
 					 var pid=$("#pid").val();
-					 var type=6;
-					 var url="${contextPath}/intopieces/addIntopieces/aaa.page?cid="+cid+"&pid="+pid+"&type="+type+"&eid="+$("#eid").val();
-					 window.location.href = url;
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=6";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
 				 
 				    });
 		      $("#sfzm").click(function(){
 		    	  var cid=$("#cid").val();
 					 var pid=$("#pid").val();
-					 var type=7;
-					 var url="${contextPath}/intopieces/addIntopieces/aaa.page?cid="+cid+"&pid="+pid+"&type="+type+"&eid="+$("#eid").val();
-					 window.location.href = url;
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=7";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
 				 
 				    });
 		      $("#grzc").click(function(){
 		    	  var cid=$("#cid").val();
 					 var pid=$("#pid").val();
-					 var type=8;
-					 var url="${contextPath}/intopieces/addIntopieces/aaa.page?cid="+cid+"&pid="+pid+"&type="+type+"&eid="+$("#eid").val();
-					 window.location.href = url;
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=8";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
 				 
 				    });
 		      $("#jf").click(function(){
 		    	  var cid=$("#cid").val();
 					 var pid=$("#pid").val();
-					 var type=9;
-					 var url="${contextPath}/intopieces/addIntopieces/aaa.page?cid="+cid+"&pid="+pid+"&type="+type+"&eid="+$("#eid").val();
-					 window.location.href = url;
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=9";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
 				 
 				    });
 		      $("#db").click(function(){
 		    	  var cid=$("#cid").val();
 					 var pid=$("#pid").val();
-					 var type=10;
-					 var url="${contextPath}/intopieces/addIntopieces/aaa.page?cid="+cid+"&pid="+pid+"&type="+type+"&eid="+$("#eid").val();
-					 window.location.href = url;
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=10";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
 				 
 				    });
 		  $("#ljjc").click(function(){
 			  var cid=$("#cid").val();
 				 var pid=$("#pid").val();
-				 var type=3;
-				 var url="${contextPath}/intopieces/addIntopieces/aaa.page?cid="+cid+"&pid="+pid+"&type="+type+"&eid="+$("#eid").val();
-				 window.location.href = url;
+					var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=3";
+					
+							$.ajax({
+						 url : url,
+						 type : "get",
+						 success : function(data) {
+							 topWin.Dialog.message(data.message);
+							 window.location.reload();
+						 }
+					 });
 			 
 			    });
 		      $("#zcfz").click(function(){
 		    	  var cid=$("#cid").val();
 					 var pid=$("#pid").val();
-					 var type=4;
-					 var url="${contextPath}/intopieces/addIntopieces/aaa.page?cid="+cid+"&pid="+pid+"&type="+type+"&eid="+$("#eid").val();
-					 window.location.href = url;
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=4";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
 				 
 				    });
 		      $("#sy").click(function(){
 		    	  var cid=$("#cid").val();
 					 var pid=$("#pid").val();
-					 var type=5;
-					 var url="${contextPath}/intopieces/addIntopieces/aaa.page?cid="+cid+"&pid="+pid+"&type="+type+"&eid="+$("#eid").val();
-					 window.location.href = url;
+						var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=5";
+						
+								$.ajax({
+							 url : url,
+							 type : "get",
+							 success : function(data) {
+								 topWin.Dialog.message(data.message);
+								 window.location.reload();
+							 }
+						 });
 				 
 				    });
 		          $("#sy1").click(function(){
 		        	  var cid=$("#cid").val();
 		 			 var pid=$("#pid").val();
-		 			 var type=11;
-					 var url="${contextPath}/intopieces/addIntopieces/aaa.page?cid="+cid+"&pid="+pid+"&type="+type+"&eid="+$("#eid").val();
-					 window.location.href = url;
+		 				var url = "${contextPath}/intopieces/addIntopieces/addImageByType.json?cid="+cid+"&pid="+pid+"&type=11";
+		 				
+		 						$.ajax({
+		 					 url : url,
+		 					 type : "get",
+		 					 success : function(data) {
+		 						 topWin.Dialog.message(data.message);
+								 window.location.reload();
+		 					 }
+		 				 });
+		 		 
 		 		    });
 		
 		

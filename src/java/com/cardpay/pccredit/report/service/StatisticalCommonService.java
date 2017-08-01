@@ -11,6 +11,7 @@ import java.util.Map;
 import net.sf.json.JSONArray;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,17 +40,19 @@ public class StatisticalCommonService {
      * @param filter
      * @return
      */
-	public List<NameValueRecord> statisticalApplicationStatus(){
+	public List<NameValueRecord> statisticalApplicationStatus(String id){
 		List<NameValueRecord> list=new ArrayList<NameValueRecord>();
-		NameValueRecord  statisticalApplicationStatussum=statisticalCommonDao.statisticalApplicationStatussum("audit");
+		NameValueRecord  statisticalApplicationStatussum=statisticalCommonDao.statisticalApplicationStatussum("audit",id);
+	
 		if(statisticalApplicationStatussum!=null){
+			System.out.println("1");
 			if(statisticalApplicationStatussum.getValue()==null || statisticalApplicationStatussum.getValue()==""){
 				statisticalApplicationStatussum.setValue("0");
 			}
 			statisticalApplicationStatussum.setName("已申请");
 			list.add(0, statisticalApplicationStatussum);
 		}
-		NameValueRecord  statisticalApplicationStatussum1=statisticalCommonDao.statisticalApplicationStatussum("refuse");
+		NameValueRecord  statisticalApplicationStatussum1=statisticalCommonDao.statisticalApplicationStatussum("refuse",id);
 		if(statisticalApplicationStatussum1!=null){
 		if(statisticalApplicationStatussum1.getValue()==null || statisticalApplicationStatussum1.getValue()==""){
 			statisticalApplicationStatussum1.setValue("0");
@@ -57,14 +60,14 @@ public class StatisticalCommonService {
 		statisticalApplicationStatussum1.setName("被拒绝");
 		list.add(0, statisticalApplicationStatussum1);
 		}
-		NameValueRecord  statisticalApplicationStatussum2=statisticalCommonDao.statisticalApplicationStatussum("returnedToFirst");
+		NameValueRecord  statisticalApplicationStatussum2=statisticalCommonDao.statisticalApplicationStatussum("returnedToFirst",id);
 		if(statisticalApplicationStatussum2!=null){
 		if(statisticalApplicationStatussum2.getValue()==null || statisticalApplicationStatussum2.getValue()==""){
 			statisticalApplicationStatussum2.setValue("0");
 		}
 		statisticalApplicationStatussum2.setName("被退回");
 		list.add(0, statisticalApplicationStatussum2);}
-		NameValueRecord  statisticalApplicationStatussum3=statisticalCommonDao.statisticalApplicationStatussum1();
+		NameValueRecord  statisticalApplicationStatussum3=statisticalCommonDao.statisticalApplicationStatussum1(id);
 		if(statisticalApplicationStatussum3!=null){
 		if(statisticalApplicationStatussum3.getValue()==null || statisticalApplicationStatussum3.getValue()==""){
 			statisticalApplicationStatussum3.setValue("0");
@@ -98,8 +101,8 @@ public class StatisticalCommonService {
      * @param filter
      * @return
      */
-	public String getApplicationStatusJson(){
-		List<PieJsonData> pList = getPieJsonData(statisticalApplicationStatus());
+	public String getApplicationStatusJson(String id){
+		List<PieJsonData> pList = getPieJsonData(statisticalApplicationStatus(id),id);
 		if(pList.size()>0){
 			PieJsonData pieJsonData = pList.get(0);
 			pieJsonData.setSliced(true);
@@ -123,8 +126,8 @@ public class StatisticalCommonService {
      * @param filter
      * @return
      */
-	public String getCreditStatusJson(){
-		List<PieJsonData> pList = getPieJsonData(statisticalCreditStatus());
+	public String getCreditStatusJson(String Id){
+		List<PieJsonData> pList = getPieJsonData(statisticalCreditStatus(),Id);
 		PieJsonData pieJsonData = pList.get(1);
 		pieJsonData.setSliced(true);
 		pieJsonData.setSelected(true);
@@ -178,39 +181,8 @@ public class StatisticalCommonService {
 		return JSONArray.fromObject(list).toString();
 	}
 	
-	public List<PieJsonData> getPieJsonData(List<NameValueRecord> list){
-		/*//获取各种状况的金额
-		List<NameValueRecord> alist = statisticalCommonDao.statisticalApplicationStatusAmt();
-		for(int a=0;a<alist.size();a++){
-			if(alist.get(a).getValue()=="" || alist.get(a).getValue()==null){
-				alist.get(a).setValue("0");
-			}
-		}
-		Map<String, Object> map = new HashMap<String, Object>();
-		for(NameValueRecord nameValueRecord : alist){
-			map.put(nameValueRecord.getName(), nameValueRecord.getValue());
-		}
-		
-		List<PieJsonData> pList= new ArrayList<PieJsonData>();
-		for(NameValueRecord nameValueRecord : list){
-			PieJsonData pieJsonData = new PieJsonData();
-			pieJsonData.setName(nameValueRecord.getName());
-			
-			if(StringUtils.isNotEmpty(nameValueRecord.getValue())){
-				pieJsonData.setY(Double.valueOf(nameValueRecord.getValue()));
-			}else{
-				pieJsonData.setY(0);
-			}
-			
-			//q-金额
-			pieJsonData.setQ(Double.valueOf(map.get(nameValueRecord.getId())+""));
-			
-			pieJsonData.setSliced(false);
-			pieJsonData.setSelected(false);
-			pList.add(pieJsonData);
-		}
-		return pList;*/
-		List<NameValueRecord> alist = statisticalCommonDao.statisticalApplicationStatusAmt();
+	public List<PieJsonData> getPieJsonData(List<NameValueRecord> list,String id){
+		List<NameValueRecord> alist = statisticalCommonDao.statisticalApplicationStatusAmt(id);
 		for(int a=0;a<alist.size();a++){
 			if(alist.get(a).getValue()=="" || alist.get(a).getValue()==null){
 				alist.get(a).setValue("0");
@@ -272,6 +244,10 @@ public class StatisticalCommonService {
 	public String statisticaljine(){
 		List<Double> list = new ArrayList<Double>();
 		List<NameValueRecord> records = statisticalCommonDao.statisticaljine();
+		List<NameValueRecord> records3 = statisticalCommonDao.statisticalsxorgan3();
+		List<NameValueRecord> records4 = statisticalCommonDao.statisticalsxorgan4();
+		Double value=(Double.valueOf(records.get(0).getValue())+Double.valueOf(records3.get(0).getValue())+Double.valueOf(records4.get(0).getValue()));
+		records.get(0).setValue(value.toString());
 		for(NameValueRecord nameValueRecord : records){
 			if(StringUtils.isNotEmpty(nameValueRecord.getValue())){
 				list.add(Double.valueOf(nameValueRecord.getValue()));
@@ -282,16 +258,42 @@ public class StatisticalCommonService {
 		return JSONArray.fromObject(list).toString();
 	}
 	
+	public String statisticalye(String team){
+		NameValueRecord result=statisticalCommonDao.statisticaljineYe(team);
+		NameValueRecord result1=statisticalCommonDao.statisticaljineYe1(team);
+		List<Double> list = new ArrayList<Double>();
+		Double value=Double.valueOf(result.getValue())+Double.valueOf(result.getValue());
+		Double name=Double.valueOf(result.getName())+Double.valueOf(result.getName());
+		list.add(value);
+		list.add(name);
+		return JSONArray.fromObject(list).toString();
+	}
 	public String statisticalsxorgan(){
 		List<Double> list = new ArrayList<Double>();
 		List<NameValueRecord> records = statisticalCommonDao.statisticalsxorgan();
-		for(NameValueRecord nameValueRecord : records){
+		List<NameValueRecord> records1 = statisticalCommonDao.statisticalsxorgan1();
+		List<NameValueRecord> records2 = statisticalCommonDao.statisticalsxorgan2();
+		list.add(0, Double.valueOf(records.get(0).getValue())+Double.valueOf(records1.get(0).getValue())+Double.valueOf(records2.get(0).getValue()));
+		list.add(1, Double.valueOf(records.get(1).getValue())+Double.valueOf(records1.get(1).getValue())+Double.valueOf(records2.get(1).getValue()));
+		list.add(2, Double.valueOf(records.get(2).getValue())+Double.valueOf(records1.get(2).getValue())+Double.valueOf(records2.get(2).getValue()));
+/*		System.out.println(records.get(0).getValue());
+		System.out.println(records.get(1).getValue());
+		System.out.println(records.get(2).getValue());
+		
+		System.out.println(records1.get(0).getValue());
+		System.out.println(records1.get(1).getValue());
+		System.out.println(records.get(2).getValue());
+		
+		System.out.println(records2.get(0).getValue());
+		System.out.println(records2.get(1).getValue());
+		System.out.println(records2.get(2).getValue());*/
+	/*	for(NameValueRecord nameValueRecord : records){
 			if(StringUtils.isNotEmpty(nameValueRecord.getValue())){
 				list.add(Double.valueOf(nameValueRecord.getValue()));
 			}else{
 				list.add(0d);
 			}
-		}
+		}*/
 		return JSONArray.fromObject(list).toString();
 	}
 	
@@ -329,12 +331,13 @@ public class StatisticalCommonService {
 	@Autowired
 	private MonthlyStatisticsService StatisticsService;
 	//统计月季贷款总额
-	public String tjsydk(){
+	public String tjsydk(String team){
 		 MonthlyStatisticsModel StatisticsModel =new MonthlyStatisticsModel();
 		 Date d = new Date();  
 	      SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy");  
 	      String dateNowStr = sdf1.format(d);  
 	      StatisticsModel.setCustomeryeah(Integer.parseInt(dateNowStr));
+	      StatisticsModel.setTeam(team);
 	      MonthlyStatisticsModel result=StatisticsService.selectTeamYear(StatisticsModel);
 	List<Double> list = new ArrayList<Double>();
 	if(result!=null){

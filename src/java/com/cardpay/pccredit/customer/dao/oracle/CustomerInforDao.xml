@@ -698,16 +698,18 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 			TY_CUSTOMER_ID as tyCustomerId
 			from BASIC_CUSTOMER_INFORMATION T1 where 1 = 1
 				AND user_id=#{userId}
-				<if test="chineseName != null and chineseName != '' ">
+				<!-- <if test="chineseName != null and chineseName != '' ">
 					AND chinese_name=#{chineseName}
-				</if>
+				</if> -->
 				<if test="cardType != null and cardType != '' ">
 					AND card_type=#{cardType}
 				</if>
 				<if test="cardId != null and cardId != '' ">
 					AND card_id=#{cardId}
 				</if>
-		       
+		       <if test="chineseName != null and chineseName != '' ">
+					AND chinese_name like #{chineseName}
+				</if>
 		       	
 		       	and  not exists 
 		       	(

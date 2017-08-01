@@ -9,7 +9,7 @@
 		    <menu id="030003" name="intopiecesps"         title="进件资料审核"         url="/intopieces/intopiecesdecision/csBrowse.page" img="" operations="create|change|display|browse"/>
 		   	<menu id="030004" name="intopiecesdecision " title="审贷决议" url="/intopieces/intopiecesdecision/browse.page" img="" operations="create|change|display|browse"/>
 			<menu id="030005" name="intopiecesdecisions " title="最终审贷" url="/intopieces/intopiecesdecision/zzbrowse.page" img="" operations="create|change|display|browse"/>
-			<menu id="030006" name="intopiecesdecisionss " title="运营补充" url="/intopieces/intopiecesquery/yybrowse.page" img="" operations="create|change|display|browse"/>
+			<!-- <menu id="030006" name="intopiecesdecisionss " title="运营补充" url="/intopieces/intopiecesquery/yybrowse.page" img="" operations="create|change|display|browse"/> -->
 			
 <!-- 			<menu id="030004" name="intopiecesdecision"   title="审贷决议"         url="/intopieces/intopiecesdecision/browse.page"   img="" operations="create|change|display|browse"/>
 			<menu id="030005" name="intopiecesdecisionbz" title="小微负责人审批"     url="/intopieces/intopiecesdecision/bzBrowse.page" img="" operations="create|change|display|browse"/>
@@ -42,9 +42,9 @@
  			<menu id="070007" name="performmancebrowse" 	title="业绩进度查询" 			url="/manager/performmance/selectAllManegerYj.page" 			 img="" operations="checked|display|browse"/>
  			<!-- <menu id="070008" name="managerKhgl" 			title="管辖客户管理" 			url="/manager/khgl/browse.page" 					 img="" operations="checked|display|browse"/> -->
  			<menu id="070009" name="model" 					title="四维授信评估模型" 			url="/manager/khgl/dimensionsCreditModel.page" 		 img="" operations="checked|display|browse"/>
- 	   		<menu id="070010" name="weeklyaccount" 			title="客户经理周报" 			url="/manager/weeklyaccount/browse.page" 			 img="" operations="change|display|browse"/> 
+ 	   		<!-- <menu id="070010" name="weeklyaccount" 			title="客户经理周报" 			url="/manager/weeklyaccount/browse.page" 			 img="" operations="change|display|browse"/> 
  	   		<menu id="070011" name="weeklyaccountzuzhang" 	title="所属客户经理周报列表"      	url="/manager/weeklyaccountzuzhang/browse.page" 	 img="" operations="change|display|browse"/>
-			<menu id="070012" name="weeklyaccountfuzeren" 	title="客户经理周报(微贷中心)"     url="/manager/weeklyaccountfuzeren/browse.page" 	 img="" operations="change|display|browse"/>
+			<menu id="070012" name="weeklyaccountfuzeren" 	title="客户经理周报(微贷中心)"     url="/manager/weeklyaccountfuzeren/browse.page" 	 img="" operations="change|display|browse"/> -->
  	        <menu id="070013" name="managerPromotionRule" 	title="客户经理层级信息维护" 		url="/manager/managerPromotionRule/displayjjgz.page" img="" operations="browse|change|create"/>
  	        <menu id="070014" name="managerdaily" 			title="客户经理当日任务管理" 		url="/sys/user/browse.page"   						 img="" operations="change|display|browse"/>
  	      <!--  <menu id="070015" name="khjljyxx" 				title="团队业绩查询" 			url="/manager/tdyjcx/tdyjcx.page" 					 img="" operations="checked|display|browse"/>	 -->
@@ -85,7 +85,7 @@
 	     </menu>
 		
 		<menu id="100000" name="report" title="报表管理" url="" img="images/icon_sys.gif" operations="">
-			<menu id="100010" name="customerMove" 		 title="客户移交流水记录报表 "  	url="/customer/transferFlow/queryCustomerTransfer.page" img="" operations="browse"/>
+		<!-- 	<menu id="100010" name="customerMove" 		 title="客户移交流水记录报表 "  	url="/customer/transferFlow/queryCustomerTransfer.page" img="" operations="browse"/> -->
 			<menu id="100020" name="disburseLoan" 		 title="已发放贷款统计报表 "   	url="/disburse/loan/queryHaveBeenLoan.page" 				img="" operations="browse"/>
 			<menu id="100030" name="refuseLoan"   		 title="被拒绝贷款统计报表 "   	url="/refuse/loan/queryRefuseLoan.page" 					img="" operations="browse"/>
 			<menu id="100040" name="expireLoan"   		 title="到期终止贷款统计报表 "  	url="/expire/loan/queryExpireLoan.page" 					img="" operations="browse"/>

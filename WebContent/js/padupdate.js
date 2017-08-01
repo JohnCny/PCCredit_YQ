@@ -1,0 +1,1 @@
+[{'verCode':3,'verName':'3.0','apkPath':'http://10.96.1.12:8888/PCCredit/ipad/updateapk/downloadApk.json'}]
