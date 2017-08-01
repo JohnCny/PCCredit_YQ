@@ -28,7 +28,7 @@ public interface MonthlyStatisticsDao {
 	
 	//统计团队月季贷款信息
 	MonthlyStatisticsModel selectTeamYear(MonthlyStatisticsModel MonthlyStatisticsModel);
-	
+	List<MonthlyStatisticsModel>selectTdpm(@Param("team") String team);
 	//查询所有的区域以及团队
 	List<MonthlyStatisticsModel>selectAllteam();
 	//查询所有有贷款的年份

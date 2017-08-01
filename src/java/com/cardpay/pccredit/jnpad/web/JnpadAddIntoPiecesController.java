@@ -66,6 +66,9 @@ public class JnpadAddIntoPiecesController {
 		filter.setUserId(request.getParameter("userId"));
 		filter.setProductId(request.getParameter("productId"));
 		filter.setLimit(Integer.MAX_VALUE);
+		if(!request.getParameter("name").equals("") && !request.getParameter("name").equals(null)){
+			filter.setChineseName("%"+request.getParameter("name")+"%");
+		}
 		QueryResult<CustomerInfor> result = customerInforservice.findCustomerInforByFilterAndProductId(filter);
 		
 		JsonConfig jsonConfig = new JsonConfig();

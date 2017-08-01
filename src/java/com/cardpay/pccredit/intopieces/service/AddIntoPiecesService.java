@@ -241,7 +241,8 @@ public class AddIntoPiecesService {
     	}
     	return true;
     }
-	
+
+
 	//补充调查模板先删除原有的调查模板信息再新增
 	public void importExcelSupple(MultipartFile file,String productId, String customerId,String appId) {
 		// TODO Auto-generated method stub
@@ -372,9 +373,28 @@ public class AddIntoPiecesService {
 		commonDao.deleteObject(LocalImage.class, id);
 	}
 	
-	public int importImagesType(String productId,
+	public void importImagesType(MultipartFile file,String productId,
 			String customerId,String cardId,String type) throws IOException, SftpException {
-		List<LocalImage> result=null;
+		Map<String, String> map  = new HashMap<String, String>();
+		if(ServerSideConstant.IS_SERVER_SIDE_TRUE.equals("0")){
+			//本地测试
+			map = UploadFileTool.uploadYxzlFileBySpring(file,customerId);
+		}else{
+			//指定服务器上传
+			map = SFTPUtil.uploadJn(file, customerId);
+		}
+		String fileName = map.get("fileName");
+		String url = map.get("url");
+		LocalImage localImage = new LocalImage();
+		localImage.setProductId(productId);
+		localImage.setCustomerId(customerId);
+		localImage.setCreatedTime(new Date());
+		localImage.setUri(url);
+		localImage.setAttachment(fileName);
+		localImage.setPhone_type(type);
+		addImageByPType.addImageByPType(localImage);
+		
+	/*	List<LocalImage> result=null;
 		if(ServerSideConstant.IS_SERVER_SIDE_TRUE.equals("0")){
 			//本地测试
 			result = UploadFileTool.uplodImageType(cardId,customerId,type);
@@ -394,7 +414,7 @@ public class AddIntoPiecesService {
 			localImage.setPhone_type(type);
 			addImageByPType.addImageByPType(localImage);
 		}
-		return result.size();
+		return result.size();*/
 	}
 	
 	
@@ -1276,6 +1296,11 @@ public class AddIntoPiecesService {
 		}
 	}
 	
+	//下载apk
+		public void downloadApk(HttpServletResponse response) throws Exception{
+					//服务器
+					SFTPUtil.downloadAPK(response);
+		}
 	//调查模板下载
 		public void downLoadDcmb1(HttpServletResponse response,String custId) throws Exception{
 			LocalExcelForm v=localExcelDao.findWordCustomer(custId);

@@ -691,6 +691,33 @@ public class SFTPUtil {
 		}
 	}
 	
+	public static void downloadAPK(HttpServletResponse response) {
+		String fileName="APad.apk";
+		try {
+			byte[] buff = new byte[2048];
+			int bytesRead;
+			response.setHeader("Content-Disposition", "attachment; filename="
+					+ java.net.URLEncoder.encode(fileName, "UTF-8"));
+			connect();
+			sftp.cd("/apk");
+			//System.out.println(filePath.substring(51, filePath.length()));
+			BufferedInputStream bis = new BufferedInputStream(sftp.get(fileName));//filePath.split("\\\\")[4]
+			BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
+			while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+				bos.write(buff, 0, bytesRead);
+			}
+			bos.flush();
+			if (bis != null) {
+				bis.close();
+			}
+			if (bos != null) {
+				bos.close();
+			}
+			disconnect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	 /**
      * 下载文件

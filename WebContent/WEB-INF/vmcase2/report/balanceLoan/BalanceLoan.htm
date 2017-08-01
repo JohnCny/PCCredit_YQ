@@ -50,10 +50,12 @@
                 <input id="id_browse_button" type="button" value="#i18n('button.browse')" class="search_button_inquiry"
                   title="#i18n('button.browse.hint')" style="height: 26px; line-height: 24px;" />
               </li>
+                #if($!model1.id=="1" || $!model1.sfzz=="1")
               <li class="search_button">
               	<input id="id_export_button" type="button" value="导出excel" class="search_button_export"
                   title="#i18n('button.export.hint')" style="height: 26px; line-height: 24px;" />
               </li>
+                #end
             </ul>
           </form>
       </div>

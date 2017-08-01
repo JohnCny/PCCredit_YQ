@@ -374,7 +374,7 @@
         </property>
         <!-- cron表达式 -->
         <property name="cronExpression">
-            <value>0 31 15 ? * *</value>
+            <value>0 44 16 ? * *</value>
         </property>
     </bean>
     <!-- 客户经理业绩信息更新  end -->
@@ -400,7 +400,7 @@
         </property>
         <!-- cron表达式 -->
         <property name="cronExpression">
-            <value>0 38 14 ? * *</value>
+            <value>0 46 16 ? * *</value>
         </property>
     </bean>
     <!-- 客户经理贷款信息更新  end -->
@@ -501,7 +501,7 @@
          <!-- <property name="startDelay" value="0"/>
         <property name="repeatInterval" value="60000" /> -->
          <property name="cronExpression">
-            <value>0 06 10 ? * *</value>
+            <value>0 43 14 ? * *</value>
         </property> 
     </bean>
     <!-- 每日加载随借随还贷款 end-->

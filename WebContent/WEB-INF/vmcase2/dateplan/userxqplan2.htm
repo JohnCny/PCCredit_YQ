@@ -76,12 +76,12 @@
             <td nowrap="nowrap">$!result.mbsll</td>
               #if($!result.zt==0)
               <td nowrap="nowrap">未收到通知</td>
-                #else($!result.zt==1)
+                #else
                   <td nowrap="nowrap">收到通知</td>
                    #end 
                #if($!result.mbsl>$!result.mbsll)
               <td nowrap="nowrap">未完成</td>
-                #else($!result.mbsl=<$!result.mbsll)
+                #else
                   <td nowrap="nowrap">完成</td>
                    #end 
                     #end 
@@ -98,12 +98,12 @@
               <td nowrap="nowrap">$!result.whsll</td>
                  #if($!result.zt==0)
               <td nowrap="nowrap">未收到通知</td>
-                #else($!result.zt==1)
+                #else
                   <td nowrap="nowrap">收到通知</td>
                    #end 
                 #if($!result.whsl>$!result.whsll)
               <td nowrap="nowrap">未完成</td>
-                #else($!result.whsl=<$!result.whsll)
+                #else
                   <td nowrap="nowrap">完成</td>
                    #end
                      #end
@@ -120,12 +120,12 @@
               <td nowrap="nowrap">$!result.dqsll</td>
                  #if($!result.zt==0)
               <td nowrap="nowrap">未收到通知</td>
-                #else($!result.zt==1)
+                #else
                   <td nowrap="nowrap">收到通知</td>
                    #end 
                #if($!result.dcsl>$!result.dqsll)
               <td nowrap="nowrap">未完成</td>
-                #else($!result.dcsl=<$!result.dqsll)
+                #else
                   <td nowrap="nowrap">完成</td>
                    #end
                      #end
@@ -142,12 +142,12 @@
                <td nowrap="nowrap">$!result.dhsll</td>
                   #if($!result.zt==0)
               <td nowrap="nowrap">未收到通知</td>
-                #else($!result.zt==1)
+                #else
                   <td nowrap="nowrap">收到通知</td>
                    #end 
                #if($!result.dhsl>$!result.dhsll)
               <td nowrap="nowrap">未完成</td>
-                #else($!result.dhsl=<$!result.dhsll)
+                #else
                   <td nowrap="nowrap">完成</td>
                    #end
                     #end

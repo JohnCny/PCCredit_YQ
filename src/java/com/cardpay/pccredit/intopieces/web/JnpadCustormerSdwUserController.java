@@ -25,6 +25,7 @@ import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitS
 import com.cardpay.pccredit.intopieces.service.JnpadCustormerSdwUserService;
 import com.cardpay.pccredit.intopieces.service.JnpadSpUserService;
 import com.cardpay.pccredit.ipad.util.JsonDateValueProcessor;
+import com.cardpay.pccredit.jnpad.web.JnpadIntopiecesDecisionController;
 import com.cardpay.pccredit.riskControl.model.RiskCustomer;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
@@ -119,6 +120,19 @@ public class JnpadCustormerSdwUserController {
 	@RequestMapping(value="insertsdjycs.json", method = { RequestMethod.GET })
 	public JRadReturnMap insertsdjyPCcs(@ModelAttribute CustormerSdwUser CustormerSdwUser,@ModelAttribute IntoPieces IntoPieces,@ModelAttribute RiskCustomer RiskCustomer,@ModelAttribute CustomerSpUser CustomerSpUser,HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
+	/*	if(request.getParameter("status").equals("approved")){
+			if(request.getParameter("decisionAmount")=="" || request.getParameter("decisionAmount")==null){
+				returnMap.put("message", "提交失败,请输入正确的授信额度!!");
+			}else if(!JnpadIntopiecesDecisionController.isNumeric(request.getParameter("decisionAmount"))){
+				returnMap.put("message", "提交失败,授信额度为数字!!");
+			}else if(request.getParameter("decisionRate")=="" || request.getParameter("decisionRate")==null){
+				returnMap.put("message", "提交失败,请输入正确的利率区间!!");
+			}}else if(!request.getParameter("status").equals("approved")){
+				if(request.getParameter("decisionRefusereason")=="" || request.getParameter("decisionRefusereason")==null){
+					returnMap.put("message", "提交失败,请输入拒绝或退回!");
+				}
+			}
+			else{*/
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		CustomerSpUser.setSpje(request.getParameter("decisionAmount"));
 		CustomerSpUser.setSptime(new Date());
@@ -255,6 +269,7 @@ public class JnpadCustormerSdwUserController {
 		}else{
 			returnMap.put("message", "提交失败");
 		}
+		
 		return returnMap;
 }
 	
@@ -268,6 +283,19 @@ public class JnpadCustormerSdwUserController {
 	@RequestMapping(value="insertsdjy.json", method = { RequestMethod.GET })
 	public JRadReturnMap insertsdjy(@ModelAttribute RiskCustomer RiskCustomer,@ModelAttribute CustormerSdwUser CustormerSdwUser,@ModelAttribute IntoPieces IntoPieces,HttpServletRequest request) {
 		JRadReturnMap returnMap = new JRadReturnMap();
+		/*if(request.getParameter("status").equals("approved")){
+			if(request.getParameter("decisionAmount")=="" || request.getParameter("decisionAmount")==null){
+				returnMap.put("message", "提交失败,请输入正确的授信额度!!");
+			}else if(!JnpadIntopiecesDecisionController.isNumeric(request.getParameter("decisionAmount"))){
+				returnMap.put("message", "提交失败,授信额度为数字!!");
+			}else if(request.getParameter("decisionRate")=="" || request.getParameter("decisionRate")==null){
+				returnMap.put("message", "提交失败,请输入正确的利率区间!!");
+			}}else if(!request.getParameter("status").equals("approved")){
+				if(request.getParameter("decisionRefusereason")=="" || request.getParameter("decisionRefusereason")==null){
+					returnMap.put("message", "提交失败,请输入拒绝或退回!");
+				}
+			}
+			else{*/
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId=user.getId();
 		CustormerSdwUser.setSDJE(request.getParameter("decisionAmount"));
@@ -369,7 +397,6 @@ public class JnpadCustormerSdwUserController {
 			}
 		}
 			
-		
 		return returnMap;
 }
 }

@@ -53,4 +53,5 @@ public interface JnpadCustormerSdwUserDao {
 		List<IntoPieces> findsph1(@Param(value = "id")String id);
 		IntoPieces findsdh2(@Param(value = "id")String id);
 		List<IntoPieces> findEndCount(@Param(value = "id")String id);
+		IntoPieces findHISTORY(@Param(value = "id")String id);
 }

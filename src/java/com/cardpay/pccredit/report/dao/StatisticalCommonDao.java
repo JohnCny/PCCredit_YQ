@@ -27,7 +27,7 @@ public interface StatisticalCommonDao {
      * 各种状态的额度
      * @return
      */
-	public List<NameValueRecord> statisticalApplicationStatusAmt();
+	public List<NameValueRecord> statisticalApplicationStatusAmt(@Param("userId") String userId);
 	
 	/**
      * 统计当前贷款状况
@@ -51,13 +51,19 @@ public interface StatisticalCommonDao {
 	public List<NameValueRecord> statisticaljine();
 	//统计 各支行放款总金额
 	public List<NameValueRecord> statisticalsxorgan();
+	public List<NameValueRecord> statisticalsxorgan1();
+	public List<NameValueRecord> statisticalsxorgan2();
+	public List<NameValueRecord> statisticalsxorgan3();
+	public List<NameValueRecord> statisticalsxorgan4();
 	//统计 各支行逾期总金额
 	public List<NameValueRecord> statisticalyqorgan();
 	//统计 各支行不良总金额
 	public List<NameValueRecord> statisticalblorgan();
 	//放款排名
 	public List<FkRankingFilter> queryFkRanking();
-	public NameValueRecord statisticalApplicationStatussum(@Param("status") String status);
-	public NameValueRecord statisticalApplicationStatussum1();;
+	public NameValueRecord statisticalApplicationStatussum(@Param("status") String status,@Param("userId") String userId);
+	public NameValueRecord statisticalApplicationStatussum1(@Param("userId") String userId);
+	NameValueRecord statisticaljineYe(@Param("team") String team);
+	NameValueRecord statisticaljineYe1(@Param("team") String team);
 	
 }

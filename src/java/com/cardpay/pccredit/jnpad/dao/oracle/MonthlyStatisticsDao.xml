@@ -131,4 +131,9 @@ and d.user_id=s.id
 and s.id=#{userId}
 group by o.name,s.id,t.name
 </select>
+
+
+<select id="selectTdpm" resultMap="MonthlyStatisticsModel">
+select *  from(select sum(m.TOTALAMOUNT) as totalAmount ,s.display_name as name,m.team from MONTHLYSTATISTICS m,sys_user s  where team=#{team} and s.id=m.userid group by m.userid,m.team,s.display_name)  order by TOTALAMOUNT desc 
+</select>
 </mapper> 

@@ -146,6 +146,16 @@
 	status='1'
 	and CAPID=#{id} 
 	 </select>   
+
+	<select id="findHISTORY" resultMap="IntoPieces">
+	    select s.display_name as displayName,t.AUDIT_TYPE as spqx ,t.CREATED_TIME as creatime from t_app_manager_audit_log t,sys_user s where application_id =#{id} and s.id=t.user_id_4
+	</select>    
+	
+	
+	
+	
+	
+	
 	<!-- 进件审批查询审贷记录2 -->
 	<select id="findsdh2" resultMap="IntoPieces">
 select * from 
