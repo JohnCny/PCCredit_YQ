@@ -21,13 +21,18 @@ import com.cardpay.pccredit.customer.filter.CustomerInforFilter;
 import com.cardpay.pccredit.customer.filter.MaintenanceFilter;
 import com.cardpay.pccredit.customer.model.Maintenance;
 import com.cardpay.pccredit.customer.model.MaintenanceLog;
+import com.cardpay.pccredit.customer.service.CustomerInforService;
 import com.cardpay.pccredit.customer.web.MaintenanceForm;
 import com.cardpay.pccredit.customer.web.MaintenanceWeb;
 import com.cardpay.pccredit.datapri.constant.DataPriConstants;
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
+import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
 import com.cardpay.pccredit.ipad.util.JsonDateValueProcessor;
 import com.cardpay.pccredit.jnpad.filter.JnpadMaintenanceFilter;
 import com.cardpay.pccredit.jnpad.model.CustomerInfo;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
 import com.cardpay.pccredit.jnpad.service.JnpadMaintenanceService;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.manager.web.AccountManagerParameterForm;
 import com.cardpay.pccredit.riskControl.constant.RiskCustomerCollectionEnum;
 import com.wicresoft.jrad.base.auth.IUser;
@@ -55,7 +60,12 @@ import net.sf.json.JsonConfig;
 public class JnpadMaintenanceController extends BaseController{
 	@Autowired
 	private JnpadMaintenanceService jnpadMaintenanceService;
-	
+	@Autowired
+	private CustomerApplicationIntopieceWaitService customerApplicationIntopieceWaitService;
+	@Autowired
+	private CustomerInforService customerInforService;
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	
 	/**
 	 * 查询客户经理
@@ -93,7 +103,7 @@ public class JnpadMaintenanceController extends BaseController{
 	public String getMaintenance( @ModelAttribute CustomerInforFilter filter,HttpServletRequest request) {
 		String id =RequestHelper.getStringValue(request, "userId");
 		int userType = RequestHelper.getIntValue(request, "userType");
-		if(userType!=1){
+/*		if(userType!=1){
 			filter.setUserId("");
 		}
 		//查询下属客户经理
@@ -106,6 +116,18 @@ public class JnpadMaintenanceController extends BaseController{
 		}
 		if(userType!=1){
 			filter.setUserId("");
+		}*/
+		if(userType==4 || userType==5){
+			List<CustomerApplicationIntopieceWaitForm> list=customerApplicationIntopieceWaitService.findSpRy(id);
+			filter.setCustomerManagerId(id);
+		}else if(userType==1){
+			  List<MonthlyStatisticsModel> resultModel=null;
+			     resultModel=StatisticsService.findxzz(id);
+			     if(resultModel.size()>0){
+			    	 filter.setCustomerManagerId(id);
+			     }else{
+			    	 filter.setUserId(id);
+			     }
 		}
 		QueryResult<MaintenanceLog> result = jnpadMaintenanceService.findCustomerByFilter(filter);
 //		JRadPagedQueryResult<MaintenanceLog> pagedResult = new JRadPagedQueryResult<MaintenanceLog>(filter, result);

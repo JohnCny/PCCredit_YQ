@@ -22,7 +22,15 @@ public class DailyAccountManagerFilter extends BaseQueryFilter {
 	private String daySummary;
 
     private String displayName;
-    
+    private String cid;
+
+	public String getCid() {
+		return cid;
+	}
+
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
 
 	public String getDisplayName() {
 		return displayName;

@@ -1,5 +1,6 @@
 package com.cardpay.pccredit.customer.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +31,11 @@ import com.cardpay.pccredit.customer.service.CustomerInforService;
 import com.cardpay.pccredit.customer.service.MaintenanceService;
 import com.cardpay.pccredit.intopieces.filter.IntoPiecesFilter;
 import com.cardpay.pccredit.intopieces.model.IntoPieces;
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
+import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.manager.filter.ManagerSalaryFilter;
 import com.cardpay.pccredit.manager.web.AccountManagerParameterForm;
 import com.cardpay.pccredit.product.service.ProductService;
@@ -57,7 +62,8 @@ import com.wicresoft.util.web.RequestHelper;
 @RequestMapping("/customer/firsthend/*")
 @JRadModule("customer.firsthend")
 public class CustomerFirsthendController extends BaseController{
-	
+	@Autowired
+	private CustomerApplicationIntopieceWaitService customerApplicationIntopieceWaitService;
 	@Autowired
 	private IntoPiecesService intoPiecesService;
 	
@@ -66,7 +72,8 @@ public class CustomerFirsthendController extends BaseController{
 	
 	@Autowired
 	private ProductService productService;
-	
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	@Autowired
 	private MaintenanceService maintenanceService;
 	/**
@@ -87,9 +94,9 @@ public class CustomerFirsthendController extends BaseController{
 		//查询客户经理
 		QueryResult<CustomerInfor> result =null;
 		JRadModelAndView mv = new JRadModelAndView("/customer/customerFirsthend/customerfirsthend_browse", request);
-		List<AccountManagerParameterForm> forms = maintenanceService.findSubListManagerByManagerId(user);
-		
-		if(!StringUtils.isEmpty(filter.getCustomerManagerId())){
+		/*List<AccountManagerParameterForm> forms = maintenanceService.findSubListManagerByManagerId(user);*/
+		List<AccountManagerParameterForm> forms = new ArrayList<AccountManagerParameterForm>();
+		/*if(!StringUtils.isEmpty(filter.getCustomerManagerId())){
 			result = customerInforService.findCustomerInforByFilter(filter);
 		}else{
 			if(forms.size()>0){
@@ -99,9 +106,32 @@ public class CustomerFirsthendController extends BaseController{
 				//直接返回页面
 				result = customerInforService.findCustomerInforByFilter(filter);
 			}
-		}
+		}*/
 		//QueryResult<CustomerInfor> result = customerInforService.findCustomerInforByFilter(filter);
-		
+		if(user.getUserType()==4 || user.getUserType()==5){
+			List<CustomerApplicationIntopieceWaitForm> list=customerApplicationIntopieceWaitService.findSpRy(user.getId());
+			for(int i=0;i<list.size();i++){
+				AccountManagerParameterForm from=new AccountManagerParameterForm();
+				from.setDisplayName(list.get(i).getDisplayName());
+				from.setUserId(list.get(i).getUserId());
+				forms.add(i, from);
+			}
+			filter.setCustomerManagerId(user.getId());
+		}else if(user.getUserType()==1){
+			  List<MonthlyStatisticsModel> resultModel=null;
+			     resultModel=StatisticsService.findxzz(user.getId());
+			     if(resultModel.size()>0){
+			    	 for(int i=0;i<resultModel.size();i++){
+			    			AccountManagerParameterForm from=new AccountManagerParameterForm();
+							from.setDisplayName(resultModel.get(i).getName());
+							from.setUserId(resultModel.get(i).getUserId());
+							forms.add(i, from);
+			    	 }
+			    	 filter.setCustomerManagerId(user.getId());
+			     }else{
+			    	 filter.setUserId(user.getId());
+			     }
+		}result = customerInforService.findCustomerInforByFilter(filter);
 		JRadPagedQueryResult<CustomerInfor> pagedResult = new JRadPagedQueryResult<CustomerInfor>(filter, result);
 		
 		mv.addObject(PAGED_RESULT, pagedResult);

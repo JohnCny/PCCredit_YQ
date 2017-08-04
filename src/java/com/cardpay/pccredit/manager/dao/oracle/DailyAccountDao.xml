@@ -18,6 +18,7 @@
 		<result property="createdBy" column="CREATED_BY" />
 		<result property="modifiedTime" column="MODIFIED_TIME" />
 		<result property="modifiedBy" column="MODIFIED_BY" />
+			<result property="cid" column="cid" />
 	</resultMap>
 
 
@@ -41,6 +42,14 @@
 		</if>
 		<if test="displayName != null and displayName != '' ">
 			AND s.DISPLAY_NAME = #{displayName}
+		</if>
+			<if test="cid != null and cid != '' ">
+			AND s.id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{cid}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
 		</if>
 		order by d.created_time desc 
 		 <![CDATA[		

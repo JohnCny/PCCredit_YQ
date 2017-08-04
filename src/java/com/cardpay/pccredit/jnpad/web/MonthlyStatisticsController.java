@@ -1,6 +1,7 @@
 package com.cardpay.pccredit.jnpad.web;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cardpay.pccredit.customer.filter.CustomerInforFilter;
 import com.cardpay.pccredit.customer.model.CustomerInfor;
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
+import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
 import com.cardpay.pccredit.ipad.util.JsonDateValueProcessor;
 import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
 import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
@@ -30,7 +33,8 @@ import net.sf.json.JsonConfig;
 public class MonthlyStatisticsController {
 	@Autowired
 	private MonthlyStatisticsService StatisticsService;
-	
+	@Autowired
+	private CustomerApplicationIntopieceWaitService WaitService ;
 	/**
 	 * 绘画当前客户经理的月季贷款统计图
 	 * @param request
@@ -41,6 +45,7 @@ public class MonthlyStatisticsController {
 	public String browseCustomer(HttpServletRequest request) {
       String userId=request.getParameter("userId");
       String yeardate=request.getParameter("year");
+      String usertype=request.getParameter("userType");
       Integer formatDate=0;
       List<MonthlyStatisticsModel> resultModel=null;
       //查询当前客户经理哪几个年份有贷款信息
@@ -57,14 +62,26 @@ public class MonthlyStatisticsController {
       //查询当前客户经理的用信额度
       double money=StatisticsService.selecTotalAmount(userId);
       //查询当前客户经理是否为小组长以及手下的客户经理ID
-      resultModel=StatisticsService.findxzz(userId);
+      if(usertype.equals("1")){
+    	  resultModel=StatisticsService.findxzz(userId);
+      }else if(usertype.equals("4") ||usertype.equals("5")){
+    		List<CustomerApplicationIntopieceWaitForm> list=WaitService.findSpRy(userId);
+    		resultModel=new ArrayList<MonthlyStatisticsModel>();
+    		for(int i=0;i<list.size();i++){
+    			MonthlyStatisticsModel from=new MonthlyStatisticsModel();
+    			from.setUserId(list.get(i).getUserId());
+    			from.setName(list.get(i).getDisplayName());
+    			resultModel.add(i, from);
+    		}
+      }
       Map<String,Object> map = new LinkedHashMap<String,Object>();
       map.put("year", year);
       map.put("yearsize", year.size());
       map.put("result", result);
       map.put("money", money);
       map.put("resultModel", resultModel);
-      if(resultModel!=null){
+    /*  if(resultModel!=null){*/
+      if(resultModel.size()>0){
     	  map.put("size", resultModel.size());
       }
 		JsonConfig jsonConfig = new JsonConfig();

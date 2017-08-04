@@ -2,6 +2,7 @@ package com.cardpay.pccredit.report.web;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
+import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
 import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
 import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.report.filter.CustomerMoveFilter;
@@ -41,7 +44,8 @@ import com.wicresoft.util.spring.mvc.mv.AbstractModelAndView;
 @RequestMapping("/expect/loan/*")
 @JRadModule("expect.loan")
 public class ExpectLoanController extends BaseController{
-	
+	@Autowired
+	private CustomerApplicationIntopieceWaitService customerApplicationIntopieceWaitService;
 	@Autowired
 	private CustomerTransferFlowService customerTransferFlowService;
 	@Autowired
@@ -74,7 +78,20 @@ public class ExpectLoanController extends BaseController{
 					model.setSfzz("0");
 					filter.setUserId(id);
 				}
-		}else{
+		}else if(usertype==4 || usertype==5){
+			resultModel=new ArrayList<MonthlyStatisticsModel>();
+			List<CustomerApplicationIntopieceWaitForm> list=customerApplicationIntopieceWaitService.findSpRy(user.getId());
+			for(int i=0;i<list.size();i++){
+				MonthlyStatisticsModel from=new MonthlyStatisticsModel();
+				from.setName(list.get(i).getDisplayName());
+				from.setUserId(list.get(i).getUserId());
+				resultModel.add(i, from);
+			}
+			model.setId("0");
+			model.setSfzz("1");
+			MonthlyStatisticsModel team=StatisticsService.selectUserOnTeam(id);
+			filter.setTeam(team.getTeam());
+		}	else{
 			model.setId("1");;
 		}
 	    QueryResult<YqhkdktjbbForm> result =  customerTransferFlowService.findYqhkdktjbbFormList(filter);
@@ -94,6 +111,15 @@ public class ExpectLoanController extends BaseController{
 	@RequestMapping(value = "exportAll.page", method = { RequestMethod.GET })
 	public void exportAll(@ModelAttribute ReportFilter filter, HttpServletRequest request,HttpServletResponse response){
 		filter.setRequest(request);
+		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+		String id = user.getId();
+		Integer usertype=user.getUserType();
+		if(usertype==4 || usertype==5){
+			MonthlyStatisticsModel team=StatisticsService.selectUserOnTeam(id);
+			filter.setTeam(team.getTeam());}else if(usertype==1){
+				MonthlyStatisticsModel team=StatisticsService.selectUserOnTeam(id);
+				filter.setTeam(team.getTeam());
+			}
 		List<YqhkdktjbbForm> list = customerTransferFlowService.getYqhkdktjbbFormList(filter);
 		create(list,response);
 	}

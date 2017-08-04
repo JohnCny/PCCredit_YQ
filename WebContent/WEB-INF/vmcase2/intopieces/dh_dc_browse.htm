@@ -53,7 +53,7 @@
               <th nowrap="nowrap">合同金额(元)</th>
               <th nowrap="nowrap">证件号码</th> 
               <th nowrap="nowrap">审核状态</th>
-              <th nowrap="nowrap">节点名称</th>
+         <!--      <th nowrap="nowrap">节点名称</th> -->
              <!--  <th nowrap="nowrap">退回原因</th>
               <th nowrap="nowrap">拒绝原因</th> -->
             </tr>
@@ -77,7 +77,7 @@
             </colgroup>
            #foreach ($wait in $result.items)
             <tr onclick="showButton();">
-              <td class="checkbox"><input type="radio" name="checkbox" value="$!wait.id@$!wait.customerId@$!wait.id@$!wait.applyQuota@$!wait.serialNumber@$!wait.cardId@$!wait.status@$!wait.productId"/></td>
+              <td class="checkbox"><input type="radio" name="checkbox" value="$!wait.id@$!wait.customerId@$!wait.id@$!wait.applyQuota@$!wait.serialNumber@$!wait.cardId@$!wait.status@$!wait.productId@$!wait.userId"/></td>
               <td nowrap="nowrap">$!wait.chineseName</td>
               <td nowrap="nowrap">$!wait.productName</td>
               <td nowrap="nowrap">$!wait.displayName</td>
@@ -85,15 +85,16 @@
               <td nowrap="nowrap">$format.formatNumber($!wait.finalApproval,2,1)</td>
               <td nowrap="nowrap">$format.formatNumber($!wait.reqlmt,2,1)</td>
               <td nowrap="nowrap">$!wait.cardId</td> 
-               #if($!wait.status=='returnedToFirst')
+                 <td nowrap="nowrap">审批通过</td>
+                 <!-- #if($!wait.status=='returnedToFirst')
                <td nowrap="nowrap">退回至客户经理</td>
                #else
                <td nowrap="nowrap">#dictVal("applicationStatus",$!wait.status) </td>
                #end
                #if($!wait.status=='returnedToFirst')
                <td nowrap="nowrap">退回</td>
-               #else
-               <td nowrap="nowrap">$!wait.nodeName</td>
+             #else
+               <td nowrap="nowrap">$!wait.nodeName</td> -->
                #end
              <!--    <td nowrap="nowrap">$!wait.fallBackReason</td>
                 <td nowrap="nowrap">$!wait.refusqlReason</td> -->
@@ -157,12 +158,16 @@
 	//审议结论
 	function viewIntoPicesApproveHistory2(ifHideUser){
 		var id = null;
+		var cid = null;
+		var pid = null;
 		$("input[name='checkbox']:checked").each(function() {
 			id = $(this).val().split("@")[0];
+			cid = $(this).val().split("@")[1];
+			pid = $(this).val().split("@")[7];
 			
 		});
 		if(id!=null){
-			var url = contextPath+"/intopieces/intopiecesquery/findAuditConfigureFormById.page?id="+id;
+			var url = contextPath+"/intopieces/intopiecesquery/findAuditConfigureFormById.page?id="+id+"&&cid="+cid+"&&pid="+pid;
 			window.location.href = url;
 		}else{
 			Dialog.message("请选择要被查看的进件!");
@@ -371,12 +376,17 @@
 	//flag: 1:为影像补扫入口。null：内部审核
 	function scan(flag){
 		var appId = null;
+		var custId = null;
+		var pId = null;
+		var uId = null;
 		$("input[name='checkbox']:checked").each(function() {
 			appId = $(this).val().split("@")[0];
 			custId = $(this).val().split("@")[1];
+			pId = $(this).val().split("@")[7];
+			uId = $(this).val().split("@")[8];
 		});
 		if(appId!=null){
-			var url="${contextPath}/postLoan/post/sunds_ocx.page?appId=" + appId+"&custId="+custId;
+			var url="${contextPath}/postLoan/post/sunds_ocx.page?appId=" + appId+"&custId="+custId+"&pId="+pId+"&uId="+uId;
 			window.location.href = url;
 		
 		}else{

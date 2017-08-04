@@ -1,5 +1,8 @@
 package com.cardpay.pccredit.common;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -24,6 +27,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -46,6 +50,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tools.ant.types.CommandlineJava.SysProperties;
 import org.jfree.util.Log;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -272,56 +277,15 @@ public class SFTPUtil {
                         }
                         file.delete();
                     }}*/
+    
     /** 
      * upload all the files to the server 
+     * @throws IOException 
      */  
-    public  synchronized  static Map<String, String> uploadJn(MultipartFile oldFile,String customerId) {
+    public  synchronized  static Map<String, String> uploadJn(MultipartFile file,String customerId)  {
     	String newFileName = null;
 		String fileName = null;
-    	Map<String, String> map = new HashMap<String, String>();
-        try {  
-        	if (oldFile != null && !oldFile.isEmpty()) {
-        		
-	        	//连接sftp
-	        	connect();
-	        	String path = Constant.FILE_PATH + customerId;
-	        	System.out.println(path);
-	        	try {
-	    			sftp.cd(path);
-				} catch (Exception e) {
-					sftp.cd(Constant.FILE_PATH);
-					sftp.mkdir(customerId);  
-					sftp.cd(path);
-				}
-	    			
-	    	    fileName = oldFile.getOriginalFilename();
-				File tempFile = new File(path + File.separator + oldFile.getOriginalFilename());
-				if (tempFile.exists()) {
-					newFileName = IDGenerator.generateID() + "."+ oldFile.getOriginalFilename().split("\\.")[1];
-				} else {
-					newFileName = oldFile.getOriginalFilename();
-				}
-	    	   CommonsMultipartFile cf= (CommonsMultipartFile)oldFile;
-	    	   DiskFileItem fi = (DiskFileItem)cf.getFileItem(); 
-	           File file = fi.getStoreLocation();
-	    	   sftp.put(new FileInputStream(file), newFileName);
-	    	   System.out.println("上传成功！");
-	    	   disconnect();  
-	           
-	    	   map.put("fileName", fileName);
-	   		   map.put("url", path +File.separator+ newFileName);
-	   		   
-        	}
-        } catch (FileNotFoundException e) {  
-            // TODO Auto-generated catch block  
-            e.printStackTrace();  
-        } catch (SftpException e) {  
-            // TODO Auto-generated catch block  
-            e.printStackTrace();  
-        }  
-          return map;
-    /*	String newFileName = null;
-		String fileName = null;
+		String name=null;
 		Map<String, String> map = new HashMap<String, String>();
 		String path = Constant.FILE_PATH + customerId + File.separator;
 		File tempDir = new File(path);
@@ -341,33 +305,40 @@ public class SFTPUtil {
 					newFileName = file.getOriginalFilename();
 				}
 				File localFile = new File(path + newFileName);
+				name=path + newFileName;
 				file.transferTo(localFile);
-				System.out.println("开始压缩：" + new Date().toLocaleString()); 
-				ImaUtils.imgCom(path + newFileName);  
-				ImaUtils.resizeFix(1200, 600);  
-			        System.out.println("压缩完毕：" + new Date().toLocaleString());  
-			    	connect();
-			    	sftp.cd(Constant.FILE_PATH);
-			    	if(!isDirExist(customerId)){
-			    		 sftp.mkdir(customerId);
-			    	}
-						 sftp.cd(Constant.FILE_PATH + customerId);
-						 FileInputStream in = null;
-						   File file1 = new File(path + newFileName);
-				            in = new FileInputStream(file1);
-				            sftp.put(in,newFileName);
-				          
-				       
-				        	deleteFiles hfc = new deleteFiles();  
-				    	    String path1 = Constant.FILE_PATH + customerId;  
-				    	    boolean result = hfc.DeleteFolder(path1);  
+		            BufferedImage image = ImageIO.read(localFile);
+		            Graphics2D g2 = image.createGraphics();
+		            g2.setColor(Color.red);
+		            g2.setFont(new Font("Serif", Font.PLAIN, 30));  
+		            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		            Date date=new Date();
+		            g2.drawString(sdf.format(date)+"上传", 50, 50);
+		            g2.dispose();
+		            ImageIO.write(image, "jpg", localFile);
+		        	connect();
+		        	String path1 = Constant.FILE_PATH + customerId ;
+		        	try {
+		    			sftp.cd(path1);
+					} catch (Exception e) {
+						sftp.cd(Constant.FILE_PATH);
+						sftp.mkdir(customerId);  
+						sftp.cd(path1);
+					}
+		        	FileInputStream ls=new FileInputStream(localFile);
+		        	  sftp.put(ls, newFileName);
+		        	  ls.close();
+		        		disconnect();  
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		  File files = new File(name);
+		  System.out.println("地址"+name);
+    	  files.getAbsoluteFile().delete();
 		map.put("fileName", fileName);
 		map.put("url", path + newFileName);
-		return map;*/
+		return map;
     }
     
     

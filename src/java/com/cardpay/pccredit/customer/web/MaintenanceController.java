@@ -4,6 +4,7 @@
 package com.cardpay.pccredit.customer.web;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,10 @@ import com.cardpay.pccredit.customer.model.MaintenanceLog;
 import com.cardpay.pccredit.customer.service.CustomerInforService;
 import com.cardpay.pccredit.customer.service.MaintenanceService;
 import com.cardpay.pccredit.datapri.constant.DataPriConstants;
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
+import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.manager.service.ManagerBelongMapService;
 import com.cardpay.pccredit.manager.web.AccountManagerParameterForm;
 import com.cardpay.pccredit.manager.web.SysOrganizationForm;
@@ -65,9 +70,12 @@ public class MaintenanceController extends BaseController{
 
 	@Autowired
 	private ManagerBelongMapService managerBelongMapService;
-
+	@Autowired
+	private CustomerApplicationIntopieceWaitService customerApplicationIntopieceWaitService;
 	@Autowired
 	private CustomerInforService customerInforService;
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	/**
 	 * 浏览维护计划信息页面
 	 * 
@@ -83,7 +91,8 @@ public class MaintenanceController extends BaseController{
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		//查询客户经理
-		List<AccountManagerParameterForm> forms = maintenanceService.findSubListManagerByManagerId(user);
+		List<AccountManagerParameterForm> forms = new ArrayList<AccountManagerParameterForm>();
+	/*	List<AccountManagerParameterForm> forms = maintenanceService.findSubListManagerByManagerId(user);
 		String customerManagerId = filter.getCustomerManagerId();
 		QueryResult<MaintenanceForm> result = null;
 		if(customerManagerId!=null && !customerManagerId.equals("")){
@@ -96,7 +105,33 @@ public class MaintenanceController extends BaseController{
 				//直接返回页面
 				result = maintenanceService.findMaintenancePlansList(filter);
 			}
+		}*/
+		QueryResult<MaintenanceForm> result = null;
+		if(user.getUserType()==4 || user.getUserType()==5){
+			List<CustomerApplicationIntopieceWaitForm> list=customerApplicationIntopieceWaitService.findSpRy(user.getId());
+			for(int i=0;i<list.size();i++){
+				AccountManagerParameterForm from=new AccountManagerParameterForm();
+				from.setDisplayName(list.get(i).getDisplayName());
+				from.setUserId(list.get(i).getUserId());
+				forms.add(i, from);
+			}
+			filter.setCustomerManagerId(user.getId());
+		}else if(user.getUserType()==1){
+			  List<MonthlyStatisticsModel> resultModel=null;
+			     resultModel=StatisticsService.findxzz(user.getId());
+			     if(resultModel.size()>0){
+			    	 for(int i=0;i<resultModel.size();i++){
+			    			AccountManagerParameterForm from=new AccountManagerParameterForm();
+							from.setDisplayName(resultModel.get(i).getName());
+							from.setUserId(resultModel.get(i).getUserId());
+							forms.add(i, from);
+			    	 }
+			    	 filter.setCustomerManagerId(user.getId());
+			     }else{
+			    	 filter.setId(user.getId());
+			     }
 		}
+		result = maintenanceService.findMaintenancePlansList(filter);
 		JRadPagedQueryResult<MaintenanceForm> pagedResult = new JRadPagedQueryResult<MaintenanceForm>(filter, result);
 		mv.addObject(PAGED_RESULT, pagedResult);
 		mv.addObject("forms", forms);

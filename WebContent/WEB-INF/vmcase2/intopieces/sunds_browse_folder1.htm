@@ -7,6 +7,9 @@
 	<form style="margin-left:10px">
 		<div id="queue"></div>
 		<input id="file_upload" name="file_upload" type="file" multiple="true">
+				  <input type="hidden" id="pid" value="$!pid ">
+		   <input type="hidden" id="cid" value="$!cid ">
+		   <input type="hidden" id="uid" value="$!uid ">
 	</form>
 	
 	<script type="text/javascript">
@@ -34,7 +37,9 @@
 				'successTimeout'  : 10,					//上传超时
 				'uploadLimit'     : 500,					//允许上传的最多张数
 				'swf'  : '${contextPath}/common/js/common/uploadify.swf', //swfUpload
-				'uploader': '${contextPath}/postLoan/post/browse_folder.json?batch_id=$!batch_id', //服务器端脚本
+				/* 'uploader': '${contextPath}/postLoan/post/browse_folder.json?batch_id=$!batch_id', //服务器端脚本 */
+'uploader': '${contextPath}/intopieces/addIntopieces/addImageByType.json?cid=$!cid&pid=$!pid&type=12', //服务器端脚本
+
 
 
 				//修改formData数据
@@ -109,8 +114,9 @@
 	<h4>操作:</h4> 
 	<a href="javascript:$('#file_upload').uploadify('upload', '*');">开始缓存</a> &nbsp;|&nbsp;
 	<a href="javascript:$('#file_upload').uploadify('cancel', '*');">清除队列</a> &nbsp;|&nbsp;
-	<a href="javascript:history.back();">返回</a> &nbsp;|&nbsp;
-	<a href="javascript:void(0);" onclick="browse_folder_complete('$!custId')">上传</a> &nbsp;|&nbsp;
+<!-- 	<a href="javascript:history.back();">返回</a> &nbsp;|&nbsp; -->
+<a href="${contextPath}/postLoan/post/sunds_ocx.page?custId=$!cid&pId=$!pid&uId=$!uid&appId=$!aid">返回</a> &nbsp;|&nbsp;
+	<!-- <a href="javascript:void(0);" onclick="browse_folder_complete('$!custId')">上传</a> &nbsp;|&nbsp; -->
 	<h4>大小:</h4>
 	<div id='progress'></div> 
 </body>
