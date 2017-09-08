@@ -162,7 +162,7 @@ public class MainController {
 		//JRadModelAndView mv = new JRadModelAndView("home/home", request);
 		User user = (User) Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId();
-		if(user.getUserType()==4){
+		if(user.getUserType()==4 || user.getUserType()==5){
 			return yymain(request);
 		}else{
 		String rolename = user.getRoles().get(0).getName();

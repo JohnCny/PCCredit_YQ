@@ -74,6 +74,8 @@ import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
 import com.cardpay.pccredit.intopieces.service.JnpadCustormerSdwUserService;
 import com.cardpay.pccredit.ipad.util.JsonDateValueProcessor;
 import com.cardpay.pccredit.jnpad.model.JnpadCsSdModel;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.manager.constant.ManagerLevelAdjustmentConstant;
 import com.cardpay.pccredit.manager.web.AccountManagerParameterForm;
 import com.cardpay.pccredit.postLoan.model.MibusidataForm;
@@ -137,7 +139,8 @@ public class IntoPiecesControl extends BaseController {
 	private CustomerInforDao customerInforDao;
 	@Autowired
 	private JnpadCustormerSdwUserService SdwUserService;
-	
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	/**
 	 * 浏览页面
 	 * 
@@ -164,7 +167,7 @@ public class IntoPiecesControl extends BaseController {
 		String userId = user.getId();
 		QueryResult<IntoPieces> result=null;
 		
-		if(user.getUserType()==4){
+		if(user.getUserType()==4 || user.getUserType()==5){
 			List<CustomerApplicationIntopieceWaitForm> list=customerApplicationIntopieceWaitService.findSpRy(userId);
 			StringBuffer belongChildIds = new StringBuffer();
 			belongChildIds.append("(");
@@ -185,7 +188,20 @@ public class IntoPiecesControl extends BaseController {
 			
 		//客户经理
 		if(user.getUserType() ==1){
-			filter.setUserId(userId);
+		     List<MonthlyStatisticsModel> resultModel=null;
+		     resultModel=StatisticsService.findxzz(userId);
+		     if(resultModel.size()>0){
+		    	 StringBuffer belongChildIds = new StringBuffer();
+					belongChildIds.append("(");
+					for(int i=0;i<resultModel.size();i++){
+						belongChildIds.append("'").append(resultModel.get(i).getUserId()).append("'").append(",");
+					}
+					belongChildIds = belongChildIds.deleteCharAt(belongChildIds.length() - 1);
+					belongChildIds.append(")");
+					filter.setCustManagerIds(belongChildIds.toString()); 
+		     }else{
+		    	 filter.setUserId(userId);
+		     }
 		}
 		result = intoPiecesService.findintoPiecesByFilter(filter);
 		JRadPagedQueryResult<IntoPieces> pagedResult = new JRadPagedQueryResult<IntoPieces>(

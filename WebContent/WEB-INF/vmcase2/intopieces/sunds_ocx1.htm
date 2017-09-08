@@ -1,81 +1,143 @@
 #parse ("common/iframe_page_header.htm")
 #parse ("common/customerInfor.htm")
+<link href="${contextPath}/css/photoswipe.css" rel="stylesheet" />
+	<link href="${contextPath}/css/default-skin.css" rel="stylesheet" />
+	<script src="${contextPath}/js/jquery-1.11.2.min.js"></script>
+	<script src="${contextPath}/js/photoswipe.min.js"></script>
+	<script src="${contextPath}/js/photoswipe-ui-default.min.js"></script>
+
+	<script src="${contextPath}/js/jquery.transit.js"></script>
+	<script src="${contextPath}/js/hammer.js"></script>
+	<script src="${contextPath}/js/jquery.hammer.js"></script>
 <body>
 <div class="content_main">
    <div class="contentinner">
+   <input type="hidden" value="$!cid" id="cid"/>
+      <input type="hidden" value="$!pid" id="pid"/>
+       <input type="hidden" value="$!uId" id="uid"/>
+         <input type="hidden" value="$!aid" id="aid"/>
  	<div class="inquiry">
  		<div id="topDiv" class="inquiry_list inquiry_top">
           <table>
             <colgroup>
-              <col width="5%" />
-              <col width="5%" />
               <col width="10%" />
-              <col width="5%" />
               <col width="10%" />
+               <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+                <col width="20%" />
+                	#if($!NowUser == 1)
               <col width="25%" />
+                #end
             </colgroup>
             <tr class="title">
-              <th nowrap="nowrap"></th>
               <th nowrap="nowrap">客户姓名</th>
               <th nowrap="nowrap">证件号码</th>
               <th nowrap="nowrap">文件类型</th>
-              <th nowrap="nowrap">状态</th>
+                <th nowrap="nowrap">已上传</th>
+                <th nowrap="nowrap">上次贷后时间</th>
+              <th nowrap="nowrap">贷后状态</th>
+                 	#if($!NowUser == 1)
               <th nowrap="nowrap">操作</th>
+              #end
             </tr>
           </table>
         </div>
         <div id="downDiv" class="inquiry_list inquiry_down">
           <table>
-            <colgroup>
-              <col width="5%" />
-              <col width="5%" />
+           <colgroup>
               <col width="10%" />
-              <col width="5%" />
               <col width="10%" />
+               <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+                <col width="20%" />
+                	#if($!NowUser == 1)
               <col width="25%" />
+                #end
             </colgroup>
-            #foreach ($obj in $batch_ls)
             <tr>
-              <td class="checkbox"><input type="radio" name="checkbox" value="$!obj.id"/></td>
-              <td nowrap="nowrap">$!customerInfor.chineseName</td>
-              <td nowrap="nowrap">$!customerInfor.cardId</td>
-              <td nowrap="nowrap">$!obj.name</td>
-              <td nowrap="nowrap">
-              #if($!obj.isUpload == $null)
-              	未缓存,未上传
-              #elseif($!obj.isUpload == "0")
-              	已缓存,未上传
-              #elseif($!obj.isUpload == "1")
-              	已上传
-              #end
+              <td nowrap="nowrap" >$!name</td>
+              <td nowrap="nowrap">$!cardId</td>
+              <td nowrap="nowrap">贷后照片</td>
+                  <td nowrap="nowrap" style=""><font color="red">$!size张</font></td>
+              <td nowrap="nowrap"><font color="red">
+            $!time
+            </font>
               </td>
-              #if($!type==1)
+                  <td nowrap="nowrap">
+                  <font color="red">
+            $!dh
+               </font>
+              </td>
+              	#if($!NowUser == 1)
 	              <td nowrap="nowrap">
-	              	#if($!obj.isUpload == "0")
-	              		上传中,禁止操作！
-	              	#elseif($!obj.isUpload == $null)
-	              		<a id="id_browse_button" class="btn_g" href="javascript:void(0);" title="上传" onclick="browseFolder('$!{obj.id}','$!obj.isUpload','$!customerInfor.id')">上传</a>
-	              		<a id="id_detail_button" class="btn_g" href="javascript:void(0);" title="查看上传" onclick="displayDetail('$!{obj.id}','$!obj.isUpload')">查看上传</a>
-	              	#elseif($!obj.isUpload == "1")
-	              		<a id="id_browse_button" class="btn_g" href="javascript:void(0);" title="上传" onclick="browseFolder('$!{obj.id}','$!obj.isUpload','$!customerInfor.id')">上传</a>
-	              		<a id="id_detail_button" class="btn_g" href="javascript:void(0);" title="查看上传" onclick="displayDetail('$!{obj.id}','$!obj.isUpload','$!customerInfor.id')">查看上传</a>
-	              		<a id="id_server_button" class="btn_g" href="javascript:void(0);" title="在线预览" onclick="displayServerPage('$!{obj.id}','$!obj.isUpload')">在线预览</a>
-	              		<a id="id_delete_button" class="btn_g" href="javascript:void(0);" title="删除该批次" onclick="deleteBatch('$!{obj.id}')">删除该批次</a>
-	              	#end
+	             
+	              		<a id="id_browse_button" class="btn_g" href="javascript:void(0);" title="上传" onclick="browseFolder()">上传</a>
+	              		<!-- <a id="id_detail_button" class="btn_g" href="javascript:void(0);" title="查看上传" onclick="displayDetail('$!{obj.id}','$!obj.isUpload','$!customerInfor.id')">查看上传</a> -->
+<!-- 	              		<a id="id_server_button" class="btn_g" href="javascript:void(0);" title="在线预览" onclick="displayServerPage('$!{obj.id}','$!obj.isUpload')">在线预览</a> -->
+	              		<!-- <a id="id_delete_button" class="btn_g" href="javascript:void(0);" title="删除该批次" onclick="deleteBatch('$!{obj.id}')">删除该批次</a> -->
 	              </td>
-              	#else
-              	<td nowrap="nowrap">
-	              	#if($!obj.isUpload == "0")
-	              		上传中,禁止操作！
-	              	#elseif($!obj.isUpload == "1")
-	              		<a id="id_detail_button" class="btn_g" href="javascript:void(0);" title="查看上传" onclick="displayDetail('$!{obj.id}','$!obj.isUpload','$!customerInfor.id')">查看上传</a>
-	              		<a id="id_server_button" class="btn_g" href="javascript:void(0);" title="在线预览" onclick="displayServerPage('$!{obj.id}','$!obj.isUpload')">在线预览</a>
-	              	#end
-	              </td>
-              	#end
+               	#end
             </tr>
-            #end
           </table>
+             #if($!size>0)
+         	<div class="gallery" style="margin-left:15px;margin-top:15px">
+	    #foreach($result in $result)
+	   <!--  <a  href="data:image/png;base64,$!result" data-size="1000x800" data-med="data:image/png;base64,$!result" data-med-size="1920x1200">
+			<img  width="350" height="250" src="data:image/png;base64,$!result"/>
+		</a> -->
+		<a  href="http://10.96.1.12:8888/PCCredit/ipad/JnpadImageBrowse/downLoadYxzlJn.json?id=$!result.id" data-size="1000x800" data-med="http://10.96.1.12:8888/PCCredit/ipad/JnpadImageBrowse/downLoadYxzlJn.json?id=$!result.id" data-med-size="1920x1200">
+			<img  width="350" height="150" src="http://10.96.1.12:8888/PCCredit/ipad/JnpadImageBrowse/downLoadYxzlJn.json?id=$!result.id"/>
+		</a>
+		
+#end
+	</div>
+	
+	<!-- 图片弹出模态框 -->
+	<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="pswp__bg"></div>
+		<div class="pswp__scroll-wrap">
+			<div class="pswp__container">
+				<div class="pswp__item"></div>
+				<div class="pswp__item"></div>
+				<div class="pswp__item"></div>
+			</div>
+			<div class="pswp__ui pswp__ui--hidden">
+				<div class="pswp__top-bar" style="opacity:0;">
+					<div class="pswp__counter"></div>
+					<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+					<button class="pswp__button pswp__button--share" title="Share"></button>
+					<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+					<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+					<div class="pswp__preloader">
+						<div class="pswp__preloader__icn">
+							<div class="pswp__preloader__cut">
+								<div class="pswp__preloader__donut"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="pswp__loading-indicator">
+					<div class="pswp__loading-indicator__line"></div>
+				</div>
+				<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+					<div class="pswp__share-tooltip">
+						<a href="#" class="pswp__share--facebook"></a>
+						<a href="#" class="pswp__share--twitter"></a>
+						<a href="#" class="pswp__share--pinterest"></a>
+						<a href="#" download class="pswp__share--download"></a>
+					</div>
+				</div>
+				<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+				<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+				<div class="pswp__caption">
+					<div class="pswp__caption__center"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+    #end
         </div>
       </div>
       <div class="submit">
@@ -84,6 +146,7 @@
     </div>
   </div>
 </body>
+
 <script language="javascript" type="text/javascript">
 	var layout = new TableLayout(2);
 	window.top.currentWindow.setLayout(layout);
@@ -91,8 +154,8 @@
 	$(document).ready(function() {
 	});
 	
-	function browseFolder(id,is_upload,custId){
-		var url = "${contextPath}/postLoan/post/browse_folder.page?batch_id="+id+"&custId="+custId+"&bussType=1";
+	function browseFolder(){
+		var url = "${contextPath}/postLoan/post/browse_folder.page?cid="+$("#cid").val()+"&pid="+$("#pid").val()+"&uid="+$("#uid").val()+"&aid="+$("#aid").val();
 		window.location.href = url;
 	}
 	
@@ -132,4 +195,76 @@
 	}
 	
 </script>
+ <script type="text/javascript">
+	    (function() {//获取图片原始尺寸
+	    	// 读取尺寸大小
+	    	var imgReady = (function () {
+	    		var list = [], intervalId = null,
+	    		// 用来执行队列
+	    		tick = function () {
+	    			var i = 0;
+	    			for (; i < list.length; i++) {
+	    				list[i].end ? list.splice(i--, 1) : list[i]();
+	    			};
+	    			!list.length && stop();
+	    		},
+	    		// 停止所有定时器队列
+	    		stop = function () {
+	    			clearInterval(intervalId);
+	    			intervalId = null;
+	    		};
+	    		return function (url, ready, load, error) {
+	    			var onready, width, height, newWidth, newHeight,img = new Image();
+	    			img.src = url;
+	    			// 如果图片被缓存，则直接返回缓存数据
+	    			if (img.complete) {
+	    				ready.call(img);
+	    				load && load.call(img);
+	    				return;
+	    			};
+	    			width = img.width;
+	    			height = img.height;
+	    			img.onerror = function () {
+	    				error && error.call(img);
+	    				onready.end = true;
+	    				img = img.onload = img.onerror = null;
+	    			};
+	    			// 图片尺寸就绪
+	    			onready = function () {
+	    				newWidth = img.width;
+	    				newHeight = img.height;
+	    				if (newWidth !== width || newHeight !== height || newWidth * newHeight > 1024){
+	    					// 如果图片已经在其他地方加载可使用面积检测
+	    					ready.call(img);
+	    					onready.end = true;
+	    				};
+	    			};
+	    			onready();
+	    			// 完全加载完毕的事件
+	    			img.onload = function () {
+	    				// onload在定时器时间差范围内可能比onready快
+	    				// 这里进行检查并保证onready优先执行
+	    				!onready.end && onready();
+	    				load && load.call(img);
+	    				// IE gif动画会循环执行onload，置空onload即可
+	    				img = img.onload = img.onerror = null;
+	    			};
+	    			// 加入队列中定期执行
+	    			if (!onready.end) {
+	    				list.push(onready);
+	    				// 无论何时只允许出现一个定时器，减少浏览器性能损耗
+	    				if (intervalId === null) intervalId = setInterval(tick, 40);
+	    			};
+	    		};
+	    	})();
+			$(".article img").each(function(index, el) {//自定义——将其他图片做成这种形式
+				var self = $(this);
+				imgReady($(this).attr("src"), function () {
+					$(self).wrap('<div class="gallery"><a href="'+$(self).attr("src")+'" data-size="'+this.width+"x"+this.height+'" data-med="'+$(self).attr("src")+'" data-med-size="'+this.width+"x"+this.height+'"></div>');
+				});
+			});
+		});
+	</script>
+	<script src="${contextPath}/js/initPhotoSwipeFromDOM.js"></script>
+	<script>initPhotoSwipeFromDOM('.gallery');</script>
 #parse ("common/iframe_page_footer.htm")

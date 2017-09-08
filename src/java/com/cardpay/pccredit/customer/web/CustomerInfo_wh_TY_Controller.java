@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +46,13 @@ import com.cardpay.pccredit.intopieces.model.IntoPieces;
 import com.cardpay.pccredit.intopieces.model.LocalExcel;
 import com.cardpay.pccredit.intopieces.model.LocalImage;
 import com.cardpay.pccredit.intopieces.service.AddIntoPiecesService;
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
 import com.cardpay.pccredit.intopieces.web.AddIntoPiecesForm;
+import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
 import com.cardpay.pccredit.intopieces.web.LocalImageForm;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.manager.web.AccountManagerParameterForm;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
@@ -75,13 +80,15 @@ public class CustomerInfo_wh_TY_Controller extends BaseController {
 	
 	@Autowired
 	private CustomerInforService customerInforService;
-
+	@Autowired
+	private CustomerApplicationIntopieceWaitService customerApplicationIntopieceWaitService;
 	@Autowired
 	private IntoPiecesService intoPiecesService;
 
 	@Autowired
 	private AddIntoPiecesService addIntoPiecesService;
-	
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	@Autowired
 	private MaintenanceService maintenanceService;
 	
@@ -94,7 +101,8 @@ public class CustomerInfo_wh_TY_Controller extends BaseController {
 		filter.setRequest(request);
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		String userId = user.getId();
-		//查询客户经理
+		List<AccountManagerParameterForm> forms=new ArrayList<AccountManagerParameterForm>();
+	/*	//查询客户经理
 		List<AccountManagerParameterForm> forms = maintenanceService.findSubListManagerByManagerId(user);
 		if(forms != null && forms.size() > 0){
 			StringBuffer userIds = new StringBuffer();
@@ -107,6 +115,45 @@ public class CustomerInfo_wh_TY_Controller extends BaseController {
 			filter.setCustManagerIds(userIds.toString());
 		}else{
 			filter.setUserId(userId);
+		}*/
+		if(user.getUserType()==4 || user.getUserType()==5){
+			List<CustomerApplicationIntopieceWaitForm> list=customerApplicationIntopieceWaitService.findSpRy(userId);
+			StringBuffer belongChildIds = new StringBuffer();
+			belongChildIds.append("(");
+			for(int i=0;i<list.size();i++){
+				belongChildIds.append("'").append(list.get(i).getUserId()).append("'").append(",");
+			}
+			belongChildIds = belongChildIds.deleteCharAt(belongChildIds.length() - 1);
+			belongChildIds.append(")");
+			filter.setCustManagerIds(belongChildIds.toString());
+			for(int i=0;i<list.size();i++){
+				AccountManagerParameterForm from=new AccountManagerParameterForm();
+				from.setDisplayName(list.get(i).getDisplayName());
+				from.setUserId(list.get(i).getUserId());
+				forms.add(i, from);
+			}
+		}
+		if(user.getUserType() ==1){
+		     List<MonthlyStatisticsModel> resultModel=null;
+		     resultModel=StatisticsService.findxzz(userId);
+		     if(resultModel.size()>0){
+		    	 StringBuffer belongChildIds = new StringBuffer();
+					belongChildIds.append("(");
+					for(int i=0;i<resultModel.size();i++){
+						belongChildIds.append("'").append(resultModel.get(i).getUserId()).append("'").append(",");
+					}
+					belongChildIds = belongChildIds.deleteCharAt(belongChildIds.length() - 1);
+					belongChildIds.append(")");
+					filter.setCustManagerIds(belongChildIds.toString()); 
+					 for(int i=0;i<resultModel.size();i++){
+			    			AccountManagerParameterForm from=new AccountManagerParameterForm();
+							from.setDisplayName(resultModel.get(i).getName());
+							from.setUserId(resultModel.get(i).getUserId());
+							forms.add(i, from);
+			    	 }
+		     }else{
+		    	 filter.setUserId(userId);
+		     }
 		}
 		QueryResult<IntoPieces> result = intoPiecesService.findintoPiecesByFilter(filter);
 		JRadPagedQueryResult<IntoPieces> pagedResult = new JRadPagedQueryResult<IntoPieces>(filter, result);

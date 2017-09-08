@@ -2,7 +2,7 @@ package com.cardpay.pccredit.jnpad.web;
 
 
 import java.util.Date;
-
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,12 +19,16 @@ import com.cardpay.pccredit.customer.filter.CustomerInforFilter;
 import com.cardpay.pccredit.datapri.constant.DataPriConstants;
 import com.cardpay.pccredit.intopieces.filter.IntoPiecesFilter;
 import com.cardpay.pccredit.intopieces.model.IntoPieces;
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
+import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
 import com.cardpay.pccredit.ipad.util.JsonDateValueProcessor;
 import com.cardpay.pccredit.jnpad.model.CustomerInfo;
 import com.cardpay.pccredit.jnpad.model.CustomerInfoForm;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
 import com.cardpay.pccredit.jnpad.service.JnpadCustomerInfoInsertServ‎ice;
 import com.cardpay.pccredit.jnpad.service.JnpadCustomerSelectService;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.riskControl.model.RiskCustomer;
 import com.cardpay.pccredit.system.model.SystemUser;
 import com.wicresoft.jrad.base.auth.IUser;
@@ -50,14 +54,16 @@ import net.sf.json.JsonConfig;
  */
 @Controller
 public class JnpadCustomerInfoInsertController extends BaseController {
-	
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	@Autowired
 	private JnpadCustomerInfoInsertServ‎ice JnpadCustomerInfoInsertServ‎ice;
 	@Autowired
 	private JnpadCustomerSelectService jnpadCustomerSelectService; 
 	@Autowired
 	private IntoPiecesService intoPiecesService;
-	
+	@Autowired
+	private CustomerApplicationIntopieceWaitService WaitService ;
 	@ResponseBody
 	@RequestMapping(value="/ipad/product/customerInsert.json" ,method = { RequestMethod.GET })
 	public String customerInsert(@ModelAttribute CustomerInfoForm customerinfoForm ,HttpServletRequest request){
@@ -164,7 +170,30 @@ public class JnpadCustomerInfoInsertController extends BaseController {
 		QueryResult<IntoPieces> result=null;
 		//客户经理
 		if(s==1){
-			filter.setUserId(userId);
+			  List<MonthlyStatisticsModel> resultModel=null;
+			   resultModel=StatisticsService.findxzz(userId);
+			   if(resultModel.size()>0){
+				   StringBuffer belongChildIds = new StringBuffer();
+					belongChildIds.append("(");
+					for(int i=0;i<resultModel.size();i++){
+						belongChildIds.append("'").append(resultModel.get(i).getUserId()).append("'").append(",");
+					}
+					belongChildIds = belongChildIds.deleteCharAt(belongChildIds.length() - 1);
+					belongChildIds.append(")");
+					filter.setCustManagerIds(belongChildIds.toString());
+			   }else{
+					filter.setUserId(userId);  
+			   }
+		}else if(s==4 || s==5){
+			List<CustomerApplicationIntopieceWaitForm> list=WaitService.findSpRy(userId);
+			StringBuffer belongChildIds = new StringBuffer();
+			belongChildIds.append("(");
+			for(int i=0;i<list.size();i++){
+				belongChildIds.append("'").append(list.get(i).getUserId()).append("'").append(",");
+			}
+			belongChildIds = belongChildIds.deleteCharAt(belongChildIds.length() - 1);
+			belongChildIds.append(")");
+			filter.setCustManagerIds(belongChildIds.toString());
 		}
 		filter.setChineseName(request.getParameter("name"));
 		result = JnpadCustomerInfoInsertServ‎ice.findintoPiecesByFilter(filter);

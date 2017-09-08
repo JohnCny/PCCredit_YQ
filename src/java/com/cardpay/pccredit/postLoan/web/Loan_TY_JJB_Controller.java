@@ -41,7 +41,13 @@ import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentBatch;
 import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentDetail;
 import com.cardpay.pccredit.intopieces.model.QzApplnAttachmentList;
 import com.cardpay.pccredit.intopieces.service.AddIntoPiecesService;
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
 import com.cardpay.pccredit.intopieces.service.IntoPiecesService;
+import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
+import com.cardpay.pccredit.intopieces.web.LocalImageForm;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.JnpadImageBrowseService;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.manager.model.REIMBURSEMENT;
 import com.cardpay.pccredit.postLoan.dao.PostLoanDao;
 import com.cardpay.pccredit.postLoan.filter.BloansManagerFilter;
@@ -60,6 +66,7 @@ import com.cardpay.pccredit.postLoan.model.RefuseMibusidata;
 import com.cardpay.pccredit.postLoan.model.TyRarepaylistForm;
 import com.cardpay.pccredit.postLoan.service.PostLoanService;
 import com.cardpay.pccredit.riskControl.model.RiskCustomer;
+import com.jcraft.jsch.SftpException;
 import com.wicresoft.jrad.base.auth.IUser;
 import com.wicresoft.jrad.base.auth.JRadModule;
 import com.wicresoft.jrad.base.auth.JRadOperation;
@@ -82,7 +89,8 @@ import com.wicresoft.util.web.RequestHelper;
 public class Loan_TY_JJB_Controller extends BaseController {
 	
 	final public static String AREA_SEPARATOR  = "_";
-
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	Logger logger = Logger.getLogger(this.getClass());
 	
 	@Autowired
@@ -90,7 +98,8 @@ public class Loan_TY_JJB_Controller extends BaseController {
 	
 	@Autowired
 	private MaintenanceService maintenanceService;
-	
+	@Autowired
+	private CustomerApplicationIntopieceWaitService WaitService ;
 	@Autowired
 	private IntoPiecesService intoPiecesService;
 	
@@ -99,7 +108,8 @@ public class Loan_TY_JJB_Controller extends BaseController {
 	
 	@Autowired
 	private CommonDao commonDao;
-	
+	@Autowired
+	private JnpadImageBrowseService ImageBrowseService;
 	@Autowired
 	private PostLoanDao postLoanDao;
 	/**
@@ -320,8 +330,32 @@ public class Loan_TY_JJB_Controller extends BaseController {
 		String userId = user.getId();
 		//客户经理
 		if(user.getUserType() ==1){
-			filter.setUserId(userId);
-			mv.addObject("type", "1");//客户经理
+			  List<MonthlyStatisticsModel> resultModel=null;
+			   resultModel=StatisticsService.findxzz(userId);
+			   if(resultModel.size()>0){
+				   StringBuffer belongChildIds = new StringBuffer();
+					belongChildIds.append("(");
+					for(int i=0;i<resultModel.size();i++){
+						belongChildIds.append("'").append(resultModel.get(i).getUserId()).append("'").append(",");
+					}
+					belongChildIds = belongChildIds.deleteCharAt(belongChildIds.length() - 1);
+					belongChildIds.append(")");
+					filter.setCustManagerIds(belongChildIds.toString());
+			   }else{
+					filter.setUserId(userId);
+					mv.addObject("type", "1");//客户经理
+			   }
+		}
+		if(user.getUserType()==4 || user.getUserType()==5){
+			List<CustomerApplicationIntopieceWaitForm> list=WaitService.findSpRy(userId);
+			StringBuffer belongChildIds = new StringBuffer();
+			belongChildIds.append("(");
+			for(int i=0;i<list.size();i++){
+				belongChildIds.append("'").append(list.get(i).getUserId()).append("'").append(",");
+			}
+			belongChildIds = belongChildIds.deleteCharAt(belongChildIds.length() - 1);
+			belongChildIds.append(")");
+			filter.setCustManagerIds(belongChildIds.toString());
 		}
 		
 		filter.setStatus("approved");
@@ -334,11 +368,66 @@ public class Loan_TY_JJB_Controller extends BaseController {
 	//影像
 	@ResponseBody
 	@RequestMapping(value = "sunds_ocx.page")
-	public AbstractModelAndView sunds_ocx(HttpServletRequest request) {
+	public AbstractModelAndView sunds_ocx(HttpServletRequest request) throws IOException, SftpException, ParseException {
 		JRadModelAndView mv = new JRadModelAndView("/intopieces/sunds_ocx1", request);
 		String appId = RequestHelper.getStringValue(request, "appId");
 		String custId = RequestHelper.getStringValue(request, "custId");
-		mv.addObject("appId", appId);
+		String pId = RequestHelper.getStringValue(request, "pId");
+		String uId = RequestHelper.getStringValue(request, "uId");
+		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+		List<LocalImageForm> result=ImageBrowseService.findLocalImageByType1(custId,  pId, "12");
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd");
+		Date NowDate=new Date();
+		String Nowtime=sdf1.format(NowDate);
+		Integer NowUser=0;
+		if(uId.equals(user.getId())){
+			NowUser=1;
+		}
+		if(result.size()>0){
+			String  date=result.get(0).getCreatedTime();
+			String time=date.substring(0, 10);
+			Long m=sdf1.parse(Nowtime).getTime()-sdf1.parse(time).getTime();
+			Long i=m/(1000*60*60*24);
+			if(i>60){
+				mv.addObject("dh", "距离贷后操作已经超出两个月，请尽快做贷后");	
+			}else{
+				Integer ts=60-i.intValue();
+				mv.addObject("dh", "还剩下"+ts+"天需要做贷后了");	
+			}
+			mv.addObject("time", time);
+			mv.addObject("name", result.get(0).getCustomerName());
+			mv.addObject("cardId", result.get(0).getCardid());
+			mv.addObject("size", result.size());
+			mv.addObject("NowUser", NowUser);
+			mv.addObject("result", result);
+			mv.addObject("cid", custId);
+			mv.addObject("pid", pId);
+			mv.addObject("uId", uId);
+			mv.addObject("aid", appId);
+		}else{
+			LocalImageForm time=ImageBrowseService.selectbTime(appId);
+			String  date=time.getCreatedTime();
+			String time1=date.substring(0, 10).trim();
+			Long m=sdf1.parse(Nowtime).getTime()-sdf1.parse(time1).getTime();
+			Long i=m/(1000*60*60*24);
+			if(i>60){
+				mv.addObject("dh", "距离贷后操作已经超出两个月，请尽快做贷后");	
+			}else{
+				Integer ts=60-i.intValue();
+				mv.addObject("dh", "还剩下"+ts+"天需要做贷后了");	
+			}
+			mv.addObject("time", "没有上传过");
+			mv.addObject("name", time.getCustomerName());
+			mv.addObject("cardId", time.getCardid());
+			mv.addObject("size", 0);
+			mv.addObject("NowUser", NowUser);
+			mv.addObject("cid", custId);
+			mv.addObject("pid", pId);
+			mv.addObject("uId", uId);
+			mv.addObject("aid", appId);
+		}
+	/*	mv.addObject("appId", appId);
 		
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		mv.addObject("type", user.getUserType());
@@ -362,7 +451,7 @@ public class Loan_TY_JJB_Controller extends BaseController {
 		//查询客户信息
 		CustomerInfor vo = addIntoPiecesService.findBasicCustomerInfor(custId);
 		mv.addObject("batch_ls", batch_ls);
-		mv.addObject("customerInfor",vo);
+		mv.addObject("customerInfor",vo);*/
 		return mv;
 	}
 	
@@ -373,13 +462,17 @@ public class Loan_TY_JJB_Controller extends BaseController {
 		@RequestMapping(value = "browse_folder.page")
 		public AbstractModelAndView browse_folder_page(HttpServletRequest request) {
 			JRadModelAndView mv = new JRadModelAndView("/intopieces/sunds_browse_folder1", request);
-			String batch_id = RequestHelper.getStringValue(request, "batch_id");
+			mv.addObject("cid", request.getParameter("cid"));
+			mv.addObject("uid", request.getParameter("uid"));
+			mv.addObject("pid", request.getParameter("pid"));
+			mv.addObject("aid", request.getParameter("aid"));
+		/*	String batch_id = RequestHelper.getStringValue(request, "batch_id");
 			String custId = RequestHelper.getStringValue(request, "custId");
 			mv.addObject("batch_id", batch_id);
 			mv.addObject("custId", custId);
 			mv.addObject("bussType", RequestHelper.getStringValue(request, "bussType"));
 			String appId = addIntoPiecesService.findDhBatchId(batch_id);
-			mv.addObject("appId", appId);
+			mv.addObject("appId", appId);*/
 			return mv;
 		}	
 		
@@ -741,6 +834,20 @@ public class Loan_TY_JJB_Controller extends BaseController {
 		@RequestMapping(value = "creditProcess.page")
 		public AbstractModelAndView creditProcess(@ModelAttribute  CreditProcess filter,HttpServletRequest request) {
 			filter.setRequest(request);
+			IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
+			List<MonthlyStatisticsModel> resultModel=null;
+			String id = user.getId();
+			Integer usertype=user.getUserType();
+			if(usertype==4 || usertype==5){
+				filter.setUserid1(id);
+			}else if(usertype==1){
+				  resultModel=StatisticsService.findxzz(id);
+					if(resultModel.size()>0){
+						filter.setUserid1(id);
+					}else{
+						filter.setId(id);
+					}
+			}
 			String customername=request.getParameter("customername");
 			if(null!=customername&&""!=customername){
 				filter.setCustomername(customername);

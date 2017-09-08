@@ -1,5 +1,7 @@
 package com.cardpay.pccredit.manager.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -10,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.cardpay.pccredit.intopieces.service.CustomerApplicationIntopieceWaitService;
+import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.manager.filter.DailyAccountManagerFilter;
 import com.cardpay.pccredit.manager.model.DailyAccountManager;
 import com.cardpay.pccredit.manager.model.ManagerPerformmance;
@@ -41,10 +47,12 @@ import com.wicresoft.util.web.RequestHelper;
 @RequestMapping("/manager/dailyaccount/*")
 @JRadModule("manager.dailyaccount")
 public class DailyAccountManagerController extends BaseController {
-
+	@Autowired
+	private MonthlyStatisticsService StatisticsService;
 	@Autowired
 	private DailyAccountService dailyAccountService;
-
+	@Autowired
+	private CustomerApplicationIntopieceWaitService customerApplicationIntopieceWaitService;
 	@Autowired
 	private ManagerPerformmanceService managerPerformmanceService;
 	/**
@@ -62,9 +70,19 @@ public class DailyAccountManagerController extends BaseController {
 		IUser user = Beans.get(LoginManager.class).getLoggedInUser(request);
 		boolean lock = false;
 		if(user.getUserType() == 1){
-			String loginId = user.getId();
-			filter.setLoginId(loginId);
-			lock = true;
+			  List<MonthlyStatisticsModel> resultModel=null;
+			     resultModel=StatisticsService.findxzz(user.getId());
+			     if(resultModel.size()>0){
+			 		filter.setCid(user.getId()); 
+			     }else{
+			    		String loginId = user.getId();
+						filter.setLoginId(loginId);
+						lock = true;
+			     }
+		}
+		if(user.getUserType()==4 || user.getUserType()==5){
+			List<CustomerApplicationIntopieceWaitForm> list=customerApplicationIntopieceWaitService.findSpRy(user.getId());
+			filter.setCid(user.getId());
 		}
 		filter.setDisplayName(request.getParameter("displayName"));
 		QueryResult<DailyAccountManagerForm> result = dailyAccountService.findDailyAccountManagersByFilter(filter);

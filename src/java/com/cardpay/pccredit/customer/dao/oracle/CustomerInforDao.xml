@@ -767,6 +767,15 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 		<if test="productId != null and productId != '' ">
 			AND c.id = #{productId}
 		</if>
+		
+								<if test="customerManagerId != null and customerManagerId != '' ">
+						AND a.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{customerManagerId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+		</if>
 		<if test="customerManagerIds != null and customerManagerIds != '' ">
 			AND a.user_id in
 			<foreach collection="customerManagerIds" index="index" item="item"
@@ -795,6 +804,14 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 		</if>
 
 		
+								<if test="customerManagerId != null and customerManagerId != '' ">
+						AND a.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{customerManagerId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+		</if>
 		<if test="productId != null and productId != '' ">
 			AND c.id = #{productId}
 		</if>
@@ -835,9 +852,17 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 				<if test="cardId != null and cardId != '' ">
 					AND T1.card_id=#{cardId}
 				</if>
-				<if test="customerManagerId != null and customerManagerId != '' ">
-						AND t1.user_id = #{customerManagerId}
-				</if>
+						<if test="customerManagerId != null and customerManagerId != '' ">
+						AND t1.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{customerManagerId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+		</if>
+			<if test="userId != null and userId != '' ">
+						AND t1.user_id = #{userId}
+		</if>
 				<if test="customerManagerIds != null and customerManagerIds != '' ">  
  		    		and T1.user_id in  
 	 	    		<foreach collection="customerManagerIds" index="index" item="item" open="(" separator="," close=")"> 
@@ -866,7 +891,15 @@ insert into LOCAL_EXCEL(ID,CUSTOMER_ID,PRODUCT_ID,ATTACHMENT,URI,APPLICATION_ID,
 			AND card_id=#{cardId}
 		</if>
 		<if test="customerManagerId != null and customerManagerId != '' ">
-						AND t1.user_id = #{customerManagerId}
+						AND t1.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{customerManagerId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+		</if>
+			<if test="userId != null and userId != '' ">
+						AND t1.user_id = #{userId}
 		</if>
 		<if test="customerManagerIds != null and customerManagerIds != '' ">  
  		    AND T1.user_id in  

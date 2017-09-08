@@ -107,9 +107,17 @@
 						AND c.product_id=#{productId}
 					 </if>
 					 
-					 <if test="customerManagerId != null and customerManagerId != '' ">
-						AND b.user_id = #{customerManagerId}
-					 </if>
+								<if test="customerManagerId != null and customerManagerId != '' ">
+						AND b.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{customerManagerId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+		</if>
+			<if test="id != null and id != '' ">
+						AND b.user_id = #{id}
+		</if>
 		 <![CDATA[		
 							) ROW_
 						WHERE ROWNUM <= #{limit}*#{page} + #{limit}) 
@@ -142,9 +150,17 @@
 		<if test="customerName != null and customerName != '' ">
 		    AND b.CHINESE_NAME=#{customerName}
 		</if>
-					  
-		<if test="customerManagerId != null and customerManagerId != '' ">
-			AND b.user_id=#{customerManagerId}
+		
+								<if test="customerManagerId != null and customerManagerId != '' ">
+						AND b.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{customerManagerId}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+		</if>
+			<if test="id != null and id != '' ">
+						AND b.user_id = #{id}
 		</if>
 		<if test="customerId != null and customerId != '' ">
 			AND b.id=#{customerId}

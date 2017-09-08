@@ -13,6 +13,7 @@
     <result column="URI" property="uri" jdbcType="VARCHAR" />
     <result column="CREATED_TIME" property="createdTime" jdbcType="VARCHAR" />
         <result column="PHONE_TYPE" property="phone_type" jdbcType="VARCHAR" />
+          <result column="cardid" property="cardid" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="BaseResultMap1" type="com.cardpay.pccredit.intopieces.model.LocalImage" >
     <id column="ID" property="id" jdbcType="VARCHAR" />
@@ -41,7 +42,7 @@
 </delete>
 
 <select id="findLocalImageByType" resultMap="BaseResultMap">
-   select i.CUSTOMER_ID,i.ID,i.PRODUCT_ID,i.APPLICATION_ID,i.ATTACHMENT,i.URI,i.CREATED_TIME,
+   select t.chinese_name as customerName,t.card_id as cardid, i.CUSTOMER_ID,i.ID,i.PRODUCT_ID,i.APPLICATION_ID,i.ATTACHMENT,i.URI,i.CREATED_TIME,
    t.CHINESE_NAME,p.PRODUCT_NAME from local_image i INNER JOIN BASIC_CUSTOMER_INFORMATION t
    on t.id = i.CUSTOMER_ID inner join PRODUCT_ATTRIBUTE p on i.PRODUCT_ID=p.id
     where CUSTOMER_ID =#{customerId}
@@ -52,4 +53,15 @@
 <insert id="addImageByPType"  parameterType="java.lang.Integer" >
 			insert into local_image (id,customer_id,product_id,application_id,attachment,uri,created_time,phone_type) values (#{id},#{customerId},#{productId},#{applicationId},#{attachment},#{uri},#{createdTime},#{phone_type})
 </insert>
+<select id="selectbTime" resultMap="BaseResultMap">
+ select b.chinese_name as customerName ,b.card_id as cardid,t.MODIFIED_TIME as createdTime from CUSTOMER_APPLICATION_INFO t,BASIC_CUSTOMER_INFORMATION b where t.id=#{id} and t.CUSTOMER_ID=b.id
+</select>
+
+
+<select id="selectBcIma" resultMap="BaseResultMap">
+    select * from local_image where CUSTOMER_ID =#{customerId}
+	AND PRODUCT_ID=#{productId}
+	AND PHONE_TYPE=#{phone_type} 
+	order by phone_type,created_time desc
+</select>
 </mapper>

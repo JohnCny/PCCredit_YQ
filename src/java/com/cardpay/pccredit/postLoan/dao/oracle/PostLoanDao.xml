@@ -757,6 +757,17 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
 					<if test="customername!=null and customername!='' ">
 						    and bai.chinese_name like  '%'||#{customername}||'%'
 					</if>
+					<if test="id!=null and id!='' ">
+						    and bai.user_id =#{id}
+					</if>
+						<if test="userid1!=null and userid1!='' ">
+						  	AND bai.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{userid1}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
+					</if>
 					 order by cai.created_time desc
                    <![CDATA[		
 							) ROW_
@@ -783,6 +794,17 @@ tym.JZLL,tym.REQLMT,nvl(tym.DELAYINTERESTDAYS,0)  ,  nvl(tym.DELAYAMTDAYS,0),
 		               where 1=1
 			        <if test="customername!=null and customername!='' ">
 						    and bai.chinese_name like  '%'||#{customername}||'%'
+					</if>
+						<if test="id!=null and id!='' ">
+						    and bai.user_id =#{id}
+					</if>
+						<if test="userid1!=null and userid1!='' ">
+						  	AND bai.user_id in (select s.id  from sys_dept_user sd,sys_user s,
+(select t.id from
+                  sys_department t where t.id in (select tt.dept_id from sys_dept_user tt,sys_user su
+                  where tt.user_id = su.id and su.id=#{userid1}))t
+                  where t.id=sd.dept_id
+                  and sd.user_id=s.id)
 					</if>
 	</select>
 	

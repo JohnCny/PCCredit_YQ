@@ -47,8 +47,10 @@ import com.cardpay.pccredit.intopieces.web.CustomerApplicationIntopieceWaitForm;
 import com.cardpay.pccredit.ipad.util.JsonDateValueProcessor;
 import com.cardpay.pccredit.jnpad.model.JnpadCsSdModel;
 import com.cardpay.pccredit.jnpad.model.ManagerInfoForm;
+import com.cardpay.pccredit.jnpad.model.MonthlyStatisticsModel;
 import com.cardpay.pccredit.jnpad.model.ProductAttributes;
 import com.cardpay.pccredit.jnpad.service.JnpadIntopiecesDecisionService;
+import com.cardpay.pccredit.jnpad.service.MonthlyStatisticsService;
 import com.cardpay.pccredit.manager.form.ManagerPerformmanceForm;
 import com.cardpay.pccredit.manager.web.AccountManagerParameterForm;
 import com.cardpay.pccredit.product.model.ProductAttribute;
@@ -1624,7 +1626,8 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 		
 		
 		
-		
+		@Autowired
+		private MonthlyStatisticsService StatisticsService;
 		/**
 		 * 客户原始信息
 		 * @param filter
@@ -1639,7 +1642,7 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 			String userId=request.getParameter("userId");
 			Integer userType=Integer.parseInt(request.getParameter("userType"));
 			//查询客户经理
-			List<AccountManagerParameterForm> forms = maintenanceService.findSubListManagerByManagerId1(userId,userType);
+	/*		List<AccountManagerParameterForm> forms = maintenanceService.findSubListManagerByManagerId1(userId,userType);
 			if(forms != null && forms.size() > 0){
 				StringBuffer userIds = new StringBuffer();
 				userIds.append("(");
@@ -1651,6 +1654,32 @@ public class JnpadIntopiecesDecisionController extends BaseController{
 				filter.setCustManagerIds(userIds.toString());
 			}else{
 				filter.setUserId(userId);
+			}*/
+			if(userType==4 || userType==5){
+				List<CustomerApplicationIntopieceWaitForm> list=customerApplicationIntopieceWaitService.findSpRy(userId);
+				StringBuffer belongChildIds = new StringBuffer();
+				belongChildIds.append("(");
+				for(int i=0;i<list.size();i++){
+					belongChildIds.append("'").append(list.get(i).getUserId()).append("'").append(",");
+				}
+				belongChildIds = belongChildIds.deleteCharAt(belongChildIds.length() - 1);
+				belongChildIds.append(")");
+				filter.setCustManagerIds(belongChildIds.toString());}
+			else if(userType==1){
+				   List<MonthlyStatisticsModel> resultModel=null;
+				     resultModel=StatisticsService.findxzz(userId);
+				     if(resultModel.size()>0){
+				    	 StringBuffer belongChildIds = new StringBuffer();
+							belongChildIds.append("(");
+							for(int i=0;i<resultModel.size();i++){
+								belongChildIds.append("'").append(resultModel.get(i).getUserId()).append("'").append(",");
+							}
+							belongChildIds = belongChildIds.deleteCharAt(belongChildIds.length() - 1);
+							belongChildIds.append(")");
+							filter.setCustManagerIds(belongChildIds.toString()); 
+				     }else{
+				    	 filter.setUserId(userId);
+				     }
 			}
 			QueryResult<IntoPieces> result = intoPiecesService.findintoPiecesByFilter(filter);
 			for(int i=0;i<result.getTotalCount();i++){

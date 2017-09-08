@@ -11,6 +11,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,10 @@ public class JnpadImageBrowseService {
 		// TODO Auto-generated method stub
 		return jnpadImageBrowseDao.findLocalImage(customerId,productId,phone_type);
 	}
-	
+	public LocalImageForm selectbTime(String id){
+		return jnpadImageBrowseDao.selectbTime(id);
+		
+	}
 
 	
 	
@@ -120,8 +124,9 @@ public class JnpadImageBrowseService {
 		
 		jnpadImageBrowseDao.deleteImage(imageId);
 	}
-	
-	
+	public List<LocalImageForm> selectBcIma( String id, String productId, String phone_type ){
+		return jnpadImageBrowseDao.selectBcIma(id, productId, phone_type);
+	}
 	
 	
 	
