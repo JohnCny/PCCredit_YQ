@@ -21,6 +21,13 @@ public class LocalImageForm extends BaseModel{
 	private  String id;
 	private Integer page;
 	private Integer limit;
+	private  String phone_type;
+	public String getPhone_type() {
+		return phone_type;
+	}
+	public void setPhone_type(String phone_type) {
+		this.phone_type = phone_type;
+	}
 	public Integer getPage() {
 		return page;
 	}

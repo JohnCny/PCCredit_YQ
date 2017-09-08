@@ -55,7 +55,18 @@ public class JnpadImageBrowseController {
 	public AbstractModelAndView downLoadYxzlJn(HttpServletRequest request,HttpServletResponse response){
 		try {
 			String s =request.getParameter("id");
-			System.out.println(s);
+			jnpadImageBrowseService.downLoadYxzlJn(response,s);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@ResponseBody
+	@RequestMapping(value = "/ipad/TypadImageBrowse/downLoadYxzlJn.json",method = { RequestMethod.GET })
+	@JRadOperation(JRadOperation.EXPORT)
+	public AbstractModelAndView TdownLoadYxzlJn(HttpServletRequest request,HttpServletResponse response){
+		try {
+			String s =request.getParameter("id");
 			jnpadImageBrowseService.downLoadYxzlJn(response,s);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -63,15 +74,23 @@ public class JnpadImageBrowseController {
 		return null;
 	}
 	
-	
 	//删除已上传图片
 	@ResponseBody
 	@RequestMapping(value = "/ipad/JnpadImageBrowse/deleteImage.json", method = { RequestMethod.GET })
 	public String deleteImage(HttpServletRequest request) {
 		String imageId =request.getParameter("imageId");
+		String id=request.getParameter("id");
 		Map<String,Object> map = new LinkedHashMap<String,Object>();
 		try {
-		jnpadImageBrowseService.deleteImage(imageId);
+			if(imageId!=""&&imageId!=null){
+				jnpadImageBrowseService.deleteImage(imageId);
+			}else if(id!=""&&id!=null){
+				String imaId[]=id.split(",");
+				for(int i=0;i<imaId.length;i++){
+					System.out.println(imaId[i]);
+					jnpadImageBrowseService.deleteImage(imaId[i]);
+				}
+			}
 		map.put("mess", "删除成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -128,6 +147,9 @@ public class JnpadImageBrowseController {
 		map.put("size9",imagerList9.size());
 		map.put("size10",imagerList10.size());
 		map.put("size11",imagerList11.size());
+		map.put("size12",imagerList11.size()+imagerList1.size()+imagerList2.size()
+		+imagerList3.size()+imagerList4.size()+imagerList5.size()+imagerList6.size()
+		+imagerList7.size()+imagerList8.size()+imagerList9.size()+imagerList10.size());
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
 		JSONObject json = JSONObject.fromObject(map, jsonConfig);
@@ -149,6 +171,65 @@ public class JnpadImageBrowseController {
 		Map<String,Object> map = new LinkedHashMap<String,Object>();
 		map.put("imagerList",imagerList);
 		map.put("size",imagerList.size());
+		JsonConfig jsonConfig = new JsonConfig();
+		jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
+		JSONObject json = JSONObject.fromObject(map, jsonConfig);
+		return json.toString();
+	}
+	
+	
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/ipad/JnpadImageBrowse/selectBcIma.json", method = { RequestMethod.GET })
+	public String selectBcIma(HttpServletRequest request) throws IOException, SftpException {
+		List<LocalImageForm> imagerList1 = jnpadImageBrowseService.selectBcIma(request.getParameter("customerId"),request.getParameter("productId")
+				,"1");
+		List<LocalImageForm> imagerList2 = jnpadImageBrowseService.selectBcIma(request.getParameter("customerId"),request.getParameter("productId")
+				,"2");
+		List<LocalImageForm> imagerList3 = jnpadImageBrowseService.selectBcIma(request.getParameter("customerId"),request.getParameter("productId")
+				,"3");
+		List<LocalImageForm> imagerList4 = jnpadImageBrowseService.selectBcIma(request.getParameter("customerId"),request.getParameter("productId")
+				,"4");
+		List<LocalImageForm> imagerList5 = jnpadImageBrowseService.selectBcIma(request.getParameter("customerId"),request.getParameter("productId")
+				,"5");
+		List<LocalImageForm> imagerList6 = jnpadImageBrowseService.selectBcIma(request.getParameter("customerId"),request.getParameter("productId")
+				,"6");
+		List<LocalImageForm> imagerList7 = jnpadImageBrowseService.selectBcIma(request.getParameter("customerId"),request.getParameter("productId")
+				,"7");
+		List<LocalImageForm> imagerList8 = jnpadImageBrowseService.selectBcIma(request.getParameter("customerId"),request.getParameter("productId")
+				,"8");
+		List<LocalImageForm> imagerList9 = jnpadImageBrowseService.selectBcIma(request.getParameter("customerId"),request.getParameter("productId")
+				,"9");
+		List<LocalImageForm> imagerList10 = jnpadImageBrowseService.selectBcIma(request.getParameter("customerId"),request.getParameter("productId")
+				,"10");
+		List<LocalImageForm> imagerList11 = jnpadImageBrowseService.selectBcIma(request.getParameter("customerId"),request.getParameter("productId")
+				,"11");
+		Map<String,Object> map = new LinkedHashMap<String,Object>();
+		map.put("size1",imagerList1.size());
+		map.put("size2",imagerList2.size());
+		map.put("size3",imagerList3.size());
+		map.put("size4",imagerList4.size());
+		map.put("size5",imagerList5.size());
+		map.put("size6",imagerList6.size());
+		map.put("size7",imagerList7.size());
+		map.put("size8",imagerList8.size());
+		map.put("size9",imagerList9.size());
+		map.put("size10",imagerList10.size());
+		map.put("size11",imagerList11.size());
+	
+		
+		map.put("imagerList1",imagerList1);
+		map.put("imagerList2",imagerList2);
+		map.put("imagerList3",imagerList3);
+		map.put("imagerList4",imagerList4);
+		map.put("imagerList5",imagerList5);
+		map.put("imagerList6",imagerList6);
+		map.put("imagerList7",imagerList7);
+		map.put("imagerList8",imagerList8);
+		map.put("imagerList9",imagerList9);
+		map.put("imagerList10",imagerList10);
+		map.put("imagerList11",imagerList11);
 		JsonConfig jsonConfig = new JsonConfig();
 		jsonConfig.registerJsonValueProcessor(Date.class,new JsonDateValueProcessor());
 		JSONObject json = JSONObject.fromObject(map, jsonConfig);

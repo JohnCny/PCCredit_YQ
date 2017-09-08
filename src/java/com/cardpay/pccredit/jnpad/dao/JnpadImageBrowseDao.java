@@ -20,4 +20,6 @@ public interface JnpadImageBrowseDao {
 		public List<LocalImageForm> findLocalImageByType(@Param("customerId") String id,
 				@Param("productId") String productId,@Param("phone_type") String phone_type);
 		LocalImageForm selectbTime(@Param("id") String id);
+		
+		List<LocalImageForm> selectBcIma(@Param("customerId") String id,@Param("productId") String productId,@Param("phone_type") String phone_type );
 }
